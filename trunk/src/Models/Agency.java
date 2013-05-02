@@ -3,21 +3,30 @@ package Models;
 import java.util.ArrayList;
 
 public class Agency {
-	
+
+	private int id;
 	private String name;
-	private Enum<AgencyDiscountLevel> agencyDiscountLevel;
+	private int agencyDiscountLevel;
 	private ArrayList<Customer> providedCustomers;
-	
+
 	public Agency() {
-		
+
 	}
 
-	public Agency(String name, Enum<AgencyDiscountLevel> agencyDiscountLevel,
+	public Agency(int id, String name, int agencyDiscountLevel,
 			ArrayList<Customer> providedCustomers) {
-		super();
+		this.id = id;
 		this.name = name;
 		this.agencyDiscountLevel = agencyDiscountLevel;
 		this.providedCustomers = providedCustomers;
+	}
+
+	public int getID() {
+		return id;
+	}
+
+	public void setID(int id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -28,11 +37,11 @@ public class Agency {
 		this.name = name;
 	}
 
-	public Enum<AgencyDiscountLevel> getAgencyDiscountLevel() {
+	public int getAgencyDiscountLevel() {
 		return agencyDiscountLevel;
 	}
 
-	public void setAgencyDiscountLevel(Enum<AgencyDiscountLevel> agencyDiscountLevel) {
+	public void setAgencyDiscountLevel(int agencyDiscountLevel) {
 		this.agencyDiscountLevel = agencyDiscountLevel;
 	}
 
@@ -46,7 +55,7 @@ public class Agency {
 
 	@Override
 	public String toString() {
-		return "Agency [name=" + name + ", agencyDiscountLevel="
+		return "Agency [id=" + id + ", name=" + name + ", agencyDiscountLevel="
 				+ agencyDiscountLevel + ", providedCustomers="
 				+ providedCustomers + "]";
 	}
