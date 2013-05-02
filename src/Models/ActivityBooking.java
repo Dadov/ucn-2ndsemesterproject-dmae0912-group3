@@ -3,16 +3,16 @@ package Models;
 import java.util.ArrayList;
 
 public class ActivityBooking {
-	
+
 	private int id;
 	private ArrayList<Customer> customers;
 	private Activity activity;
 	private ActivityTime activityTime;
 	private boolean openActivity;
 	private boolean instructorHired;
-	
+
 	ActivityBooking() {
-		
+
 	}
 
 	public ActivityBooking(int id, ArrayList<Customer> customers,
@@ -77,9 +77,9 @@ public class ActivityBooking {
 	@Override
 	public String toString() {
 		return "ActivityBooking [id=" + id + ", customers=" + customers
-				+ ", activity=" + activity + ", activityTime=" + activityTime
-				+ ", openActivity=" + openActivity + ", instructorHired="
-				+ instructorHired + "]";
+				+ ", activity=" + activity.toString() + ", activityTime="
+				+ activityTime.toString() + ", openActivity=" + openActivity
+				+ ", instructorHired=" + instructorHired + "]";
 	}
-	
+
 }

@@ -12,11 +12,11 @@ CREATE TABLE Person (
     personID int not null,
     CPR varchar(11) not null,
     fname varchar(255) not null,
-    lname varchar (255) not null,
-    address varchar (255) not null,
+    lname varchar(255) not null,
+    address varchar(255) not null,
     locationZIP varchar(255) not null,
     email varchar(255) not null,
-    personType varchar (255) not null,
+    personType varchar(255) not null,
     UNIQUE ( personID ),
     PRIMARY KEY ( personID ),
     FOREIGN KEY ( locationZIP ) REFERENCES Location ( ZIP )
@@ -26,40 +26,35 @@ CREATE TABLE Staff (
     staffID int not null,
     rank varchar(255) not null,
     salary double not null,
+    staffType varchar(225) not null,
     UNIQUE ( staffID ),
     PRIMARY KEY ( staffID ),
     FOREIGN KEY ( staffID ) REFERENCES Person ( personID )
 );
 
-CREATE TABLE Instructor (
-    instructorID int not null,
-    UNIQUE ( instructorID ),
-    PRIMARY KEY ( instructorID ),
-    FOREIGN KEY ( instructorID ) REFERENCES Person ( personID )
-);
-
 CREATE TABLE Customer (
     customerID int not null,
-    registrationDate varchar(255),
-    noOfStays int
+    registrationDate date,
+    noOfStays int,
     UNIQUE ( cutomerID ),
     PRIMARY KEY ( customerID ),
     FOREIGN KEY ( customerID ) REFERENCES Person ( personID )
 );
 
 CREATE TABLE Agency (
+    agencyID int not null,
     name varchar(255) not null,
-    discountLevel varchar(255),
-    UNIQUE ( name ),
-    PRIMARY KEY ( name )
+    discountLevel int,
+    UNIQUE ( agencyID ),
+    PRIMARY KEY ( agencyID )
 );
 
 CREATE TABLE ProvidedCustomers (
-    agencyName varchar(255) not null,
+    agencyID int not null,
     customerID int not null,
     UNIQUE ( agencyName, customerID ),
-    PRIMARY KEY ( agencyName, customerID ),
-    FOREIGN KEY ( agencyName ) REFERENCES Agency ( name ),
+    PRIMARY KEY ( agencyID, customerID ),
+    FOREIGN KEY ( agencyID ) REFERENCES Agency ( agencyID ),
     FOREIGN KEY ( cusomerID ) REFERENCES Customer ( cusomerID )
 );
 
@@ -110,7 +105,7 @@ CREATE TABLE ActivityBooking (
     instructorHired boolean not null,
     UNIQUE ( activityBookingID ),
     PRIMARY KEY ( activityBookingID ),
-    FOREIGN KEY ( activityID ) REFERENCES ACtivity ( activityID )
+    FOREIGN KEY ( activityID ) REFERENCES Activity ( activityID )
 );
 
 CREATE TABLE ActivityCustomers (
@@ -135,11 +130,13 @@ CREATE TABLE InstructorHire (
     instructorHireID int not null,
     customerID int not null,
     instructorID int not null,
+    activityBookingID int not null,
     hireDate date not null,
     hireTime time not null,
     UNIQUE ( instructorHireID ),
     PRIMARY KEY ( instructorHireID ),
     FOREIGN KEY ( customerID ) REFERENCES Customer ( cusotmerID ),
-    FOREIGN KEY ( instructorID ) REFERENCES Instructor ( instructorID )
+    FOREIGN KEY ( instructorID ) REFERENCES Instructor ( instructorID ),
+    FOREIGN KEY ( activityBookingID ) REFERENCES ActivityBooking ( activityBookingID );
 );
     

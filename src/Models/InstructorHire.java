@@ -5,17 +5,19 @@ public class InstructorHire {
 	private int id;
 	private Customer customer;
 	private Instructor instructor;
+	private ActivityBooking activityBooking;
 	private ActivityTime activityTime;
-	
+
 	public InstructorHire() {
-		
+
 	}
 
 	public InstructorHire(int id, Customer customer, Instructor instructor,
-			ActivityTime activityTime) {
+			ActivityBooking activityBooking, ActivityTime activityTime) {
 		this.id = id;
 		this.customer = customer;
 		this.instructor = instructor;
+		this.activityBooking = activityBooking;
 		this.activityTime = activityTime;
 	}
 
@@ -39,6 +41,14 @@ public class InstructorHire {
 		return instructor;
 	}
 
+	public ActivityBooking getActivityBooking() {
+		return activityBooking;
+	}
+
+	public void setActivityBooking(ActivityBooking activityBooking) {
+		this.activityBooking = activityBooking;
+	}
+
 	public void setInstructor(Instructor instructor) {
 		this.instructor = instructor;
 	}
@@ -53,9 +63,10 @@ public class InstructorHire {
 
 	@Override
 	public String toString() {
-		return "InstructorHire [id=" + id + ", customer=" + customer
-				+ ", instructor=" + instructor + ", activityTime="
-				+ activityTime + "]";
+		return "InstructorHire [id=" + id + ", customer=" + customer.toString()
+				+ ", instructor=" + instructor.toString()
+				+ ", activityBooking=" + activityBooking.toString()
+				+ ", activityTime=" + activityTime.toString() + "]";
 	}
-	
+
 }

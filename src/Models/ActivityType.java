@@ -1,5 +1,5 @@
 package Models;
 
 public enum ActivityType {
-	Football, Gym, Whatever
+	TennisCourt, BadmintonCourt, VolleyballCourt, HandballCourt, FitnessCenter
 }

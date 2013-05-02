@@ -1,5 +1,5 @@
 package Models;
 
 public enum RoomType {
-	GOOD, BAD
+	Family, Single
 }
