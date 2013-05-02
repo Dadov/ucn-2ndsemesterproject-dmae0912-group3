@@ -2,31 +2,25 @@ package DAO;
 
 import java.util.ArrayList;
 
-import Models.Room;
-import Models.RoomType;
+import Models.RoomBooking;
 
 public interface IFRoomBookingDAO {
 
-	// find room by its number (ID)
-	public Room getRoom(int number);
+	// find room by its id
+	public RoomBooking getRoomBooking(int id);
 
-	// get all Rooms
-	public ArrayList<Room> getAllRooms();
+	// get all RoomBookings
+	public ArrayList<RoomBooking> getAllRoomBookings();
 
-	// find free rooms on given date period and filter by type
-	// should filtering by type be optional?
-	public ArrayList<Room> findFreeRooms(String startDate, String endDate,
-			Enum<RoomType> roomType);
-
-	// insert Room
+	// insert RoomBooking
 	// returns int, see Statement.executeUpdate()
-	public int insert(Room room);
+	public int insert(RoomBooking roomBooking);
 
-	// update Room
+	// update RoomBooking
 	// returns int, see Statement.executeUpdate()
-	public int update(Room room);
+	public int update(RoomBooking roomBooking);
 
-	// delete Room
+	// delete RoomBooking
 	// returns int, see Statement.executeUpdate()
-	public int delete(int number);
+	public int delete(int id);
 }
