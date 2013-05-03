@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import Models.RoomBooking;
 
-public interface IFRoomBookingDAO {
+public interface IFDAORoomBooking {
 
 	// find room by its id
 	public RoomBooking getRoomBooking(int id);
