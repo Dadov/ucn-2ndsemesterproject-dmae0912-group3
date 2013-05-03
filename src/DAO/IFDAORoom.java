@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import Models.Room;
 import Models.RoomType;
 
-public interface IFRoomDAO {
+public interface IFDAORoom {
 
 	public Room getRoom(int number);
 
