@@ -1,33 +1,35 @@
-use something;
+use Morocco;
 
 CREATE TABLE Location (
     ZIP varchar(255) not null,
-    country carchar(255) not null,
+    country varchar(255) not null,
     city varchar(255) not null,
     UNIQUE ( ZIP, country ),
     PRIMARY KEY ( ZIP, country )
 );
 
 CREATE TABLE Person (
-    personID int not null,
+    personID int not null identity,
     CPR varchar(11) not null,
     fname varchar(255) not null,
     lname varchar(255) not null,
     address varchar(255) not null,
     locationZIP varchar(255) not null,
+	country varchar(255) not null,
     email varchar(255) not null,
+    password varchar(255) not null,
     personType varchar(255) not null,
     UNIQUE ( personID ),
     PRIMARY KEY ( personID ),
-    FOREIGN KEY ( locationZIP ) REFERENCES Location ( ZIP )
+    FOREIGN KEY ( locationZIP, country ) REFERENCES Location ( ZIP, country )
 );
 
 CREATE TABLE Staff (
     staffID int not null,
-    rank varchar(255) not null,
-    salary double not null,
-    staffType varchar(225) not null,
-    UNIQUE ( staffID ),
+    staffRank varchar(255) not null,
+    salary float,
+    staffType varchar(255) not null,
+    UNIQUE  ( staffID ),
     PRIMARY KEY ( staffID ),
     FOREIGN KEY ( staffID ) REFERENCES Person ( personID )
 );
@@ -36,13 +38,13 @@ CREATE TABLE Customer (
     customerID int not null,
     registrationDate date,
     noOfStays int,
-    UNIQUE ( cutomerID ),
+    UNIQUE ( customerID ),
     PRIMARY KEY ( customerID ),
     FOREIGN KEY ( customerID ) REFERENCES Person ( personID )
 );
 
 CREATE TABLE Agency (
-    agencyID int not null,
+    agencyID int not null identity,
     name varchar(255) not null,
     discountLevel int,
     UNIQUE ( agencyID ),
@@ -52,30 +54,30 @@ CREATE TABLE Agency (
 CREATE TABLE ProvidedCustomers (
     agencyID int not null,
     customerID int not null,
-    UNIQUE ( agencyName, customerID ),
+    UNIQUE ( agencyID, customerID ),
     PRIMARY KEY ( agencyID, customerID ),
     FOREIGN KEY ( agencyID ) REFERENCES Agency ( agencyID ),
-    FOREIGN KEY ( cusomerID ) REFERENCES Customer ( cusomerID )
+    FOREIGN KEY ( customerID ) REFERENCES Customer ( customerID )
 );
 
 CREATE TABLE Room (
-    number int not null,
+    number int not null identity,
     roomType varchar(255) not null,
-    price double not null,
+    price float,
     note varchar(255),
     UNIQUE ( number ),
     PRIMARY KEY ( number )
 );
 
 CREATE TABLE RoomBooking (
-    bookingID int not null,
+    bookingID int not null identity,
     customerID int not null,
     dateStart date not null,
     dateEnd date not null,
     dateBooked date not null,
     UNIQUE ( bookingID ),
     PRIMARY KEY ( bookingID ),
-    FOREIGN KEY ( cusomerID ) REFERENCES Customer ( cusotmerID )
+    FOREIGN KEY ( customerID ) REFERENCES Customer ( customerID )
 );
 
 CREATE TABLE RoomsBooked (
@@ -88,21 +90,21 @@ CREATE TABLE RoomsBooked (
 );
 
 CREATE TABLE Activity (
-    activityID int not null,
+    activityID int not null identity,
     activityType varchar(255) not null,
     capacity int not null,
-    instructorAvailability boolean not null,
+    instructorAvailability bit,
     UNIQUE ( activityID ),
     PRIMARY KEY ( activityID )
 );
 
 CREATE TABLE ActivityBooking (
-    activityBookingID int not null,
+    activityBookingID int not null identity,
     activityID int not null,
     activityDate date not null,
     activityTime time not null,
-    openActivity boolean not null,
-    instructorHired boolean not null,
+    openActivity bit not null,
+    instructorHired bit not null,
     UNIQUE ( activityBookingID ),
     PRIMARY KEY ( activityBookingID ),
     FOREIGN KEY ( activityID ) REFERENCES Activity ( activityID )
@@ -123,11 +125,11 @@ CREATE TABLE ActivityInstructors (
     UNIQUE ( activityID, instructorID ),
     PRIMARY KEY ( activityID, instructorID ),
     FOREIGN KEY ( activityID ) REFERENCES Activity ( activityID ),
-    FOREIGN KEY ( instructorID ) REFERENCES Instructor ( instructorID )
+    FOREIGN KEY ( instructorID ) REFERENCES Staff ( staffID )
 );
 
 CREATE TABLE InstructorHire (
-    instructorHireID int not null,
+    instructorHireID int not null identity,
     customerID int not null,
     instructorID int not null,
     activityBookingID int not null,
@@ -135,8 +137,7 @@ CREATE TABLE InstructorHire (
     hireTime time not null,
     UNIQUE ( instructorHireID ),
     PRIMARY KEY ( instructorHireID ),
-    FOREIGN KEY ( customerID ) REFERENCES Customer ( cusotmerID ),
-    FOREIGN KEY ( instructorID ) REFERENCES Instructor ( instructorID ),
-    FOREIGN KEY ( activityBookingID ) REFERENCES ActivityBooking ( activityBookingID );
+    FOREIGN KEY ( customerID ) REFERENCES Customer ( customerID ),
+    FOREIGN KEY ( instructorID ) REFERENCES Staff ( staffID ),
+    FOREIGN KEY ( activityBookingID ) REFERENCES ActivityBooking ( activityBookingID )
 );
-    

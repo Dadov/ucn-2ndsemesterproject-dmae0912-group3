@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import org.junit.After;
@@ -14,8 +16,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import Models.Room;
+// TODO probably delete mockito import
 
 public class DAORoomTest {
+	private Connection con;
 	private Room room;
 	private IFDAORoom daoRoom;
 
@@ -48,13 +52,13 @@ public class DAORoomTest {
 
 	// deleted testGet/Insert/Update/Delete going to be be tested in testCRUD
 	@Test
-	public void testCRUD() {
+	public void testCRUD() throws SQLException {
 		// nothing to test
 		fail("Not yet implemented"); // TODO
-		// TODO con = DBConnection.getInstance().getDBCon();
+		con = DBConnection.getInstance().getDBCon();
 		// group statements into transaction so we can roll back after test
-		// TODO con.setAutoCommit(false);
-		// TODO IFDAORoom = new DAORoom();
+		con.setAutoCommit(false);
+		daoRoom = new DAORoom();
 
 		// no need for mocks, using data from database
 		ArrayList<Room> rooms = daoRoom.getAllRooms();
@@ -70,16 +74,15 @@ public class DAORoomTest {
 			// DAO part
 			assertEquals(null, daoRoom.getRoom(room.getNumber()));
 
-			// TODO wtf why does it require 'int' return value
-			int update = daoRoom.update(null);
+			daoRoom.update(null);
 			assertEquals(null, daoRoom.getRoom(0));
 
 			daoRoom.delete(0);
 			assertNull(daoRoom.delete(0));
 
 		} finally {
-			// TODO con.rollback();
-			// TODO con.close();
+			con.rollback();
+			con.close();
 		}
 	}
 
