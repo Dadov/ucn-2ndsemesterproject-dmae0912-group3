@@ -8,8 +8,9 @@ public class Manager extends Staff {
 
 	public Manager(int personID, String CPR, String fname, String lname,
 			String country, String ZIP, String address, String email,
-			double salary) {
-		super(personID, CPR, fname, lname, country, ZIP, address, email, salary);
+			String password, double salary) {
+		super(personID, CPR, fname, lname, country, ZIP, address, email,
+				password, salary);
 	}
 
 	@Override

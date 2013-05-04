@@ -1,7 +1,6 @@
 package Models;
 
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -10,6 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class PersonTest {
+	private Person person;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -21,9 +21,9 @@ public class PersonTest {
 
 	@Before
 	public void setUp() throws Exception {
-		Person person = mock(Person.class);
-		System.out.println(person.toString());
-		System.out.println(person.getCPR());
+		// person = mock(Person.class);
+		person = new Person();
+		// System.out.println(person.toString());
 	}
 
 	@After
@@ -31,98 +31,65 @@ public class PersonTest {
 	}
 
 	@Test
-	public void testPerson() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testPersonIntStringStringStringStringStringStringString() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetPersonID() {
-		fail("Not yet implemented");
-	}
-
-	@Test
 	public void testSetPersonID() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetCPR() {
-		fail("Not yet implemented");
+		person.setPersonID(1);
+		assertEquals(1, person.getPersonID());
 	}
 
 	@Test
 	public void testSetCPR() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetFname() {
-		fail("Not yet implemented");
+		person.setCPR("101010-1234");
+		assertEquals("101010-1234", person.getCPR());
 	}
 
 	@Test
 	public void testSetFname() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetLname() {
-		fail("Not yet implemented");
+		person.setFname("mr.");
+		assertEquals("mr.", person.getFname());
 	}
 
 	@Test
 	public void testSetLname() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetCountry() {
-		fail("Not yet implemented");
+		person.setLname("wonder");
+		assertEquals("wonder", person.getLname());
 	}
 
 	@Test
 	public void testSetCountry() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetZIP() {
-		fail("Not yet implemented");
+		person.setCountry("atlantis");
+		assertEquals("atlantis", person.getCountry());
 	}
 
 	@Test
 	public void testSetZIP() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetAddress() {
-		fail("Not yet implemented");
+		person.setZIP("0000");
+		assertEquals("0000", person.getZIP());
 	}
 
 	@Test
 	public void testSetAddress() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetEmail() {
-		fail("Not yet implemented");
+		person.setAddress("faraway");
+		assertEquals("faraway", person.getAddress());
 	}
 
 	@Test
 	public void testSetEmail() {
-		fail("Not yet implemented");
+		person.setEmail("mr.wonder@wunderbar.a");
+		assertEquals("mr.wonder@wunderbar.a", person.getEmail());
+	}
+
+	@Test
+	public void testSetPassword() {
+		person.setPassword("udontwannaknow");
+		assertEquals("udontwannaknow", person.getPassword());
 	}
 
 	@Test
 	public void testToString() {
-		fail("Not yet implemented");
+		String expectNullValues = "Person [personID=0, CPR=null, fname=null,"
+				+ " lname=null, country=null, ZIP=null, address=null, email=null,"
+				+ " password=null]";
+		assertEquals(expectNullValues, person.toString());
 	}
 
 }
