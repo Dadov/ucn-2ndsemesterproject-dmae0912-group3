@@ -1,22 +1,24 @@
 package Models;
 
+import java.util.ArrayList;
+
 public class Activity {
-	
+
 	private int id;
 	private Enum<ActivityType> activityType;
 	private int capacity;
-	private boolean instructorAvailability;
-	
+	private ArrayList<Instructor> activityInstructors;
+
 	Activity() {
-		
+
 	}
 
 	public Activity(int id, Enum<ActivityType> activityType, int capacity,
-			boolean instructorAvailability) {
+			ArrayList<Instructor> activityInstructors) {
 		this.id = id;
 		this.activityType = activityType;
 		this.capacity = capacity;
-		this.instructorAvailability = instructorAvailability;
+		this.activityInstructors = activityInstructors;
 	}
 
 	public int getId() {
@@ -43,19 +45,19 @@ public class Activity {
 		this.capacity = capacity;
 	}
 
-	public boolean isInstructorAvailability() {
-		return instructorAvailability;
+	public ArrayList<Instructor> getActivityInstructors() {
+		return activityInstructors;
 	}
 
-	public void setInstructorAvailability(boolean instructorAvailability) {
-		this.instructorAvailability = instructorAvailability;
+	public void setActivityInstructors(ArrayList<Instructor> activityInstructors) {
+		this.activityInstructors = activityInstructors;
 	}
 
 	@Override
 	public String toString() {
 		return "Activity [id=" + id + ", activityType=" + activityType
-				+ ", capacity=" + capacity + ", instructorAvailability="
-				+ instructorAvailability + "]";
+				+ ", capacity=" + capacity + ", activityInstructors="
+				+ activityInstructors + "]";
 	}
 
 }

@@ -3,67 +3,63 @@ package DAO;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-import Models.Room;
-import Models.RoomType;
+import Models.Staff;
 
-public class DAORoom implements IFDAORoom {
+public class DAOStaff implements IFDAOStaff {
 
-	public DAORoom() {
+	public DAOStaff() {
 		// TODO con = DBConnection.getInstance().getDBCon();
 	}
 
 	@Override
-	public Room getRoom(int number) {
+	public Staff getStaff(int ID) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Room> getAllRooms() {
+	public ArrayList<Staff> getAllStaff() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Room> findFreeRooms(String startDate, String endDate,
-			Enum<RoomType> roomType) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int insert(Room room) {
+	public int insert(Staff Staff) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public int update(Room room) {
+	public int update(Staff Staff) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public int delete(int number) {
+	public int delete(int ID) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@SuppressWarnings("unused")
-	private Room singleWhere(String wClause, boolean retrieveAssociation) {
+	private Staff singleWhere(String wClause, boolean retrieveAssociation) {
 		// TODO
 		return null;
 	}
 
 	@SuppressWarnings("unused")
-	private ArrayList<Room> miscWhere(String wClause,
+	private ArrayList<Staff> miscWhere(String wClause,
 			boolean retrieveAssociation) {
 		// TODO
 		return null;
 	}
 
 	@SuppressWarnings("unused")
-	private Room buildRoom(ResultSet results) {
+	private Staff buildStaff(ResultSet results) {
+		// going to return Manager/Secretary/Receptionist/Instructor object
+		// depending on the 'type' field in Staff table
+		// still not gonna give type error
+		// since all of them are subclasses ofStaff
 		// TODO
 		return null;
 	}
