@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 public class Instructor extends Staff {
 
-	private ArrayList<Activity> activities;
-
 	public Instructor() {
 
 	}
@@ -15,20 +13,11 @@ public class Instructor extends Staff {
 			String password, double salary, ArrayList<Activity> activities) {
 		super(personID, CPR, fname, lname, country, ZIP, address, email,
 				password, salary);
-		this.activities = activities;
-	}
-
-	public ArrayList<Activity> getActivities() {
-		return activities;
-	}
-
-	public void setActivities(ArrayList<Activity> activities) {
-		this.activities = activities;
 	}
 
 	@Override
 	public String toString() {
-		return super.toString() + "Instructor [activities=" + activities + "]";
+		return "Instructor []";
 	}
 
 }

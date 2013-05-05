@@ -3,67 +3,61 @@ package DAO;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-import Models.Room;
-import Models.RoomType;
+import Models.InstructorHire;
 
-public class DAORoom implements IFDAORoom {
+public class DAOInstructorHire implements IFDAOInstructorHire {
 
-	public DAORoom() {
+	public DAOInstructorHire() {
 		// TODO con = DBConnection.getInstance().getDBCon();
 	}
 
 	@Override
-	public Room getRoom(int number) {
+	public InstructorHire getInstructorHire(int ID) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Room> getAllRooms() {
+	public ArrayList<InstructorHire> getInstructorHires() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Room> findFreeRooms(String startDate, String endDate,
-			Enum<RoomType> roomType) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int insert(Room room) {
+	public int insert(InstructorHire InstructorHire) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public int update(Room room) {
+	public int update(InstructorHire InstructorHire) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public int delete(int number) {
+	public int delete(int ID) {
 		// TODO Auto-generated method stub
 		return 0;
+
 	}
 
 	@SuppressWarnings("unused")
-	private Room singleWhere(String wClause, boolean retrieveAssociation) {
-		// TODO
-		return null;
-	}
-
-	@SuppressWarnings("unused")
-	private ArrayList<Room> miscWhere(String wClause,
+	private InstructorHire singleWhere(String wClause,
 			boolean retrieveAssociation) {
 		// TODO
 		return null;
 	}
 
 	@SuppressWarnings("unused")
-	private Room buildRoom(ResultSet results) {
+	private ArrayList<InstructorHire> miscWhere(String wClause,
+			boolean retrieveAssociation) {
+		// TODO
+		return null;
+	}
+
+	@SuppressWarnings("unused")
+	private InstructorHire buildInstructorHire(ResultSet results) {
 		// TODO
 		return null;
 	}

@@ -93,7 +93,6 @@ CREATE TABLE Activity (
     activityID int not null identity,
     activityType varchar(255) not null,
     capacity int not null,
-    instructorAvailability bit,
     UNIQUE ( activityID ),
     PRIMARY KEY ( activityID )
 );
@@ -111,11 +110,11 @@ CREATE TABLE ActivityBooking (
 );
 
 CREATE TABLE ActivityCustomers (
-    activityID int not null,
+    activityBookigID int not null,
     customerID int not null,
-    UNIQUE ( activityID, customerID ),
-    PRIMARY KEY ( activityID, customerID ),
-    FOREIGN KEY ( activityID ) REFERENCES Activity ( activityID ),
+    UNIQUE ( activityBookigID, customerID ),
+    PRIMARY KEY ( activityBookigID, customerID ),
+    FOREIGN KEY ( activityBookigID ) REFERENCES ActivityBooking ( activityBookingID ),
     FOREIGN KEY ( customerID ) REFERENCES Customer ( customerID )
 );
 

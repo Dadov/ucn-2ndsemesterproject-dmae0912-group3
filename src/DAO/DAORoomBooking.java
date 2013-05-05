@@ -8,7 +8,7 @@ import Models.RoomBooking;
 public class DAORoomBooking implements IFDAORoomBooking {
 
 	public DAORoomBooking() {
-		// con = DBConnection.getInstance().getDBCon();
+		// TODO con = DBConnection.getInstance().getDBCon();
 	}
 
 	@Override

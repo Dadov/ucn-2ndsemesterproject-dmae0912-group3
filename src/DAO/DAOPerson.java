@@ -3,67 +3,59 @@ package DAO;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-import Models.Room;
-import Models.RoomType;
+import Models.Person;
 
-public class DAORoom implements IFDAORoom {
+public class DAOPerson implements IFDAOPerson {
 
-	public DAORoom() {
+	public DAOPerson() {
 		// TODO con = DBConnection.getInstance().getDBCon();
 	}
 
 	@Override
-	public Room getRoom(int number) {
+	public Person getPerson(int ID) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Room> getAllRooms() {
+	public ArrayList<Person> getAllPersons() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Room> findFreeRooms(String startDate, String endDate,
-			Enum<RoomType> roomType) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int insert(Room room) {
+	public int insert(Person Person) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public int update(Room room) {
+	public int update(Person Person) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public int delete(int number) {
-		// TODO Auto-generated method stub
+	public int delete(int ID) {
+		// TODO con = DBConnection.getInstance().getDBCon();
 		return 0;
 	}
 
 	@SuppressWarnings("unused")
-	private Room singleWhere(String wClause, boolean retrieveAssociation) {
+	private Person singleWhere(String wClause, boolean retrieveAssociation) {
 		// TODO
 		return null;
 	}
 
 	@SuppressWarnings("unused")
-	private ArrayList<Room> miscWhere(String wClause,
+	private ArrayList<Person> miscWhere(String wClause,
 			boolean retrieveAssociation) {
 		// TODO
 		return null;
 	}
 
 	@SuppressWarnings("unused")
-	private Room buildRoom(ResultSet results) {
+	private Person buildPerson(ResultSet results) {
 		// TODO
 		return null;
 	}
