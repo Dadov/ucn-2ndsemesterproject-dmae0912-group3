@@ -1,4 +1,4 @@
-use Morocco;
+USE Morocco;
 
 CREATE TABLE Location (
     ZIP varchar(255) not null,
