@@ -12,13 +12,13 @@ public class DAOActivity implements IFDAOActivity {
 	}
 
 	@Override
-	public Activity getActivity(int ID) {
+	public Activity getActivity(int ID, boolean retrieveAssociation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Activity> getAllActivities() {
+	public ArrayList<Activity> getAllActivities(boolean retrieveAssociation) {
 		// TODO Auto-generated method stub
 		return null;
 	}

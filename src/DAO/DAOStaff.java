@@ -12,13 +12,13 @@ public class DAOStaff implements IFDAOStaff {
 	}
 
 	@Override
-	public Staff getStaff(int ID) {
+	public Staff getStaff(int ID, boolean retrieveAssociation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Staff> getAllStaff() {
+	public ArrayList<Staff> getAllStaff(boolean retrieveAssociation) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -6,9 +6,9 @@ import Models.Person;
 
 public interface IFDAOPerson {
 
-	public Person getPerson(int ID);
+	public Person getPerson(int ID, boolean retrieveAssociation);
 
-	public ArrayList<Person> getAllPersons();
+	public ArrayList<Person> getAllPersons(boolean retrieveAssociation);
 
 	public int insert(Person Person);
 

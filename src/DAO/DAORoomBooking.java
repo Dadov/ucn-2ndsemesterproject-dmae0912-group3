@@ -12,13 +12,13 @@ public class DAORoomBooking implements IFDAORoomBooking {
 	}
 
 	@Override
-	public RoomBooking getRoomBooking(int id) {
+	public RoomBooking getRoomBooking(int id, boolean retrieveAssociation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<RoomBooking> getAllRoomBookings() {
+	public ArrayList<RoomBooking> getAllRoomBookings(boolean retrieveAssociation) {
 		// TODO Auto-generated method stub
 		return null;
 	}

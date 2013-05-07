@@ -12,13 +12,14 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 	}
 
 	@Override
-	public ActivityBooking getActivityBookig(int ID) {
+	public ActivityBooking getActivityBookig(int ID, boolean retrieveAssociation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<ActivityBooking> getAllActivityBookings() {
+	public ArrayList<ActivityBooking> getAllActivityBookings(
+			boolean retrieveAssociation) {
 		// TODO Auto-generated method stub
 		return null;
 	}

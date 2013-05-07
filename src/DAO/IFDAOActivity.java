@@ -6,9 +6,9 @@ import Models.Activity;
 
 public interface IFDAOActivity {
 
-	public Activity getActivity(int ID);
+	public Activity getActivity(int ID, boolean retrieveAssociation);
 
-	public ArrayList<Activity> getAllActivities();
+	public ArrayList<Activity> getAllActivities(boolean retrieveAssociation);
 
 	public int insert(Activity activity);
 

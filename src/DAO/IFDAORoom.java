@@ -7,9 +7,9 @@ import Models.RoomType;
 
 public interface IFDAORoom {
 
-	public Room getRoom(int number);
+	public Room getRoom(int number, boolean retrieveAssociation);
 
-	public ArrayList<Room> getAllRooms();
+	public ArrayList<Room> getAllRooms(boolean retrieveAssociation);
 
 	// find free rooms on given date period and filter by type
 	// should filtering by type be optional?

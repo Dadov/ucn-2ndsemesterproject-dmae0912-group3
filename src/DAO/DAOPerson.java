@@ -12,13 +12,13 @@ public class DAOPerson implements IFDAOPerson {
 	}
 
 	@Override
-	public Person getPerson(int ID) {
+	public Person getPerson(int ID, boolean retrieveAssociation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Person> getAllPersons() {
+	public ArrayList<Person> getAllPersons(boolean retrieveAssociation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
