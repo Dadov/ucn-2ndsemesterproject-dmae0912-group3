@@ -16,6 +16,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import Models.Room;
+
 // TODO probably delete mockito import
 
 public class DAORoomTest {
@@ -61,7 +62,7 @@ public class DAORoomTest {
 		daoRoom = new DAORoom();
 
 		// no need for mocks, using data from database
-		ArrayList<Room> rooms = daoRoom.getAllRooms();
+		ArrayList<Room> rooms = daoRoom.getAllRooms(false);
 		room = rooms.get(rooms.lastIndexOf(room));
 
 		try {
@@ -72,10 +73,10 @@ public class DAORoomTest {
 			// correct/expected SQL statement
 			// have to know (write) each SQL statement expected before coding
 			// DAO part
-			assertEquals(null, daoRoom.getRoom(room.getNumber()));
+			assertEquals(null, daoRoom.getRoom(room.getNumber(), false));
 
 			daoRoom.update(null);
-			assertEquals(null, daoRoom.getRoom(0));
+			assertEquals(null, daoRoom.getRoom(0, false));
 
 			daoRoom.delete(0);
 			assertNull(daoRoom.delete(0));

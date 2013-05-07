@@ -43,14 +43,14 @@ public class RoomsCtr {
 	// finds a booking by id
 	public RoomBooking findBooking(int id) {
 		IFDAORoomBooking daoBooking = new DAORoomBooking();
-		return daoBooking.getRoomBooking(id);
+		return daoBooking.getRoomBooking(id, false);
 	}
 
 	// retrieves all bookings
 	public ArrayList<RoomBooking> getAllBookings() {
 		IFDAORoomBooking daoBooking = new DAORoomBooking();
 		ArrayList<RoomBooking> allBookings = new ArrayList<RoomBooking>();
-		allBookings = daoBooking.getAllRoomBookings();
+		allBookings = daoBooking.getAllRoomBookings(false);
 		return allBookings;
 	}
 
