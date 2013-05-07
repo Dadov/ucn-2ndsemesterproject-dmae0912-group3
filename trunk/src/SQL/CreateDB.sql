@@ -1,5 +1,8 @@
 USE Morocco;
 
+/* setting date format for normal people, not americans */
+SET DATEFORMAT dmy;
+
 CREATE TABLE Location (
     ZIP varchar(255) not null,
     country varchar(255) not null,
