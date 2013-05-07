@@ -69,18 +69,26 @@ public class DAORoom implements IFDAORoom {
 
 	@Override
 	public int update(Room room) {
-		// TODO Auto-generated method stub
-		// not needed:
-		// Room roomObj = room;
+		Room roomObj = room;
 		int rc = -1;
 
-		// update room where number = room.getNumber() , should be like that ?!
-		String query = "UPDATE ROOM SET " + "roomType = '" + room.getRoomType()
-				+ "'," + "price = " + room.getPrice() + "," + "note = '"
-				+ room.getNote() + "';";
+		String query = "UPDATE ROOM SET " + "roomType = '"
+				+ roomObj.getRoomType() + "'," + "price = "
+				+ roomObj.getPrice() + "," + "note = '" + roomObj.getNote()
+				+ "' WHERE number = " + roomObj.getNumber() + ";";
 		System.out.println("Update query :" + query);
 
-		return 0;
+		try {
+			Statement stmt = con.createStatement();
+			stmt.setQueryTimeout(5);
+			rc = stmt.executeUpdate(query);
+			stmt.close();
+		} catch (Exception e) {
+			System.out.println("Room was not updated");
+			e.getMessage();
+		}
+
+		return rc;
 	}
 
 	@Override
@@ -120,7 +128,9 @@ public class DAORoom implements IFDAORoom {
 				stmt.close();
 
 				if (retrieveAssociation) {
-					// TODO association with RoomBooking
+					// TODO or not TODO,association with RoomBooking
+					System.out
+							.println("There is no association to be retreived.");
 				}
 
 			} else {
@@ -154,7 +164,9 @@ public class DAORoom implements IFDAORoom {
 			stmt.close();
 
 			if (retrieveAssociation) {
-				// TODO association with RoomBooking
+				// TODO or not TODO,association with RoomBookingSystem.out
+				System.out.println("There is no association to be retreived.");
+
 			}
 
 		} catch (Exception e) {
@@ -165,7 +177,6 @@ public class DAORoom implements IFDAORoom {
 	}
 
 	private Room buildRoom(ResultSet results) {
-		// TODO test
 		Room roomObj = new Room();
 		try {
 			roomObj.setNumber(results.getInt("number"));

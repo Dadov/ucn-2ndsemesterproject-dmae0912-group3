@@ -1,6 +1,4 @@
-select number,count(*)
-from ROOM
-where roomType = 'type' and number in (select roomNumber
+SELECT * FROM Room WHERE roomType = 'type' and number in (select roomNumber
 					from RoomsBooked
 					where roomBookingID not in( select bookingID 
 								   from RoomBooking
