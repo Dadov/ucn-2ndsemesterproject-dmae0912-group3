@@ -12,13 +12,13 @@ public class DAOAgency implements IFDAOAgency {
 	}
 
 	@Override
-	public Agency getAgency(int ID) {
+	public Agency getAgency(int ID, boolean retrieveAssociation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Agency> getAllAgencies() {
+	public ArrayList<Agency> getAllAgencies(boolean retrieveAssociation) {
 		// TODO Auto-generated method stub
 		return null;
 	}

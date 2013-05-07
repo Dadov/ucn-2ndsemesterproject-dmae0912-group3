@@ -12,13 +12,13 @@ public class DAOCustomer implements IFDAOCustomer {
 	}
 
 	@Override
-	public Customer getCustomer(int ID) {
+	public Customer getCustomer(int ID, boolean retrieveAssociation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Customer> getAllCustomers() {
+	public ArrayList<Customer> getAllCustomers(boolean retrieveAssociation) {
 		// TODO Auto-generated method stub
 		return null;
 	}

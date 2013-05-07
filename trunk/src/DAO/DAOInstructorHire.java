@@ -12,13 +12,14 @@ public class DAOInstructorHire implements IFDAOInstructorHire {
 	}
 
 	@Override
-	public InstructorHire getInstructorHire(int ID) {
+	public InstructorHire getInstructorHire(int ID, boolean retrieveAssociation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<InstructorHire> getInstructorHires() {
+	public ArrayList<InstructorHire> getInstructorHires(
+			boolean retrieveAssociation) {
 		// TODO Auto-generated method stub
 		return null;
 	}

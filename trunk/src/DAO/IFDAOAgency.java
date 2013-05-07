@@ -6,9 +6,9 @@ import Models.Agency;
 
 public interface IFDAOAgency {
 
-	public Agency getAgency(int ID);
+	public Agency getAgency(int ID, boolean retrieveAssociation);
 
-	public ArrayList<Agency> getAllAgencies();
+	public ArrayList<Agency> getAllAgencies(boolean retrieveAssociation);
 
 	public int insert(Agency agency);
 

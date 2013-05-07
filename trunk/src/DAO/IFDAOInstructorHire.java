@@ -6,9 +6,10 @@ import Models.InstructorHire;
 
 public interface IFDAOInstructorHire {
 
-	public InstructorHire getInstructorHire(int ID);
+	public InstructorHire getInstructorHire(int ID, boolean retrieveAssociation);
 
-	public ArrayList<InstructorHire> getInstructorHires();
+	public ArrayList<InstructorHire> getInstructorHires(
+			boolean retrieveAssociation);
 
 	public int insert(InstructorHire InstructorHire);
 

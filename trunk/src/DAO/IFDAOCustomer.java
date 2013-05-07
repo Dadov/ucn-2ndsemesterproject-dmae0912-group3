@@ -6,9 +6,9 @@ import Models.Customer;
 
 public interface IFDAOCustomer {
 
-	public Customer getCustomer(int ID);
+	public Customer getCustomer(int ID, boolean retrieveAssociation);
 
-	public ArrayList<Customer> getAllCustomers();
+	public ArrayList<Customer> getAllCustomers(boolean retrieveAssociation);
 
 	public int insert(Customer Customer);
 
