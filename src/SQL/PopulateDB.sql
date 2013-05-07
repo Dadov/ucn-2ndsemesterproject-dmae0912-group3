@@ -8,7 +8,7 @@ USE Morocco;
 *	Staff
 */
 
-USE Morocco;
+SET DATEFORMAT dmy;
 
 /* Inserting 64 Single rooms and 40 Family rooms */
 INSERT INTO Room(roomType, price, note) VALUES('Single', 60, '');
