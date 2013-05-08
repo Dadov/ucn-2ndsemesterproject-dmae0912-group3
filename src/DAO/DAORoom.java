@@ -17,7 +17,7 @@ public class DAORoom implements IFDAORoom {
 
 	@Override
 	public Room getRoom(int number, boolean retrieveAssociation) {
-		String wClause = " number = '" + number + "'";
+		String wClause = " WHERE number = '" + number + "'";
 		return singleWhere(wClause, retrieveAssociation);
 	}
 
