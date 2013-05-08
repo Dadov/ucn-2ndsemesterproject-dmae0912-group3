@@ -26,23 +26,22 @@ public class DAORoom implements IFDAORoom {
 		return miscWhere("", retrieveAssociation);
 	}
 
+	// takes roomType as argument but it's commented out
+	// might be a good idea to return all Rooms and filter it in GUI
 	@Override
 	public ArrayList<Room> findFreeRooms(String startDate, String endDate,
 			Enum<RoomType> roomType) {
-		// TODO Auto-generated method stub
-		int rc = -1;
+		// TODO not tested, yet
 
 		// constructing fancy query for retrieving only free rooms
-		// look at 'roomCheck.sql' at 2nd Semester Project\03.Design &
-		// Implementation\05. Random
-		String query = "";
-		/*
-		 * where roomType = 'type' and number in (select roomNumber from
-		 * RoomsBooked where roomBookingID not in( select bookingID from
-		 * RoomBooking where dateStart <= DATE 'newEndDateJava' and dateEnd>=
-		 * DATE 'newStartDateJava' or dateEnd >= DATE 'newStartDateJava' ));
-		 */
-		return null;
+		String query = "SET DATEFORMAT dmy; "
+				+ "SELECT * FROM Room WHERE /* roomType = 'Family' and */ number not in ("
+				+ "SELECT roomNumber FROM RoomsBooked WHERE roomBookingID in ("
+				+ "SELECT bookingID FROM RoomBooking WHERE dateStart >= '"
+				+ startDate + "' and dateEnd <=  '" + endDate + "'));";
+		System.out.println(query);
+
+		return miscWhere(query, false);
 	}
 
 	@Override
@@ -180,7 +179,7 @@ public class DAORoom implements IFDAORoom {
 		Room roomObj = new Room();
 		try {
 			roomObj.setNumber(results.getInt("number"));
-			roomObj.setRoomType(RoomType.valueOf(results.getString("type")));
+			roomObj.setRoomType(RoomType.valueOf(results.getString("roomType")));
 			roomObj.setPrice(results.getDouble("price"));
 			roomObj.setNote(results.getString("note"));
 		} catch (Exception e) {
