@@ -5,7 +5,7 @@ public class ActivityTime {
 	private String date;
 	private String time;
 	
-	ActivityTime() {
+	public ActivityTime() {
 		
 	}
 
