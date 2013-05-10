@@ -11,7 +11,7 @@ public class ActivityBooking {
 	private boolean openActivity;
 	private boolean instructorHired;
 
-	ActivityBooking() {
+	public ActivityBooking() {
 
 	}
 
