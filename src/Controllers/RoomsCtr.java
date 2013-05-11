@@ -131,5 +131,6 @@ public class RoomsCtr {
 		IFDAORoom daoRoom = new DAORoom();
 		return daoRoom.delete(id);
 	}
+	//METHODS FOR ROOM END
 
 }
