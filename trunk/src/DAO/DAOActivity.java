@@ -1,37 +1,66 @@
 package DAO;
 
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.ArrayList;
-
-import Models.Activity;
+import Models.*;
 
 public class DAOActivity implements IFDAOActivity {
+	
+	private Connection con; // connection to the database
 
+	// creates a new instance of DAOActivity
 	public DAOActivity() {
-		// TODO con = DBConnection.getInstance().getDBCon();
+		con = DBConnection.getInstance().getDBCon();
 	}
 
+	// gets one activity, given the ID
 	@Override
 	public Activity getActivity(int ID, boolean retrieveAssociation) {
-		// TODO Auto-generated method stub
-		return null;
+		String wClause = " activityID = " + ID;
+		return singleWhere(wClause, retrieveAssociation);
 	}
 
+	// gets all activities
 	@Override
 	public ArrayList<Activity> getAllActivities(boolean retrieveAssociation) {
-		// TODO Auto-generated method stub
-		return null;
+		return miscWhere("", retrieveAssociation);
 	}
 
+	// inserts a new activity
 	@Override
 	public int insert(Activity activity) {
-		// TODO Auto-generated method stub
-		return 0;
+		// row count is set to -1
+		int rc = -1;
+		// creates query
+		String query = "SET DATEFORMAT dmy;" +
+				"INSERT INTO Activity(activityID, activityType, capacity, instructorAvailability) VALUES(" +
+				activity.getID() + ",'" +
+				activity.getActivityType() + "'," +
+				activity.getCapacity() + ",'" +
+				activity.getActivityInstructors() + "',";
+		System.out.println("Insert query : " + query);
+		// creates statement and executes query
+		try {
+			Statement stmt = con.createStatement();
+			stmt.setQueryTimeout(5);
+			rc = stmt.executeUpdate(query);
+			stmt.close();
+			
+		}
+		catch(Exception e) {
+			System.out.println("Activity was not inserted into the database");
+			e.getMessage();
+		}
+		return rc;
 	}
 
 	@Override
 	public int update(Activity activity) {
-		// TODO Auto-generated method stub
+		// row count set to -1
+		int rc = -1;
+		// creates query
+		String query = "SET DATEFORMAT dmy;" +
+				"UPDATE ACTIVITY SET " +
 		return 0;
 	}
 
