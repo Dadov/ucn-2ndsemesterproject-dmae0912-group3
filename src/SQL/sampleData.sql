@@ -14,7 +14,7 @@ INSERT INTO Customer(customerID, registrationDate, noOfStays)
 	VALUES((SELECT IDENT_CURRENT('Person')), '30-12-2013', 0);
 	
 INSERT INTO Staff(staffID, staffRank, salary, staffType)
-	VALUES((SELECT IDENT_CURRENT('Person')), 15000, Instructor);
+	VALUES((SELECT IDENT_CURRENT('Person')), 'Employee', 15000, 'Instructor');
 
 INSERT INTO RoomBooking(customerID, dateStart, dateEnd, dateBooked)
 	VALUES((SELECT IDENT_CURRENT('Person')), '13-08-2014', '24-08-2014', '05-06-2014');
