@@ -52,6 +52,30 @@ public class DAOAgency implements IFDAOAgency {
 		}
 		return rc;
 	}
+	
+	// inserts customers in the ProvidedCustomers table
+	public int insertCustomers(ArrayList<Customer> customers, int id) {
+		int rc = -1;
+		if (id == -1)
+			id = getLastInsertedID();
+		String query = "SET DATEFORMAT dmy;";
+		for (Customer customer : customers) {
+			query = query + "INSERT INTO ProvidedCustomers(agencyID, customerID) VALUES(" +
+			id + "," +
+			customer.getPersonID() + ");";
+		}
+		try {
+			Statement stmt = con.createStatement();
+			stmt.setQueryTimeout(5);
+			rc = stmt.executeUpdate(query);
+			stmt.close();
+		}
+		catch (SQLException e) {
+			System.out.println("Customer was not inserted in ProvidedCustomers");
+		}
+		return rc;
+		
+	}
 
 	// updates an agency
 	@Override
@@ -101,6 +125,24 @@ public class DAOAgency implements IFDAOAgency {
 		return rc;
 	}
 
+	// deletes all the customers from ProvidedCustomers, given the agencyID
+	public int deleteCustomers(int id) {
+		int rc = -1;
+		String query = "DELETE FROM ProvidedCustomers WHERE agencyID = " + id + ";";
+		System.out.println("Delete query : " + query);
+		try {
+			Statement stmt = con.createStatement();
+			stmt.setQueryTimeout(5);
+			rc = stmt.executeUpdate(query);
+			stmt.close();
+		}
+		catch (Exception e) {
+			System.out.println("Failed to delete provided customers");
+			e.getMessage();
+		}
+		return rc;
+	}
+	
 	// used when only one agency is to be selected
 	@SuppressWarnings("unused")
 	private Agency singleWhere(String wClause, boolean retrieveAssociation) {
@@ -115,13 +157,11 @@ public class DAOAgency implements IFDAOAgency {
 			results = stmt.executeQuery(query);
 			if (results.next()) { // check whether there are any agencies in the database
 				agency = buildAgency(results);
+				//inserts provided customers into Agency object
+				agency.setProvidedCustomers(getProvidedCustomers(wClause,false));
 				stmt.close();
 				if (retrieveAssociation) {
-					// TODO: IFDAOProvidedCustomers, DAOProvidedCustomers
-					//IFDAOProvidedCustomers daoProvidedCustomers = new DAOProvidedCustomers();
-					//int agencyID = agency.getID();
-					//ArrayList<Customer> customers = daoProvidedCustomers.getAllProvidedCustomers(agencyID,false);
-					//agency.setProvidedCustomers(customers);
+					
 				}
 			
 			}
@@ -149,16 +189,14 @@ public class DAOAgency implements IFDAOAgency {
 			while (results.next()) {
 				Agency agency = new Agency();
 				agency = buildAgency(results);
+				//inserts provided customers into Agency object
+				agency.setProvidedCustomers(getProvidedCustomers(wClause,false));
 				list.add(agency);
 			}
 			stmt.close();
 			if (retrieveAssociation) {
 				for (Agency agency : list) {
-					// TODO: IFDAOProvidedCustomers, DAOProvidedCustomers
-					//IFDAOProvidedCustomers daoProvidedCustomers = new DAOProvidedCustomers();
-					//int agencyID = agency.getID();
-					//ArrayList<Customer> customers = daoProvidedCustomers.getAllProvidedCustomers(agencyID,false);
-					//agency.setProvidedCustomers(customers);
+					
 				}
 			}
 		}
@@ -167,6 +205,30 @@ public class DAOAgency implements IFDAOAgency {
 			e.printStackTrace();
 		}
 		return list;
+	}
+	
+	// returns a list of the customers provided by an agency
+	private ArrayList<Customer> getProvidedCustomers (String wClause, boolean retrieveAssociation) {
+		ResultSet results;
+		String query = buildCustomersQuery(wClause);
+		ArrayList<Customer> providedCustomers = new ArrayList<Customer>();
+		Customer customer = new Customer();
+		IFDAOCustomer daoCustomer = new DAOCustomer();
+		try {
+			Statement stmt = con.createStatement();
+			stmt.setQueryTimeout(5);
+			results = stmt.executeQuery(query);
+			while(results.next()) {
+				customer = daoCustomer.getCustomer(results.getInt("customerID"),false);
+				providedCustomers.add(customer);
+			}
+			stmt.close();
+		}
+		catch (Exception e) {
+			System.out.println("Query exception : " + e);
+			e.printStackTrace();
+		}
+		return providedCustomers;
 	}
 
 	// builds an Agency object
@@ -187,13 +249,42 @@ public class DAOAgency implements IFDAOAgency {
 		return agency;
 	}
 
-	// builds a query
+	// builds a query for retrieving information from the Agency table
 	@SuppressWarnings("unused")
 	private String buildQuery(String wClause) {
-		String query = "SELECT * FROM Agency";
+		String query = "SET DATEFORMAT dmy;" + "SELECT * FROM Agency";
 		if (wClause.length() > 0)
 			query = query + " WHERE " + wClause;
 		return query;
 	}
 
+	// builds a query for retrieving the customers a specific agency provides
+	private String buildCustomersQuery(String wClause) {
+		String query = "SET DATEFORMAT dmy;" + " SELECT customerID FROM ProvidedCustomers";
+		if (wClause.length() > 0)
+			query = query + "WHERE" + wClause;
+		return query;
+	}
+	
+	// retrieves the last inserted ID 
+	public int getLastInsertedID() {
+		ResultSet results;
+		String query = "SELECT IDENT_CURRENT('Agency') AS agencyID;";
+		int id = 0;
+		try {
+			Statement stmt = con.createStatement();
+			stmt.setQueryTimeout(5);
+			results = stmt.executeQuery(query);
+			if (results.next()) {
+				id = results.getInt("agencyID");
+			}
+			stmt.close();
+		}
+		catch (Exception e) {
+			System.out.println("Failed in getting last inserted ID");
+			e.getMessage();
+		}
+		return id;
+	}
+	
 }
