@@ -2,11 +2,14 @@ package Controllers;
 
 import java.util.ArrayList;
 
+import DAO.DAORoom;
 import DAO.DAORoomBooking;
+import DAO.IFDAORoom;
 import DAO.IFDAORoomBooking;
 import Models.Customer;
 import Models.Room;
 import Models.RoomBooking;
+import Models.RoomType;
 
 public class RoomsCtr {
 
@@ -14,7 +17,7 @@ public class RoomsCtr {
 	public RoomsCtr() {
 
 	}
-
+	//METHODS FOR ROOM BOOKING
 	// starts a new booking
 	public void newBooking(Customer customer, ArrayList<Room> rooms,
 			String bookDate, String startDate, String endDate) {
@@ -73,6 +76,60 @@ public class RoomsCtr {
 	public int deleteBooking(int id) {
 		IFDAORoomBooking daoBooking = new DAORoomBooking();
 		return daoBooking.delete(id);
+	}
+	//METHODS FOR ROOM BOOKING END
+	
+	//METHODS FOR ROOM
+	// starts a new booking
+	public void newRoom(RoomType roomType, double price, String note) {
+		Room room = new Room();
+		room.getNumber();
+		room.setRoomType(roomType);
+		room.setPrice(price);
+		room.setNote(note);
+
+		try {
+			// TODO DBConnection.startTransaction();
+			IFDAORoom daoRoom = new DAORoom();
+			daoRoom.insert(room);
+			// TODO DBConnection.commitTransaction();
+		} catch (Exception e) {
+			System.out.println("Error while creating room in RoomCtr");
+			// TODO DBConnection.rollbackTransaction();
+			e.getMessage();
+			e.printStackTrace();
+		}
+	}
+
+	// finds a room by id
+	public Room findRoom(int number) {
+		IFDAORoom daoRoom = new DAORoom();
+		return daoRoom.getRoom(number, false);
+	}
+
+	// retrieves all rooms
+	public ArrayList<Room> getAllrooms() {
+		IFDAORoom daoRoom = new DAORoom();
+		ArrayList<Room> allRooms = new ArrayList<Room>();
+		allRooms = daoRoom.getAllRooms(false);
+		return allRooms;
+	}
+
+	// updates a Room
+	public int updateRoom(int newId, RoomType roomType, double price, String note) {
+		IFDAORoom daoRoom = new DAORoom();
+		Room room = new Room();
+		room.setNumber(newId);
+		room.setRoomType(roomType);
+		room.setPrice(price);
+		room.setNote(note);
+		return daoRoom.update(room);
+	}
+
+	// deletes a Room
+	public int deleteRoom(int id) {
+		IFDAORoom daoRoom = new DAORoom();
+		return daoRoom.delete(id);
 	}
 
 }

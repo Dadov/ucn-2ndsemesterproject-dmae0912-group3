@@ -9,7 +9,7 @@ public class Activity {
 	private int capacity;
 	private ArrayList<Instructor> activityInstructors;
 
-	Activity() {
+	public Activity() {
 
 	}
 
