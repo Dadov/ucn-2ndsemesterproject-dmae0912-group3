@@ -156,7 +156,7 @@ public class DAOInstructorHire implements IFDAOInstructorHire {
                 	
                 	IFDAOActivityBooking dbActiv = new DAOActivityBooking();
                 	int actID = instructorHire.getActivityBooking().getId();
-                	ActivityBooking activityBooking = dbActiv.getActivityBookig(actID, false);
+                	ActivityBooking activityBooking = dbActiv.getActivityBooking(actID, false);
                 	instructorHire.setActivityBooking(activityBooking);
                 }
 			} else { //nothing was found
@@ -204,7 +204,7 @@ public class DAOInstructorHire implements IFDAOInstructorHire {
                 	
                 	IFDAOActivityBooking dbActiv = new DAOActivityBooking();
                 	int actID = instructorHire.getActivityBooking().getId();
-                	ActivityBooking activityBooking = dbActiv.getActivityBookig(actID, false);
+                	ActivityBooking activityBooking = dbActiv.getActivityBooking(actID, false);
                 	instructorHire1.setActivityBooking(activityBooking);
 				}
 	        }
