@@ -33,11 +33,10 @@ public class DAOActivity implements IFDAOActivity {
 		int rc = -1;
 		// creates query
 		String query = "SET DATEFORMAT dmy;" +
-				"INSERT INTO Activity(activityID, activityType, capacity, instructorAvailability) VALUES(" +
+				"INSERT INTO Activity(activityID, activityType, capacity) VALUES(" +
 				activity.getID() + ",'" +
 				activity.getActivityType() + "'," +
-				activity.getCapacity() + ",'" +
-				activity.getActivityInstructors() + "',";
+				activity.getCapacity() + ",'";
 		System.out.println("Insert query : " + query);
 		// creates statement and executes query
 		try {
@@ -53,7 +52,31 @@ public class DAOActivity implements IFDAOActivity {
 		}
 		return rc;
 	}
+	
+	// inserts instructor in the ActivityInstructors table
+	public int insertInstructor(ArrayList<Instructor> instructors, int id) {
+		int rc = -1;
+		if (id == -1)
+			id = getLastInsertedID();
+		String query = "SET DATEFORMAT dmy;";
+		for (Instructor instructor : instructors) {
+			query = query + "INSERT INTO ActivityInstructors(activityBookingID, customerID) VALUES(" +
+			id + "," +
+			instructor.getPersonID() + ");";
+		}
+		try {
+			Statement stmt = con.createStatement();
+			stmt.setQueryTimeout(5);
+			rc = stmt.executeUpdate(query);
+			stmt.close();
+		}
+		catch (SQLException e) {
+			System.out.println("Instructor was not inserted into ActivityInstructors");
+		}
+		return rc;
+	}
 
+	// updates an activity
 	@Override
 	public int update(Activity activity) {
 		// row count set to -1
@@ -61,38 +84,203 @@ public class DAOActivity implements IFDAOActivity {
 		// creates query
 		String query = "SET DATEFORMAT dmy;" +
 				"UPDATE ACTIVITY SET " +
-		return 0;
+				"activityType = " + activity.getActivityType() + "';" +
+				"capacity = " + activity.getCapacity() + ",'" +
+				"WHERE activityID = " + activity.getID() + ",'";
+		System.out.println("Update query : " + query);
+		// creates statement and executes query
+		try {
+			Statement stmt = con.createStatement();
+			stmt.setQueryTimeout(5);
+			rc = stmt.executeUpdate(query);
+			stmt.close();
+		}
+		catch (Exception e) {
+			System.out.println("Acivity update failed.");
+			e.getMessage();
+		}
+		return rc;
 	}
 
+	// deletes an agency
 	@Override
 	public int delete(int ID) {
-		// TODO Auto-generated method stub
-		return 0;
+		// row count set to -1
+		int rc = -1;
+		// creates query
+		String query = "DELETE FROM ACTIVITY WHERE activityID = " + ID + ",'";
+		System.out.println("Delete query :" + query);
+		// creates statement and executes query
+		try {
+			Statement stmt = con.createStatement();
+			stmt.setQueryTimeout(5);
+			rc = stmt.executeUpdate(query);
+			stmt.close();
+		}
+		catch (Exception e) {
+			System.out.println("Activity was not deleted");
+			e.getMessage();
+		}
+		return rc;
+	}
+	
+	// deletes all instructors from AcitivtyInstructors, given the activityID
+	public int deleteInstructors(int id) {
+		int rc = -1;
+		String query = "DELETE FROM ActivityInstructors WHERE activityID = " + id + ";";
+		System.out.println("Delete query : " + query);
+		try {
+			Statement stmt = con.createStatement();
+			stmt.setQueryTimeout(5);
+			rc = stmt.executeUpdate(query);
+			stmt.close();
+		}
+		catch (Exception e) {
+			System.out.println("Failed to delete provided instructors");
+			e.getMessage();
+		}
+		return rc;
 	}
 
+	// used only when one activity is to be selected
 	@SuppressWarnings("unused")
 	private Activity singleWhere(String wClause, boolean retrieveAssociation) {
-		// TODO
-		return null;
+		ResultSet results;
+		Activity activity = new Activity();
+		String query = buildQuery(wClause);
+		System.out.println(query);
+		// reads the activity from the database
+		try {
+			Statement stmt = con.createStatement();
+			stmt.setQueryTimeout(5);
+			results = stmt.executeQuery(query);
+			if (results.next()) { // checks whether there are any activities in the database
+				activity = buildActivity(results);
+				// inserts provided instructors into the Activity object
+				activity.setActivityInstructors(getActivityInstructors(wClause,false));
+				stmt.close();
+				if (retrieveAssociation) {
+				}
+			}
+			else { // no activity found
+				activity = null;
+			}
+		}
+		catch (Exception e) {
+			System.out.println("Query exception: " + e);
+		}
+		return activity;
 	}
 
+	//used when more than one activity is to be selected
 	@SuppressWarnings("unused")
-	private ArrayList<Activity> miscWhere(String wClause,
-			boolean retrieveAssociation) {
-		// TODO
-		return null;
+	private ArrayList<Activity> miscWhere(String wClause, boolean retrieveAssociation) {
+		ResultSet results;
+		ArrayList<Activity> list = new ArrayList<Activity>();
+		String query = buildQuery(wClause);
+		// reads the activity from the database
+		try {
+			Statement stmt = con.createStatement();
+			stmt.setQueryTimeout(5);
+			results = stmt.executeQuery(query);
+			while (results.next()) {
+				Activity activity = new Activity();
+				activity = buildActivity(results);
+				// inserts provided instructors into Activity object
+				activity.setActivityInstructors(getActivityInstructors(wClause,false));
+				list.add(activity);
+			}
+			stmt.close();
+			if (retrieveAssociation) {
+				for (Activity activity : list) {
+				}
+			}
+		}
+		catch (Exception e) {
+			System.out.println("Query exception : " + e);
+			e.printStackTrace();
+		}
+		return list;
 	}
-
+	
+	// returns a list of the instructors provided by the activity
+	private ArrayList<Instructor> getActivityInstructors (String wClause, boolean retrieveAssociation) {
+		ResultSet results;
+		String query = buildInstructorsQuery(wClause);
+		ArrayList<Instructor> activityInstructors = new ArrayList<Instructor>();
+		Instructor instructor = new Instructor();
+		IFDAOStaff daoStaff = new DAOStaff();
+		try {
+			Statement stmt = con.createStatement();
+			stmt.setQueryTimeout(5);
+			results = stmt.executeQuery(query);
+			while(results.next()) {
+				instructor = daoStaff.getStaff(results.getInt("instructorID"),false);
+				activityInstructors.add(instructor);
+			}
+			stmt.close();
+		}
+		catch (Exception e) {
+			System.out.println("Query exception : " + e);
+			e.printStackTrace();
+		}
+		return activityInstructors;
+	}
+	
+	// builds an Activity object
 	@SuppressWarnings("unused")
 	private Activity buildActivity(ResultSet results) {
-		// TODO
-		return null;
+		Activity activity = new Activity();
+		ArrayList<Instructor> instructors = new ArrayList<Instructor>();
+		activity.setActivityInstructors(instructors);
+		// fills the Activity object with date from the database
+		try {
+			activity.setID(results.getInt("activityID"));
+			activity.setActivityType(ActivityType.valueOf(results.getString("activityType")));
+			activity.setCapacity(results.getInt("capacity"));
+		}
+		catch (Exception e) {
+			System.out.println("Error in building the Activity object");
+		}
+		return activity;
 	}
 
+	// builds a query for retrieving information from the Activity table
 	@SuppressWarnings("unused")
 	private String buildQuery(String wClause) {
-		// TODO
-		return "";
+		String query = "SET DATEFORMAT dmy;" + "SELECT * FROM Activity";
+		if (wClause.length() > 0)
+			query = query + " WHERE " + wClause;
+		return query;
+	}
+	
+	// builds a query for retrieving the instructors a specific activity provides
+	private String buildInstructorsQuery(String wClause) {
+		String query = "SET DATEFORMAT dmy;" + " SELECT instructorID FROM ActivityInstructors";
+		if (wClause.length() > 0)
+			query = query + "WHERE" + wClause;
+		return query;
+	}
+	
+	//retrieves the last inserted ID
+	public int getLastInsertedID() {
+		ResultSet results;
+		String query = "SELECT IDENT_CURRENT('Activity') AS activityID;";
+		int id = 0;
+		try {
+			Statement stmt = con.createStatement();
+			stmt.setQueryTimeout(5);
+			results = stmt.executeQuery(query);
+			if (results.next()) {
+				id = results.getInt("activityID");
+			}
+			stmt.close();
+		}
+		catch (Exception e) {
+			System.out.println("Failed in getting last inserted ID");
+			e.getMessage();
+		}
+		return id;
 	}
 
 }
