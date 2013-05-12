@@ -60,7 +60,7 @@ public class DAOActivity implements IFDAOActivity {
 			id = getLastInsertedID();
 		String query = "SET DATEFORMAT dmy;";
 		for (Instructor instructor : instructors) {
-			query = query + "INSERT INTO ActivityInstructors(activityBookingID, customerID) VALUES(" +
+			query = query + "INSERT INTO ActivityInstructors(activityID, instructorID) VALUES(" +
 			id + "," +
 			instructor.getPersonID() + ");";
 		}
