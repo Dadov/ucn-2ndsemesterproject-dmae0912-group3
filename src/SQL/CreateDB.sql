@@ -113,11 +113,11 @@ CREATE TABLE ActivityBooking (
 );
 
 CREATE TABLE ActivityCustomers (
-    activityBookigID int not null,
+    activityBookingID int not null,
     customerID int not null,
-    UNIQUE ( activityBookigID, customerID ),
-    PRIMARY KEY ( activityBookigID, customerID ),
-    FOREIGN KEY ( activityBookigID ) REFERENCES ActivityBooking ( activityBookingID ),
+    UNIQUE ( activityBookingID, customerID ),
+    PRIMARY KEY ( activityBookingID, customerID ),
+    FOREIGN KEY ( activityBookingID ) REFERENCES ActivityBooking ( activityBookingID ),
     FOREIGN KEY ( customerID ) REFERENCES Customer ( customerID )
 );
 
