@@ -15,7 +15,7 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 	
 	// gets one activity booking given the ID
 	@Override
-	public ActivityBooking getActivityBookig(int ID, boolean retrieveAssociation) {
+	public ActivityBooking getActivityBooking(int ID, boolean retrieveAssociation) {
 		String wClause = " activityBookingID = " + ID;
 		return singleWhere(wClause, retrieveAssociation);
 	}
@@ -146,7 +146,7 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 	}
 	
 	// used when only one agency is to be selected
-	@SuppressWarnings("unused")
+
 	private ActivityBooking singleWhere(String wClause, boolean retrieveAssociation) {
 		ResultSet results;
 		ActivityBooking activityBooking = new ActivityBooking();
@@ -234,7 +234,6 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 	}
 
 	// builds an ActivityBooking object
-	@SuppressWarnings("unused")
 	private ActivityBooking buildActivityBooking(ResultSet results) {
 		ActivityBooking activityBooking = new ActivityBooking();
 		ArrayList<Customer> customers = new ArrayList<Customer>();
@@ -254,7 +253,6 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 	}
 
 	// builds a query for retrieving information from the ActivityBooking table
-	@SuppressWarnings("unused")
 	private String buildQuery(String wClause) {
 		String query = "SET DATEFORMAT dmy;" + "SELECT * FROM ActivityBooking";
 		if (wClause.length() > 0)
