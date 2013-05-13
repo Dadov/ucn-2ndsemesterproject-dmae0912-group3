@@ -143,7 +143,7 @@ public class ActivitiesCtr {
 		// starts a new booking
 				public void newActivity(ArrayList<Instructor> instructors, ActivityType activityType, int capacity) {
 					Activity activity = new Activity();
-					activity.getId();
+					activity.getID();
 					activity.setActivityInstructors(instructors);
 					activity.setActivityType(activityType);
 					activity.setCapacity(capacity);
@@ -180,7 +180,7 @@ public class ActivitiesCtr {
 				public int updateactivity(int newId, ArrayList<Instructor> instructors, ActivityType activityType, int capacity) {
 					IFDAOActivity daoActivity = new DAOActivity();
 					Activity activity = new Activity();
-					activity.setId(newId);
+					activity.setID(newId);
 					activity.setActivityInstructors(instructors);
 					activity.setActivityType(activityType);
 					activity.setCapacity(capacity);
