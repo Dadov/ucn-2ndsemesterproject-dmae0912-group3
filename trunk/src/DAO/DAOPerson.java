@@ -6,9 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import Models.InstructorHire;
 import Models.Person;
-import Models.RoomType;
 
 public class DAOPerson implements IFDAOPerson {
     
