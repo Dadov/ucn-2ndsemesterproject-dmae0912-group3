@@ -6,7 +6,7 @@ import Models.Customer;
 
 public interface IFDAOCustomer {
 
-	public Customer getCustomer(int ID, boolean retrieveAssociation);
+	public Customer getCustomer(int customerID, boolean retrieveAssociation);
 
 	public ArrayList<Customer> getAllCustomers(boolean retrieveAssociation);
 
@@ -14,5 +14,5 @@ public interface IFDAOCustomer {
 
 	public int update(Customer Customer);
 
-	public int delete(int ID);
+	public int delete(int customerID);
 }
