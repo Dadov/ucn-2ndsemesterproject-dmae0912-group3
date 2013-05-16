@@ -1,6 +1,5 @@
 package Models;
 
-import java.util.ArrayList;
 
 public class Instructor extends Staff {
 
@@ -9,15 +8,15 @@ public class Instructor extends Staff {
 	}
 
 	public Instructor(int personID, String CPR, String fname, String lname,
-			String country, String ZIP, String address, String email,
-			String password, double salary, ArrayList<Activity> activities) {
-		super(personID, CPR, fname, lname, country, ZIP, address, email,
+			String country, String ZIP, String city, String address,
+			String email, String password, double salary) {
+		super(personID, CPR, fname, lname, country, ZIP, city, address, email,
 				password, salary);
 	}
 
 	@Override
 	public String toString() {
-		return "Instructor []";
+		return super.toString() + "Instructor []";
 	}
 
 }

@@ -3,16 +3,16 @@ package Models;
 import java.util.ArrayList;
 
 public class RoomBooking {
-	
+
 	private int id;
 	private Customer customer;
 	private ArrayList<Room> roomsBooked;
 	private String dateBooked;
 	private String dateStart;
 	private String dateEnd;
-	
+
 	public RoomBooking() {
-		
+
 	}
 
 	public RoomBooking(int id, Customer customer, ArrayList<Room> roomsBooked,
@@ -79,5 +79,5 @@ public class RoomBooking {
 				+ ", roomsBooked=" + roomsBooked + ", dateBooked=" + dateBooked
 				+ ", dateStart=" + dateStart + ", dateEnd=" + dateEnd + "]";
 	}
-	
+
 }

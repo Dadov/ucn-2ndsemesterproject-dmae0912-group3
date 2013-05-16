@@ -8,6 +8,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+// import static org.mockito.Mockito.*;
+
 public class PersonTest {
 	private Person person;
 
@@ -34,6 +36,8 @@ public class PersonTest {
 	public void testSetPersonID() {
 		person.setPersonID(1);
 		assertEquals(1, person.getPersonID());
+		// mockito version:
+		// when(person.getPersonID()).thenReturn(1);
 	}
 
 	@Test
@@ -67,6 +71,12 @@ public class PersonTest {
 	}
 
 	@Test
+	public void testSetCity() {
+		person.setCity("chorobna");
+		assertEquals("chorobna", person.getCity());
+	}
+
+	@Test
 	public void testSetAddress() {
 		person.setAddress("faraway");
 		assertEquals("faraway", person.getAddress());
@@ -87,7 +97,7 @@ public class PersonTest {
 	@Test
 	public void testToString() {
 		String expectNullValues = "Person [personID=0, CPR=null, fname=null,"
-				+ " lname=null, country=null, ZIP=null, address=null, email=null,"
+				+ " lname=null, country=null, ZIP=null, city=null, address=null, email=null,"
 				+ " password=null]";
 		assertEquals(expectNullValues, person.toString());
 	}

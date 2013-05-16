@@ -2,7 +2,6 @@ package DAO;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -119,7 +118,7 @@ public class DAORoomTest {
 
 	@Test
 	public void testFindFreeRooms() {
-		fail("Not yet implemented"); // TODO
+		// TODO fail("Not yet implemented");
 	}
 
 }

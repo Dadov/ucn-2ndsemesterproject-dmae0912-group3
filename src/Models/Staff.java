@@ -9,9 +9,9 @@ public class Staff extends Person {
 	}
 
 	public Staff(int personID, String CPR, String fname, String lname,
-			String country, String ZIP, String address, String email,
-			String password, double salary) {
-		super(personID, CPR, fname, lname, country, ZIP, address, email,
+			String country, String ZIP, String city, String address,
+			String email, String password, double salary) {
+		super(personID, CPR, fname, lname, country, ZIP, city, address, email,
 				password);
 		this.salary = salary;
 	}

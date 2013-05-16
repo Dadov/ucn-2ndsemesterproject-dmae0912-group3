@@ -29,7 +29,6 @@ CREATE TABLE Person (
 
 CREATE TABLE Staff (
     staffID int not null,
-    staffRank varchar(255) not null,
     salary float,
     staffType varchar(255) not null,
     UNIQUE  ( staffID ),
