@@ -101,7 +101,7 @@ public class DAOPerson implements IFDAOPerson {
      * the row count is initialized at -1, to indicate failure, in case the method fails;
      * creates INSERT query; 
      */
-    public int insert(Person person) {
+    public int insert(Person person, String personType) {
 	
 	int rc = -1; //row count; 
 	
@@ -121,7 +121,7 @@ public class DAOPerson implements IFDAOPerson {
 			"'" + person.getCountry()	+ "', " + /* country (FK)	*/
 			"'" + person.getEmail()		+ "', " + /* email		*/
 			"'" + person.getPassword()	+ "', " + /* password		*/
-			"'" + person.getPersonType()	+ "');";  /* personType		*/
+			"'" + personType		+ "');";  /* personType		*/
 	//INSERT query building completed;
 	
 	try { //executing the query and inserting Person data;
@@ -150,7 +150,7 @@ public class DAOPerson implements IFDAOPerson {
      * creates UPDATE query;
      */
     //updates information about particular Person instance;
-    public int update(Person person) {
+    public int update(Person person, String personType) {
 	
 	int rc = -1; //row count;
 	
@@ -165,7 +165,7 @@ public class DAOPerson implements IFDAOPerson {
 			"country = '" 		+ person.getCountry()	+ "', " +	/* country (FK)		*/
 			"email = '" 		+ person.getEmail()	+ "', " +	/* email		*/
 			"password = '" 		+ person.getPassword()	+ "', " +	/* password		*/
-			"personType = '" 	+ person.getPersonType()+ "' "  +	/* personType		*/
+			"personType = '" 	+ personType		+ "' "  +	/* personType		*/
 			"WHERE personID = " 	+ person.getPersonID()	+ ";";		/* SPECIFIES FOR WHICH	*/
 											/* TO APPLY THE UPDATES	*/
 	//UPDATE query building completed;
@@ -344,8 +344,9 @@ public class DAOPerson implements IFDAOPerson {
 	    person.setCountry(data.getString("country"));	/* country (FK)		*/
 	    person.setEmail(data.getString("email"));		/* email		*/
 	    person.setPassword(data.getString("password"));	/* password		*/
-	    person.setPersonType(data.getString("personType"));	/* personType		*/
-	    	
+	    
+	    // person.setPersonType(data.getString("personType")); /* personType - we don't need it
+	    
 	} catch(Exception cantBuild) {
 	    System.out.println("Error: Person instance can't be built");
 	    cantBuild.getCause();
