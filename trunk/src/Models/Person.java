@@ -8,6 +8,7 @@ public class Person {
 	private String lname;
 	private String country;
 	private String ZIP;
+	private String city;
 	private String address;
 	private String email;
 	private String password;
@@ -17,14 +18,15 @@ public class Person {
 	}
 
 	public Person(int personID, String CPR, String fname, String lname,
-			String country, String ZIP, String address, String email,
-			String password) {
+			String country, String ZIP, String city, String address,
+			String email, String password) {
 		this.personID = personID;
 		this.CPR = CPR;
 		this.fname = fname;
 		this.lname = lname;
 		this.country = country;
 		this.ZIP = ZIP;
+		this.city = city;
 		this.address = address;
 		this.email = email;
 	}
@@ -77,6 +79,14 @@ public class Person {
 		this.ZIP = ZIP;
 	}
 
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
 	public String getAddress() {
 		return address;
 	}
@@ -105,8 +115,8 @@ public class Person {
 	public String toString() {
 		return "Person [personID=" + personID + ", CPR=" + CPR + ", fname="
 				+ fname + ", lname=" + lname + ", country=" + country
-				+ ", ZIP=" + ZIP + ", address=" + address + ", email=" + email
-				+ ", password=" + password + "]";
+				+ ", ZIP=" + ZIP + ", city=" + city + ", address=" + address
+				+ ", email=" + email + ", password=" + password + "]";
 	}
 
 }

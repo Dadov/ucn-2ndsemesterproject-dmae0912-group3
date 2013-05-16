@@ -14,246 +14,311 @@ import Models.InstructorHire;
 
 public class DAOInstructorHire implements IFDAOInstructorHire {
 
-	private Connection con; //The reference is needed for building a connection with the Database;
-	
+	private Connection con; // The reference is needed for building a connection
+							// with the Database;
+
 	public DAOInstructorHire() {
 		con = DBConnection.getInstance().getDBCon();
 	}
-	
-	public static void main(String[] args){
-		
-		InstructorHire ih1 = new InstructorHire(1,null,null,null,null);
-		IFDAOInstructorHire dih = new DAOInstructorHire();
-		dih.delete(15);
-		Customer customer = new Customer(1,"cpr", "fname", "lname", "country", "ZIP", "address", "email", "password", "registrationDate",10);
-		ih1.setCustomer(customer);
-		Instructor instructor = new Instructor(1,"cpr", "fname", "lname", "country", "ZIP", "address", "email", "password", 10000, null);
-		ih1.setInstructor(instructor);
-		ActivityTime at = new ActivityTime("21-12-2013","19:00");
-		ih1.setActivityTime(at);
-		ActivityBooking ab = new ActivityBooking(2, null, null, at, false, true);
-		ih1.setActivityBooking(ab);
-		dih.insert(ih1);
-		System.out.println(dih.getInstructorHire(16, true).getId());
-	}
+
+	// public static void main(String[] args){
+	//
+	// InstructorHire ih1 = new InstructorHire(1,null,null,null,null);
+	// IFDAOInstructorHire dih = new DAOInstructorHire();
+	// dih.delete(15);
+	// Customer customer = new Customer(1,"cpr", "fname", "lname", "country",
+	// "ZIP", "address", "email", "password", "registrationDate",10);
+	// ih1.setCustomer(customer);
+	// Instructor instructor = new Instructor(1,"cpr", "fname", "lname",
+	// "country", "ZIP", "address", "email", "password", 10000, null);
+	// ih1.setInstructor(instructor);
+	// ActivityTime at = new ActivityTime("21-12-2013","19:00");
+	// ih1.setActivityTime(at);
+	// ActivityBooking ab = new ActivityBooking(2, null, null, at, false, true);
+	// ih1.setActivityBooking(ab);
+	// dih.insert(ih1);
+	// System.out.println(dih.getInstructorHire(16, true).getId());
+	// }
 
 	@Override
 	public InstructorHire getInstructorHire(int ID, boolean retrieveAssociation) {
-		String wClause = "instructorHireID = " + ID; //Creates a search criteria, this will make to get that instructorHire, which fulfils the clause;
+		String wClause = "instructorHireID = " + ID; // Creates a search
+														// criteria, this will
+														// make to get that
+														// instructorHire, which
+														// fulfils the clause;
 		return singleWhere(wClause, retrieveAssociation);
 	}
 
 	@Override
-	public ArrayList<InstructorHire> getInstructorHires(boolean retrieveAssociation) {
-		return miscWhere("", retrieveAssociation);//Note: wClause is empty, because we want to get all instructorHires, so no condition(clause) is needed;
+	public ArrayList<InstructorHire> getInstructorHires(
+			boolean retrieveAssociation) {
+		return miscWhere("", retrieveAssociation);// Note: wClause is empty,
+													// because we want to get
+													// all instructorHires, so
+													// no condition(clause) is
+													// needed;
 	}
 
 	@Override
 	public int insert(InstructorHire instructorHire) {
-		  int rc = -1; //row count, it is set to -1, to guarantee nothing will happen, in case the method fails to fulfil the task;
-	        
-	        //creates a query for data insertion;
-	        String query = "SET DATEFORMAT dmy;"+ 
-	        		" INSERT INTO InstructorHire(customerID, instructorID, activityBookingID, hireDate, hireTime) VALUES(" +
-					instructorHire.getCustomer().getPersonID() + "," +
-					instructorHire.getInstructor().getPersonID() + "," +
-					instructorHire.getActivityBooking().getId() + ",'" +
-					instructorHire.getActivityTime().getDate() + "','" +
-					instructorHire.getActivityTime().getTime() + "');";
-	       
-			System.out.println("Insert query : " + query); 
-			
-			try{ //creating a statement and inserting instructorHire in database;
-	         
-				Statement stmt = con.createStatement();
-				stmt.setQueryTimeout(5);
-				rc = stmt.executeUpdate(query); //tries to get row count number;
-				stmt.close();
-			}//try ends;
-			
-			
-	       catch(SQLException ex){ //error, exception call;
-	          System.out.println("Error, instructorHire wasn't inserted in the database");
-	       }
-	       return rc; //returns the row count to controller;
+		int rc = -1; // row count, it is set to -1, to guarantee nothing will
+						// happen, in case the method fails to fulfil the task;
+
+		// creates a query for data insertion;
+		String query = "SET DATEFORMAT dmy;"
+				+ " INSERT INTO InstructorHire(customerID, instructorID, activityBookingID, hireDate, hireTime) VALUES("
+				+ instructorHire.getCustomer().getPersonID() + ","
+				+ instructorHire.getInstructor().getPersonID() + ","
+				+ instructorHire.getActivityBooking().getId() + ",'"
+				+ instructorHire.getActivityTime().getDate() + "','"
+				+ instructorHire.getActivityTime().getTime() + "');";
+
+		System.out.println("Insert query : " + query);
+
+		try { // creating a statement and inserting instructorHire in database;
+
+			Statement stmt = con.createStatement();
+			stmt.setQueryTimeout(5);
+			rc = stmt.executeUpdate(query); // tries to get row count number;
+			stmt.close();
+		}// try ends;
+
+		catch (SQLException ex) { // error, exception call;
+			System.out
+					.println("Error, instructorHire wasn't inserted in the database");
+		}
+		return rc; // returns the row count to controller;
 	}
 
 	@Override
 	public int update(InstructorHire instructorHire) {
-		int rc = -1; //row count, it is set to -1, to guarantee nothing will happen, in case the method fails to fulfil the task;
-		
-		//creates update data query;
-		String query = "SET DATEFORMAT dmy;"+ 
-				" UPDATE instructorHire SET " +
-				"customerID = " + instructorHire.getCustomer().getPersonID() + "," +
-				"instructorID = " + instructorHire.getInstructor().getPersonID() + "," +
-				"activityBookingID = " + instructorHire.getActivityBooking().getId() + "," +
-				"hireDate = '" + instructorHire.getActivityTime().getDate() + "'" +
-				"hireTime = '" + instructorHire.getActivityTime().getTime() + "'" +
-				" WHERE instrutorHireID = " + instructorHire.getId() + ";";
-		
+		int rc = -1; // row count, it is set to -1, to guarantee nothing will
+						// happen, in case the method fails to fulfil the task;
+
+		// creates update data query;
+		String query = "SET DATEFORMAT dmy;" + " UPDATE instructorHire SET "
+				+ "customerID = " + instructorHire.getCustomer().getPersonID()
+				+ "," + "instructorID = "
+				+ instructorHire.getInstructor().getPersonID() + ","
+				+ "activityBookingID = "
+				+ instructorHire.getActivityBooking().getId() + ","
+				+ "hireDate = '" + instructorHire.getActivityTime().getDate()
+				+ "'" + "hireTime = '"
+				+ instructorHire.getActivityTime().getTime() + "'"
+				+ " WHERE instrutorHireID = " + instructorHire.getId() + ";";
+
 		System.out.println("Update query : " + query);
-	
-		try { //creating a statement and modifying a selected instructorHire's data in database;
+
+		try { // creating a statement and modifying a selected instructorHire's
+				// data in database;
 			Statement stmt = con.createStatement();
 			stmt.setQueryTimeout(5);
-			rc = stmt.executeUpdate(query); //tries to get row count number;
+			rc = stmt.executeUpdate(query); // tries to get row count number;
 			stmt.close();
-		}//try ends;
-		catch (Exception e) { //error, exception call;
+		}// try ends;
+		catch (Exception e) { // error, exception call;
 			System.out.println("instructorHire update fails");
 			e.getMessage();
 		}
-		return rc; //returns the row count to controller;
+		return rc; // returns the row count to controller;
 	}
 
 	@Override
 	public int delete(int ID) {
-		int rc = -1; //row count, it is set to -1, to guarantee nothing will happen, in case the method fails to fulfil the task;
-		//creates a deletion query;
-		String query = "DELETE FROM InstructorHire WHERE instructorHireID = " + ID + ";";
-				
+		int rc = -1; // row count, it is set to -1, to guarantee nothing will
+						// happen, in case the method fails to fulfil the task;
+		// creates a deletion query;
+		String query = "DELETE FROM InstructorHire WHERE instructorHireID = "
+				+ ID + ";";
+
 		System.out.println("Delete query : " + query);
-		
-		try { //creating a statement and deleting a selected instructorHire from database;
+
+		try { // creating a statement and deleting a selected instructorHire
+				// from database;
 			Statement stmt = con.createStatement();
 			stmt.setQueryTimeout(5);
 			rc = stmt.executeUpdate(query);
-			stmt.close();	
-		}
-		catch (Exception e) { //error, exception call;
+			stmt.close();
+		} catch (Exception e) { // error, exception call;
 			System.out.println("InstructorHire deletion fails");
 			e.getMessage();
 		}
-		
-		return rc; //returns the row count to controller;
+
+		return rc; // returns the row count to controller;
 
 	}
 
-	private InstructorHire singleWhere(String wClause, boolean retrieveAssociation) {
-		ResultSet results; //the results retrieved from the database will be stored here;
-		InstructorHire instructorHire = new InstructorHire(); //creates an empty instructorHire instance, which will be populated with retrieved data;
-                
-	    String query = buildQuery(wClause); //creates SELECT query for instructorHire table
-		try { //fetching the instructorHire data from the database;
-	 		Statement stmt = con.createStatement(); //Creates a statement, that will be executed;
-	 		stmt.setQueryTimeout(5);
-	 		results = stmt.executeQuery(query); //Storing the results from the statement execution;
-	 		
-	 		if(results.next()) { //checks if there are any instructorHire in the database at all;
-	 			instructorHire = buildInstructorHire(results);//builds instructorHire
-                stmt.close();
-                if(retrieveAssociation) {//retrievs the customer object
-                	IFDAOCustomer dbCust = new DAOCustomer();
-                	int custID = instructorHire.getCustomer().getPersonID();
-                	Customer cust = dbCust.getCustomer(custID, false);
-                	instructorHire.setCustomer(cust);
-                	
-                	IFDAOStaff dbInst = new DAOStaff();
-                	int instID = instructorHire.getInstructor().getPersonID();
-                	Instructor instructor = (Instructor) dbInst.getStaff(instID, false);
-                	instructorHire.setInstructor(instructor);
-                	
-                	IFDAOActivityBooking dbActiv = new DAOActivityBooking();
-                	int actID = instructorHire.getActivityBooking().getId();
-                	ActivityBooking activityBooking = dbActiv.getActivityBooking(actID, false);
-                	instructorHire.setActivityBooking(activityBooking);
-                }
-			} else { //nothing was found
+	private InstructorHire singleWhere(String wClause,
+			boolean retrieveAssociation) {
+		ResultSet results; // the results retrieved from the database will be
+							// stored here;
+		InstructorHire instructorHire = new InstructorHire(); // creates an
+																// empty
+																// instructorHire
+																// instance,
+																// which will be
+																// populated
+																// with
+																// retrieved
+																// data;
+
+		String query = buildQuery(wClause); // creates SELECT query for
+											// instructorHire table
+		try { // fetching the instructorHire data from the database;
+			Statement stmt = con.createStatement(); // Creates a statement, that
+													// will be executed;
+			stmt.setQueryTimeout(5);
+			results = stmt.executeQuery(query); // Storing the results from the
+												// statement execution;
+
+			if (results.next()) { // checks if there are any instructorHire in
+									// the database at all;
+				instructorHire = buildInstructorHire(results);// builds
+																// instructorHire
+				stmt.close();
+				if (retrieveAssociation) {// retrievs the customer object
+					IFDAOCustomer dbCust = new DAOCustomer();
+					int custID = instructorHire.getCustomer().getPersonID();
+					Customer cust = dbCust.getCustomer(custID, false);
+					instructorHire.setCustomer(cust);
+
+					IFDAOStaff dbInst = new DAOStaff();
+					int instID = instructorHire.getInstructor().getPersonID();
+					Instructor instructor = (Instructor) dbInst.getStaff(
+							instID, false);
+					instructorHire.setInstructor(instructor);
+
+					IFDAOActivityBooking dbActiv = new DAOActivityBooking();
+					int actID = instructorHire.getActivityBooking().getId();
+					ActivityBooking activityBooking = dbActiv
+							.getActivityBooking(actID, false);
+					instructorHire.setActivityBooking(activityBooking);
+				}
+			} else { // nothing was found
 				instructorHire = null;
 			}
-		}//try ends;
-		
-	 	catch(Exception e) {
-	 		System.out.println("Query exception: "+e);
-	 	}
+		}// try ends;
+
+		catch (Exception e) {
+			System.out.println("Query exception: " + e);
+		}
 		return instructorHire;
 	}
 
-	private ArrayList<InstructorHire> miscWhere(String wClause, boolean retrieveAssociation) {
-		ResultSet results; //the results retrieved from the database will be stored here;
-		ArrayList<InstructorHire> hires = new ArrayList<InstructorHire>(); //here instructorHire instances will be stored;	
-		InstructorHire instructorHire = new InstructorHire(); //creates an empty instructorHire instance, which will be populated with retrieved data;	
-		
+	private ArrayList<InstructorHire> miscWhere(String wClause,
+			boolean retrieveAssociation) {
+		ResultSet results; // the results retrieved from the database will be
+							// stored here;
+		ArrayList<InstructorHire> hires = new ArrayList<InstructorHire>(); // here
+																			// instructorHire
+																			// instances
+																			// will
+																			// be
+																			// stored;
+		InstructorHire instructorHire = new InstructorHire(); // creates an
+																// empty
+																// instructorHire
+																// instance,
+																// which will be
+																// populated
+																// with
+																// retrieved
+																// data;
+
 		String query = buildQuery(wClause);
-	  
-	    try { // fetching the instructorHire data from the database;
-			Statement stmt = con.createStatement(); //Creates a statement, that will be executed;
-		 	stmt.setQueryTimeout(5);
-		 	results = stmt.executeQuery(query); //Storing the results from the statement execution;
-		 	
-			while(results.next()) { //there is another row;
-				
-				instructorHire = buildInstructorHire(results);	//calls a method which will populate instructorHire the instance with data;
-	            hires.add(instructorHire); //adding the built object to the list;
-			}//while loop ends, because there are no more rows;
-	        stmt.close();       
-	        
-	        if (retrieveAssociation) {//retrieves the customer objects
-	        	IFDAOCustomer dbCust = new DAOCustomer();
+
+		try { // fetching the instructorHire data from the database;
+			Statement stmt = con.createStatement(); // Creates a statement, that
+													// will be executed;
+			stmt.setQueryTimeout(5);
+			results = stmt.executeQuery(query); // Storing the results from the
+												// statement execution;
+
+			while (results.next()) { // there is another row;
+
+				instructorHire = buildInstructorHire(results); // calls a method
+																// which will
+																// populate
+																// instructorHire
+																// the instance
+																// with data;
+				hires.add(instructorHire); // adding the built object to the
+											// list;
+			}// while loop ends, because there are no more rows;
+			stmt.close();
+
+			if (retrieveAssociation) {// retrieves the customer objects
+				IFDAOCustomer dbCust = new DAOCustomer();
 				for (InstructorHire instructorHire1 : hires) {
-					
+
 					int custID = instructorHire1.getCustomer().getPersonID();
 					Customer cust = dbCust.getCustomer(custID, false);
 					instructorHire1.setCustomer(cust);
-				
+
 					IFDAOStaff dbInst = new DAOStaff();
-                	int instID = instructorHire.getInstructor().getPersonID();
-                	Instructor instructor = (Instructor) dbInst.getStaff(instID, false);
-                	instructorHire1.setInstructor(instructor);
-                	
-                	IFDAOActivityBooking dbActiv = new DAOActivityBooking();
-                	int actID = instructorHire.getActivityBooking().getId();
-                	ActivityBooking activityBooking = dbActiv.getActivityBooking(actID, false);
-                	instructorHire1.setActivityBooking(activityBooking);
+					int instID = instructorHire.getInstructor().getPersonID();
+					Instructor instructor = (Instructor) dbInst.getStaff(
+							instID, false);
+					instructorHire1.setInstructor(instructor);
+
+					IFDAOActivityBooking dbActiv = new DAOActivityBooking();
+					int actID = instructorHire.getActivityBooking().getId();
+					ActivityBooking activityBooking = dbActiv
+							.getActivityBooking(actID, false);
+					instructorHire1.setActivityBooking(activityBooking);
 				}
-	        }
-	    }//try ends;
-	    
-	    catch(Exception e) { //e.g. no instructorHire are found in the database, this will result in an empty OrderList;
-		 		System.out.println("Query exception - select: "+e);
-				e.printStackTrace();
-		 	}
-	    
-	    
-	    return hires; //returns the OrderList;	
+			}
+		}// try ends;
+
+		catch (Exception e) { // e.g. no instructorHire are found in the
+								// database, this will result in an empty
+								// OrderList;
+			System.out.println("Query exception - select: " + e);
+			e.printStackTrace();
+		}
+
+		return hires; // returns the OrderList;
 	}
 
 	private InstructorHire buildInstructorHire(ResultSet results) {
-		InstructorHire instructorHire = new InstructorHire(); //storage;
+		InstructorHire instructorHire = new InstructorHire(); // storage;
 		Customer cust = new Customer();
-		instructorHire.setCustomer(cust);//empty customer project, will be filled later
+		instructorHire.setCustomer(cust);// empty customer project, will be
+											// filled later
 		ActivityBooking activBook = new ActivityBooking();
 		instructorHire.setActivityBooking(activBook);
 		Instructor instructor = new Instructor();
 		instructorHire.setInstructor(instructor);
 		ActivityTime activTime = new ActivityTime();
 		instructorHire.setActivityTime(activTime);
-		
-		
-		try { //retrieving data from the InstructorHire table, by using the columns;
+
+		try { // retrieving data from the InstructorHire table, by using the
+				// columns;
 			instructorHire.setId(results.getInt("instructorHireID"));
 			cust.setPersonID(results.getInt("customerID"));
 			activBook.setId(results.getInt("activityBookingID"));
 			instructor.setPersonID(results.getInt("instructorID"));
 			activTime.setDate(results.getString("hireDate"));
 			activTime.setTime(results.getString("hireTime"));
-									
+
+		} catch (Exception e) {
+			System.out.println("error in building the instructorHire object");
 		}
-		catch(Exception e) {
-			System.out.println("error in building the instructorHire object"); 
-		}
-         return instructorHire;
+		return instructorHire;
 	}
 
-
 	private String buildQuery(String wClause) {
-		String query = "SET DATEFORMAT dmy;" + " SELECT customerID, activityBookingID, instructorID, hireDate, hireTime FROM InstructorHire";
-		 if (wClause.length()>0) {
-				query = query+" WHERE "+ wClause; //this query will retrieve that RoomsBooked instance data, which fulfils a specified condition;
-			}
-		 
-		 return query;
+		String query = "SET DATEFORMAT dmy;"
+				+ " SELECT customerID, activityBookingID, instructorID, hireDate, hireTime FROM InstructorHire";
+		if (wClause.length() > 0) {
+			query = query + " WHERE " + wClause; // this query will retrieve
+													// that RoomsBooked instance
+													// data, which fulfils a
+													// specified condition;
+		}
+
+		return query;
 	}
 
 }

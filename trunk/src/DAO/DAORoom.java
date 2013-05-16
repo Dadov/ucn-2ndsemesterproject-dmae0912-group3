@@ -127,9 +127,10 @@ public class DAORoom implements IFDAORoom {
 				stmt.close();
 
 				if (retrieveAssociation) {
-					// TODO or not TODO,association with RoomBooking
-					System.out
-							.println("There is no association to be retreived.");
+					// there is no association to be retrieved
+					// if 'true' is passed we throw an IllegalArgumentException
+					throw new IllegalArgumentException(
+							"There is no association to be retrieved Room table.");
 				}
 
 			} else {
@@ -163,9 +164,8 @@ public class DAORoom implements IFDAORoom {
 			stmt.close();
 
 			if (retrieveAssociation) {
-				// TODO or not TODO,association with RoomBookingSystem.out
-				System.out.println("There is no association to be retreived.");
-
+				throw new IllegalArgumentException(
+						"There is no association to be retrieved Room table.");
 			}
 
 		} catch (Exception e) {

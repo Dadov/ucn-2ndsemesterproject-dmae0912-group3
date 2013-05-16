@@ -10,9 +10,10 @@ public class Customer extends Person {
 	}
 
 	public Customer(int personID, String CPR, String fname, String lname,
-			String country, String ZIP, String address, String email,
-			String password, String registrationDate, int noOfStays) {
-		super(personID, CPR, fname, lname, country, ZIP, address, email,
+			String country, String ZIP, String city, String address,
+			String email, String password, String registrationDate,
+			int noOfStays) {
+		super(personID, CPR, fname, lname, country, ZIP, city, address, email,
 				password);
 		this.registrationDate = registrationDate;
 		this.noOfStays = noOfStays;
