@@ -1,14 +1,20 @@
 package Models;
 
 public class Room {
-	
+
 	private int number;
 	private Enum<RoomType> roomType;
 	private double price;
 	private String note;
-	
+
 	public Room() {
-		
+
+	}
+
+	public Room(Enum<RoomType> roomType, double price, String note) {
+		this.roomType = roomType;
+		this.price = price;
+		this.note = note;
 	}
 
 	public Room(int number, Enum<RoomType> roomType, double price, String note) {
@@ -55,6 +61,5 @@ public class Room {
 		return "Room [number=" + number + ", roomType=" + roomType + ", price="
 				+ price + ", note=" + note + "]";
 	}
-	
-	
+
 }
