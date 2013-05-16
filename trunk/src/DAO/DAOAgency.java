@@ -144,7 +144,6 @@ public class DAOAgency implements IFDAOAgency {
 	}
 	
 	// used when only one agency is to be selected
-	@SuppressWarnings("unused")
 	private Agency singleWhere(String wClause, boolean retrieveAssociation) {
 		ResultSet results;
 		Agency agency = new Agency();
@@ -160,10 +159,6 @@ public class DAOAgency implements IFDAOAgency {
 				//inserts provided customers into Agency object
 				agency.setProvidedCustomers(getProvidedCustomers(wClause,false));
 				stmt.close();
-				if (retrieveAssociation) {
-					
-				}
-			
 			}
 			else { // no agency found
 				agency = null;	
@@ -176,7 +171,6 @@ public class DAOAgency implements IFDAOAgency {
 	}
 
 	// used when more than one agency is to be selected
-	@SuppressWarnings("unused")
 	private ArrayList<Agency> miscWhere(String wClause, boolean retrieveAssociation) {
 		ResultSet results;
 		ArrayList<Agency> list = new ArrayList<Agency>();
@@ -194,11 +188,6 @@ public class DAOAgency implements IFDAOAgency {
 				list.add(agency);
 			}
 			stmt.close();
-			if (retrieveAssociation) {
-				for (Agency agency : list) {
-					
-				}
-			}
 		}
 		catch (Exception e) {
 			System.out.println("Query exception : " + e);
@@ -232,7 +221,6 @@ public class DAOAgency implements IFDAOAgency {
 	}
 
 	// builds an Agency object
-	@SuppressWarnings("unused")
 	private Agency buildAgency(ResultSet results) {
 		Agency agency = new Agency();
 		ArrayList<Customer> customers = new ArrayList<Customer>();
@@ -250,7 +238,6 @@ public class DAOAgency implements IFDAOAgency {
 	}
 
 	// builds a query for retrieving information from the Agency table
-	@SuppressWarnings("unused")
 	private String buildQuery(String wClause) {
 		String query = "SET DATEFORMAT dmy;" + "SELECT * FROM Agency";
 		if (wClause.length() > 0)
