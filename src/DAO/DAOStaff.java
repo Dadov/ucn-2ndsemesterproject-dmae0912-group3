@@ -99,8 +99,7 @@ public class DAOStaff implements IFDAOStaff {
 		return rc;
 	}
 
-	// used when only one staff member is to be selected
-	@SuppressWarnings("unused")
+	// used when only one staff member is to be selected)
 	private Staff singleWhere(String wClause, boolean retrieveAssociation) {
 		ResultSet results;
 		Staff staff = new Staff();
@@ -130,7 +129,6 @@ public class DAOStaff implements IFDAOStaff {
 	}
 
 	// used when more than one staff member is to be selected
-	@SuppressWarnings("unused")
 	private ArrayList<Staff> miscWhere(String wClause, boolean retrieveAssociation) {
 		ResultSet results;
 		ArrayList<Staff> list = new ArrayList<Staff>();
@@ -146,11 +144,6 @@ public class DAOStaff implements IFDAOStaff {
 				list.add(staff);
 			}
 			stmt.close();
-			if (retrieveAssociation) {
-				for (Staff staff : list) {
-					// no associations
-				}
-			}
 		}
 		catch (Exception e) {
 			System.out.println("Query exception : " + e);
@@ -160,7 +153,6 @@ public class DAOStaff implements IFDAOStaff {
 	}
 
 	// builds a staff member
-	@SuppressWarnings("unused")
 	private Staff buildStaff(ResultSet results) {
 		Staff staff = new Staff();
 		// fills the Agency object with date from the database
@@ -175,7 +167,6 @@ public class DAOStaff implements IFDAOStaff {
 	}
 
 	// builds a query
-	@SuppressWarnings("unused")
 	private String buildQuery(String wClause) {
 		String query = "SELECT * FROM Staff";
 		if (wClause.length() > 0)
