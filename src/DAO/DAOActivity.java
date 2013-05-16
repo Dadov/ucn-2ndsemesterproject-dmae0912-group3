@@ -143,7 +143,6 @@ public class DAOActivity implements IFDAOActivity {
 	}
 
 	// used only when one activity is to be selected
-	@SuppressWarnings("unused")
 	private Activity singleWhere(String wClause, boolean retrieveAssociation) {
 		ResultSet results;
 		Activity activity = new Activity();
@@ -215,7 +214,11 @@ public class DAOActivity implements IFDAOActivity {
 			stmt.setQueryTimeout(5);
 			results = stmt.executeQuery(query);
 			while(results.next()) {
-				instructor = daoStaff.getStaff(results.getInt("instructorID"),false);
+				try{
+					instructor = (Instructor) daoStaff.getStaff(results.getInt("instructorID"),false);
+				}
+				catch(ClassCastException cce){
+				}
 				activityInstructors.add(instructor);
 			}
 			stmt.close();
@@ -228,7 +231,6 @@ public class DAOActivity implements IFDAOActivity {
 	}
 	
 	// builds an Activity object
-	@SuppressWarnings("unused")
 	private Activity buildActivity(ResultSet results) {
 		Activity activity = new Activity();
 		ArrayList<Instructor> instructors = new ArrayList<Instructor>();
@@ -246,7 +248,6 @@ public class DAOActivity implements IFDAOActivity {
 	}
 
 	// builds a query for retrieving information from the Activity table
-	@SuppressWarnings("unused")
 	private String buildQuery(String wClause) {
 		String query = "SET DATEFORMAT dmy;" + "SELECT * FROM Activity";
 		if (wClause.length() > 0)

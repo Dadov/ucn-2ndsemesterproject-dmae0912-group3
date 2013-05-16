@@ -31,13 +31,22 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 	public int insert(ActivityBooking activityBooking) {
 		// row count is set to -1
 		int rc = -1;
+		int openActivity;
+		if(activityBooking.isOpenActivity())openActivity = 1;
+		else openActivity = 0;
+		int instrHired;
+		if(activityBooking.isInstructorHired())instrHired = 1;
+		else instrHired = 0;
 		// creates query
 		String query = "SET DATEFORMAT dmy;" +
 				"INSERT INTO ActivityBooking(activityBookingID, activityID, activityDate, activityTime, openActivity, instructorHired) VALUES(" +
 				activityBooking.getId() + "," +
-				activityBooking.getActivity().getID() + "," +
-				activityBooking.isOpenActivity() + "," +
-				activityBooking.isInstructorHired() + ")";
+				activityBooking.getActivity().getID() + ",'" +
+				activityBooking.getActivityTime().getDate() + "','" +
+				activityBooking.getActivityTime().getTime() + "'," +
+				openActivity + "," +
+				instrHired + 
+				")";
 				
 		System.out.println("Insert query : " + query);
 		// creates statement and executes query
@@ -51,6 +60,7 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 			System.out.println("ActivityBooking was not inserted into the database");
 			e.getMessage();
 		}
+		insertCustomers(activityBooking.getCustomers(), -1);
 		return rc;
 	}
 	
@@ -82,13 +92,20 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 	public int update(ActivityBooking activityBooking) {
 		// row count set to -1
 		int rc = -1;
+		int openActivity;
+		if(activityBooking.isOpenActivity())openActivity = 1;
+		else openActivity = 0;
+		int instrHired;
+		if(activityBooking.isInstructorHired())instrHired = 1;
+		else instrHired = 0;
 		// creates query
 		String query = "SET DATEFORMAT dmy;" +
 				"UPDATE ActivityBooking SET " +
-				activityBooking.getId() + "," +
-				activityBooking.getActivity().getID() + "," +
-				activityBooking.isOpenActivity() + "," +
-				activityBooking.isInstructorHired() + ")" +
+				"activityID = " + activityBooking.getActivity().getID() + "," +
+				"activityDate = '" + activityBooking.getActivityTime().getDate() + "'," +
+				"activityTime = '" + activityBooking.getActivityTime().getTime() + "'," +
+				"openActivity = " + openActivity + "," +
+				"instructorHired = " + instrHired + ")" +
 				"WHERE activityBookingID = " + activityBooking.getId() + ";";
 		System.out.println("Update query : " + query);
 		// creates statement and executes query
@@ -102,6 +119,8 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 			System.out.println("ActivityBooking update failed.");
 			e.getMessage();
 		}
+		deleteCustomers(activityBooking.getId());
+		insertCustomers(activityBooking.getCustomers(), activityBooking.getId());
 		return rc;
 	}
 	
@@ -110,6 +129,7 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 	public int delete(int ID) {
 		// row count set to -1
 		int rc = -1;
+		deleteCustomers(ID);
 		// creates query
 		String query = "DELETE FROM ActivityBooking WHERE activityBookingID = " + ID + ";";
 		System.out.println("Delete query : " + query);
@@ -163,14 +183,16 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 				activityBooking.setCustomers(getActivityCustomers(wClause,false));
 				stmt.close();
 				if (retrieveAssociation) {
-					
+					IFDAOActivity daoActivity = new DAOActivity();
+					int aID = activityBooking.getActivity().getID();
+					Activity activity = daoActivity.getActivity(aID, false);
+					activityBooking.setActivity(activity);
 				}
-			
 			}
 			else { // no agency found
 				activityBooking = null;	
 			}
-		}
+				}
 		catch (Exception e) {
 			System.out.println("Query exception: " + e);
 		}
@@ -178,7 +200,6 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 	}
 	
 	// used when more than one booking activity is to be selected
-	@SuppressWarnings("unused")
 	private ArrayList<ActivityBooking> miscWhere(String wClause, boolean retrieveAssociation) {
 		ResultSet results;
 		ArrayList<ActivityBooking> list = new ArrayList<ActivityBooking>();
@@ -198,7 +219,10 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 			stmt.close();
 			if (retrieveAssociation) {
 				for (ActivityBooking activityBooking : list) {
-					
+					IFDAOActivity daoActivity = new DAOActivity();
+					int aID = activityBooking.getActivity().getID();
+					Activity activity = daoActivity.getActivity(aID, false);
+					activityBooking.setActivity(activity);
 				}
 			}
 		}
@@ -245,6 +269,10 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 			activityBooking.setId(results.getInt("activityBookingID"));
 			activityBooking.setOpenActivity(results.getBoolean("openActivity"));
 			activityBooking.setInstructorHired(results.getBoolean("instructorHired"));
+			String date = results.getString("activityDate");
+			String time = results.getString("activityTime");
+			ActivityTime activityTime = new ActivityTime(date, time);
+			activityBooking.setActivityTime(activityTime);
 		}
 		catch (Exception e) {
 			System.out.println("Error in building the ActvityBooking object");
