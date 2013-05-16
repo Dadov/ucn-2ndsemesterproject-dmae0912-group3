@@ -17,7 +17,7 @@ public class DAORoom implements IFDAORoom {
 
 	@Override
 	public Room getRoom(int number, boolean retrieveAssociation) {
-		String wClause = " WHERE number = '" + number + "'";
+		String wClause = " number = " + number;
 		return singleWhere(wClause, retrieveAssociation);
 	}
 
@@ -172,6 +172,8 @@ public class DAORoom implements IFDAORoom {
 			System.out.println("Query exception: ");
 			e.getMessage();
 		}
+		System.out.println(list.toString());
+
 		return list;
 	}
 
@@ -183,18 +185,18 @@ public class DAORoom implements IFDAORoom {
 			roomObj.setPrice(results.getDouble("price"));
 			roomObj.setNote(results.getString("note"));
 		} catch (Exception e) {
-			System.out.println("Erroe in building Room object.");
+			System.out.println("Error in building Room object.");
 			e.getMessage();
 		}
-		return null;
+		return roomObj;
 	}
 
 	private String buildQuery(String wClause) {
 		String query = "SELECT * FROM Room";
 
 		if (wClause.length() > 0)
-			query = query + wClause;
+			query = query + " WHERE " + wClause;
+
 		return query;
 	}
-
 }

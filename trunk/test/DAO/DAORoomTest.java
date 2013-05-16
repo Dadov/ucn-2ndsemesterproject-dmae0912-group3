@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -16,8 +17,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import Models.Room;
-
-// TODO probably delete mockito import
+import Models.RoomType;
 
 public class DAORoomTest {
 	private Connection con;
@@ -34,10 +34,12 @@ public class DAORoomTest {
 
 	@Before
 	public void setUp() throws Exception {
-		room = mock(Room.class);
+		// room = mock(Room.class);
 
-		// fun test
-		System.out.println(room.toString());
+		// random test
+		// System.out.println(room.toString());
+
+		room = new Room(RoomType.Single, 78.9, "testing");
 	}
 
 	@After
@@ -47,39 +49,62 @@ public class DAORoomTest {
 	// not much to do here, delete
 	@Test
 	public void testDAORoom() {
-		// TODO
-		fail("Not yet implemented");
+		DBConnection dbCon = mock(DBConnection.class);
+		// using Mockito static methods
+		// 'when' you call DBConnection.getDBCon() 'thenReturn' value should be
+		// Connection con
+		when(dbCon.getDBCon()).thenReturn(con);
 	}
 
 	// deleted testGet/Insert/Update/Delete going to be be tested in testCRUD
 	@Test
 	public void testCRUD() throws SQLException {
-		// nothing to test
-		fail("Not yet implemented"); // TODO
 		con = DBConnection.getInstance().getDBCon();
 		// group statements into transaction so we can roll back after test
 		con.setAutoCommit(false);
 		daoRoom = new DAORoom();
 
+		// some testing experiments, don't delete
 		// no need for mocks, using data from database
-		ArrayList<Room> rooms = daoRoom.getAllRooms(false);
-		room = rooms.get(rooms.lastIndexOf(room));
+		// ArrayList<Room> rooms = daoRoom.getAllRooms(false);
+
+		/*
+		 * Iterator<Room> iter = rooms.iterator(); while (iter.hasNext()) {
+		 * System.out.println(iter.next().toString()); }
+		 */
+		// Room lastRoom = rooms.get(rooms.size() - 1);
+		// System.out.println("Last room: " + room.toString());
+		// System.out.println(rooms.size());
+		// System.out.println(rooms.get(102));
 
 		try {
-			// not usable testing values
-
+			// insert test
 			daoRoom.insert(room);
+			// getting all rooms, and picking up last which was previously
+			// inserted
+			ArrayList<Room> rooms = daoRoom.getAllRooms(false);
+			Room lastRoom = rooms.get(rooms.size() - 1);
 			// assert generated SQL statement with string containing expected
 			// correct/expected SQL statement
 			// have to know (write) each SQL statement expected before coding
 			// DAO part
-			assertEquals(null, daoRoom.getRoom(room.getNumber(), false));
 
-			daoRoom.update(null);
-			assertEquals(null, daoRoom.getRoom(0, false));
+			// cannot compare by toString since we don't have Room number
+			assertEquals(room.getRoomType(), lastRoom.getRoomType());
+			assertEquals(room.getPrice(), lastRoom.getPrice(), 0);
+			assertEquals(room.getNote(), lastRoom.getNote());
+			// assertEquals(rooms.size(), lastRoom.getNumber());
 
-			daoRoom.delete(0);
-			assertNull(daoRoom.delete(0));
+			// update test
+			lastRoom.setNote("update test");
+			System.out.println("update test: " + lastRoom.getNumber());
+			daoRoom.update(lastRoom);
+			assertEquals(lastRoom.toString(),
+					daoRoom.getRoom(lastRoom.getNumber(), false).toString());
+
+			// delete test
+			daoRoom.delete(lastRoom.getNumber());
+			assertNull(daoRoom.getRoom(lastRoom.getNumber(), false));
 
 		} finally {
 			con.rollback();
@@ -89,7 +114,7 @@ public class DAORoomTest {
 
 	@Test
 	public void testGetAllRooms() {
-		fail("Not yet implemented"); // TODO
+		// used in CRUDTest
 	}
 
 	@Test
