@@ -43,14 +43,14 @@ public interface IFDAOPerson {
      * inserts Person instance information in db;
      * returns row count number;
      */
-    public int insert(Person person);
+    public int insert(Person person, String personType);
     
     
     /*
      * updates information about specified Person in db;
      * returns row count number;
      */
-    public int update(Person person);
+    public int update(Person person, String personType);
     
     
     /*
