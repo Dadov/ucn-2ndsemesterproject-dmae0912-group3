@@ -2,9 +2,7 @@ package Controllers;
 
 import java.util.ArrayList;
 
-import DAO.DAOPerson;
 import DAO.DAOStaff;
-import DAO.IFDAOPerson;
 import DAO.IFDAOStaff;
 import Models.Instructor;
 import Models.Manager;
@@ -53,8 +51,6 @@ public class StaffCtr {
 			try {
 				// TODO DBConnection.startTransaction();
 				IFDAOStaff daoStaff = new DAOStaff();
-				IFDAOPerson daoPerson = new DAOPerson();
-				daoPerson.insert(employee);
 				daoStaff.insert(employee);
 				// TODO DBConnection.commitTransaction();
 			} catch (Exception e) {
