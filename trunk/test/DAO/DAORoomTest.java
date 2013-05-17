@@ -45,9 +45,9 @@ public class DAORoomTest {
 	public void tearDown() throws Exception {
 	}
 
-	// not much to do here, delete
 	@Test
 	public void testDAORoom() {
+		// making mock for DBConnection
 		DBConnection dbCon = mock(DBConnection.class);
 		// using Mockito static methods
 		// 'when' you call DBConnection.getDBCon() 'thenReturn' value should be
