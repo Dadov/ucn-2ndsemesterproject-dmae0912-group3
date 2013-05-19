@@ -1,16 +1,27 @@
-package DAO;
+package DAO; //indicates the location of the class;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.Connection; 	//a connection with the db must be established;
+import java.sql.ResultSet;	//storage for the data which is going to be retrieved from the db; 
+import java.sql.SQLException;	//exceptions must be handle, if an operation fails;
+import java.sql.Statement;	//SQL queries, built in this class, must be executed;
+
+//in case, multiple Customer instances must be retrieved;
 import java.util.ArrayList;
 
+//business class, where data fetched from the db will be stored;
 import Models.Customer;
 
+/**
+ * separates the db access code from the business class Customer; 
+ * contains all necessary SQL-code for db access and data manipulation;
+ * consists of 2 get and 3 update methods;
+ * responsible for editing Customer table;
+ * calls DAOPerson when a new Customer is being inserted;
+ * for its interface check IFDAOCustomer;
+ */
 public class DAOCustomer implements IFDAOCustomer {
    
-    //needed, so a connection with the db can be established;
+    //needed, so data in the db can be retrieved or manipulated;
     private Connection con;   
     
     
@@ -30,7 +41,7 @@ public class DAOCustomer implements IFDAOCustomer {
     
     @Override
     /*
-     * gets Customer data from the db found by ID;
+     * gets Customer data from the db found by customerID;
      * returns Customer instance to the controller;
      * prompts for customerID and retrieveAssociation;
      */
@@ -63,29 +74,33 @@ public class DAOCustomer implements IFDAOCustomer {
     @Override
     /*
      * inserts Customer instance information in db;
-     * affects Customer, Person and Location table; 
      * returns a row count number at success;
      * the row count is initialized at -1, to indicate failure, in case the method fails;
-     * creates INSERT query; 
+     * creates INSERT query;
+     * affects Customer, Person and Location tables;
+     * on call, calls DAOPerson insert method, which edits Location and Person tables,
+     * and then it edits the Customer table;
+     * prompts for Customer instance;
      */
     public int insert(Customer customer) {
 	
-	int rc = -1; //row count; 
+	int rc = -1; //row count;
 	
 	//creates DAOPerson instance to insert data in Person and Location tables;
 	IFDAOPerson dao = new DAOPerson();
-	//passes the Customer instance to DAOPerson;
-	dao.insert(customer); 
+	//passes the Customer instance to DAOPerson and indicates that personType is Customer;
+	dao.insert(customer, "Customer"); 
 	
 	//building INSERT query;
-	String query =  "SET DATEFORMAT dmy; "  +				/* SETS DATA FORMAT	*/
-			"INSERT INTO Customer " +				/* SPECIFIES COLUMNS	*/
-			"(customerID, registrationDate, noOfStays) " +		/* Customer Data	*/
-			"VALUES (" +						/* INSERTS THE VALUES	*/
-			""  + customer.getPersonID()		 + ", "  +	/* customerID		*/
-			"'" + customer.getRegistrationDate()	 + "', " +	/* registrationDate	*/
-			""  + customer.getNoOfStays()		 + ";)";	/* noOfStays 		*/
+	String query =  "SET DATEFORMAT dmy; " +			/* SETS DATA FORMAT	*/
+			"INSERT INTO Customer " +			/* SPECIFIES COLUMNS	*/
+			"(customerID, registrationDate, noOfStays) " +	/* Customer Data	*/
+			"VALUES (" +					/* INSERTS THE VALUES 	*/
+			"(SELECT IDENT_CURRENT('Person')), " +		/* customerID		*/
+			"'" + customer.getRegistrationDate() + "', " +	/* registrationDate	*/
+			""  + customer.getNoOfStays() + ");";		/* noOfStays		*/
 	//INSERT query building completed;
+	//we don't need to insert personID in the db, 'cause it is auto-incremented (IDENTITY);
 	
 	try { //executing the query and inserting Customer data;
 	    
@@ -108,18 +123,21 @@ public class DAOCustomer implements IFDAOCustomer {
     @Override
     /*
      * updates information about specified Customer in db; 
-     * affects Customer, Person and Location tables; 
      * returns a row count number at success;
      * the row count is initialized at -1, to indicate failure, in case the method fails; 
      * creates UPDATE query;
+     * affects Customer, Person and Location tables;
+     * on call, calls DAOPerson update method, which edits Location and Person tables,
+     * and then it edits the Customer table;
+     * prompts for Customer instance;
      */
     public int update(Customer customer) {
 	int rc = -1; //row count; 
 	
 	//creates DAOPerson instance to update data in Person and Location tables;
 	IFDAOPerson dao = new DAOPerson(); 
-	//passes the Customer instance to DAOPerson;
-	dao.update(customer); 
+	//passes the Customer instance to DAOPerson and indicates the personType;
+	dao.update(customer, "Customer"); 
 	
 	//building UPDATE query;
 	String query =  "SET DATEFORMAT dmy;" + 						/* SETS DATA FORMAT	*/
@@ -150,11 +168,14 @@ public class DAOCustomer implements IFDAOCustomer {
     
     @Override
     /*
-     * deletes information about specified Customer in db; 
-     * affects Customer, Person and Location tables;
+     * deletes information about specified Customer in db found by customerID; 
      * returns a row count number at success;
      * the row count is initialized at -1, to indicate failure, in case the method fails; 
      * creates DELETE query;
+     * affects Customer, Person and Location tables;
+     * on call, edits the Customer table first and then calls DAOPerson delete method,
+     * which edits Person table;
+     * prompts for Customer instance;
      */
     public int delete(int customerID) {
 	
@@ -162,11 +183,6 @@ public class DAOCustomer implements IFDAOCustomer {
 	
 	//building DELETE query;
 	String query =  "DELETE FROM Customer WHERE customerID = " + customerID + ";";
-	
-	//creates DAOPerson instance to delete data in Person and Location tables;
-	IFDAOPerson dao = new DAOPerson(); 
-	//passes the Customer instance to DAOPerson;
-	dao.delete(customerID); 
 	
 	try { //executing the query and deleting Customer data;
 	    	
@@ -180,7 +196,12 @@ public class DAOCustomer implements IFDAOCustomer {
 	} catch(SQLException cantDelete) {
 	    System.out.println("Error: DELETE Customer fails ");
 	    cantDelete.getCause(); //shows the cause for exception;
-	}	
+	}
+	
+	//creates DAOPerson instance to delete data in Person and Location tables;
+	IFDAOPerson dao = new DAOPerson(); 
+	//passes the Customer instance to DAOPerson;
+	dao.delete(customerID); 
 	
 	return rc; //returns the row count to the controller;
     }
@@ -190,7 +211,7 @@ public class DAOCustomer implements IFDAOCustomer {
     
     /*
      * fetches Customer data from the db;
-     * builds one instance, which is populated with the fetched data;
+     * creates Customer instance, which is populated with the fetched data;
      * prompts for wClause and retrieveAssociation;
      */
     private Customer singleWhere(String wClause, boolean retrieveAssociation) {
@@ -219,8 +240,10 @@ public class DAOCustomer implements IFDAOCustomer {
 		customer = buildCustomer(results);
 		stmt.close();
 	    
-		if(retrieveAssociation) {//if there is association, retrieve it;
-		//do we need retrieve association? :)    
+		//there shouldn't be any retrieve association;
+		//in case the boolean condition returns true it will throw an exception;
+		if(retrieveAssociation) {
+		    throw new IllegalArgumentException("There is no association to be retrieved");
 		}
 		
 	    } else {
@@ -238,8 +261,8 @@ public class DAOCustomer implements IFDAOCustomer {
     
     /*
      * fetches multiple Customer data from the db;
-     * builds multiple instances, which are populated with the fetched data;
-     * there's a while loop;
+     * creates multiple instances, which are populated with the fetched data;
+     * there's a while loop and also ArrayList is used;
      * prompts for wClause and retrieveAssociation;
      */
     private ArrayList<Customer> miscWhere(String wClause, boolean retrieveAssociation) {
@@ -269,8 +292,10 @@ public class DAOCustomer implements IFDAOCustomer {
 		//populates Customer instance with retrieved data;
 		customer = buildCustomer(results);
 		
-		if(retrieveAssociation) {//if there is association, retrieve it;
-		    //do we need retrieve association? :)    
+		//there shouldn't be any retrieve association;
+		//in case the boolean condition returns true it will throw an exception;
+		if(retrieveAssociation) {
+		    throw new IllegalArgumentException("There is no association to be retrieved");
 		}
 		
 		//adds the new instance to the list;
