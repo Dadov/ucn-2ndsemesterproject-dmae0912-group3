@@ -1,16 +1,19 @@
-package DAO;
+package DAO; //indicates the location of the class;
 
+//in case, multiple Person instances must be retrieved;
 import java.util.ArrayList;
 
-import Models.Person;
+import Models.Person; //imports the business class;
 
 /**
- *  This class is the interface for DAOPerson
+ * interface of DAOPerson class;
+ * for its implementation see DAOPerson;
  */
 public interface IFDAOPerson {
     
     /*
-     * gets Person instance, found by ID;
+     * gets Person instance, found by personID;
+     * returns Person instance;
      * prompts for personID and retrieveAssociation;
      */
     public Person getPerson(int personID, boolean retrieveAssociation);
@@ -18,6 +21,7 @@ public interface IFDAOPerson {
     
     /*
      * gets Person instance, found by CPR;
+     * returns Person instance;
      * prompts for CPR and retrieveAssociation;
      */
     public Person getPerson(String CPR, boolean retrieveAssociation);
@@ -34,6 +38,7 @@ public interface IFDAOPerson {
     
     /*
      * gets all Person instances;
+     * returns an ArrayList with Person instances;
      * prompts for retrieveAssociation;
      */
     public ArrayList<Person> getAllPersons(boolean retrieveAssociation);
@@ -41,21 +46,21 @@ public interface IFDAOPerson {
     
     /*
      * inserts Person instance information in db;
-     * returns row count number;
+     * prompts for Person instance and personType;
      */
     public int insert(Person person, String personType);
     
     
     /*
      * updates information about specified Person in db;
-     * returns row count number;
+     * prompts for Person instance and personType;
      */
     public int update(Person person, String personType);
     
     
     /*
      * deletes information about specified Person in db;
-     * returns row count number;
+     * prompts for personID;
      */
     public int delete(int PersonID);
 
