@@ -30,11 +30,15 @@ public class DAOStaff implements IFDAOStaff {
 	@Override
 	public int insert(Staff staff) {
 		// row count is set to -1
-		int rc = -1; 
-		// creates query 
+		int rc = -1;
+		//DAOPerson object needed to be able to insert data in Person table first
+		IFDAOPerson daoPerson = new DAOPerson();
+		daoPerson.insert(staff, "Staff");
+		
+		// creates query for inserting data in Staff table
 		String query = "SET DATEFORMAT dmy;" +
 				"INSERT INTO Staff(staffID, salary) VALUES(" +
-				staff.getPersonID() + "," +
+				"(SELECT IDENT_CURRENT('Staff')), " +
 				staff.getSalary() + ");";
 		System.out.println("Insert query : " + query);
 		// creates statement and executes query
@@ -45,7 +49,7 @@ public class DAOStaff implements IFDAOStaff {
 			stmt.close();
 			
 		}
-		catch(Exception e) {
+		catch(SQLException e) {
 			System.out.println("Staff member was not inserted in the database");
 			e.getMessage();
 		}
@@ -57,7 +61,11 @@ public class DAOStaff implements IFDAOStaff {
 	public int update(Staff staff) {
 		// row count set to -1
 		int rc = -1;
-		// creates query
+		//DAOPerson object needed to be able to update data in Person table first
+		IFDAOPerson daoPerson = new DAOPerson();
+		daoPerson.update(staff, "Staff");
+		
+		// creates query for updating data in Staff table
 		String query = "SET DATEFORMAT dmy;" +
 				"UPDATE Staff SET " +
 				"salary = " + staff.getSalary() + 
@@ -70,7 +78,7 @@ public class DAOStaff implements IFDAOStaff {
 			rc = stmt.executeUpdate(query);
 			stmt.close();
 		}
-		catch (Exception e) {
+		catch (SQLException e) {
 			System.out.println("Staff update failed.");
 			e.getMessage();
 		}
@@ -82,7 +90,11 @@ public class DAOStaff implements IFDAOStaff {
 	public int delete(int ID) {
 		// row count set to -1
 		int rc = -1;
-		// creates query
+		//DAOPerson object needed to be able to delete data from Person table first
+		IFDAOPerson daoPerson = new DAOPerson();
+		daoPerson.delete(ID);
+		
+		// creates query for deleting data from Staff table
 		String query = "DELETE FROM Staff WHERE staffID = " + ID + ";";
 		System.out.println("Delete query : " + query);
 		// creates statement and executes query
@@ -92,7 +104,7 @@ public class DAOStaff implements IFDAOStaff {
 			rc = stmt.executeUpdate(query);
 			stmt.close();
 		}
-		catch (Exception e) {
+		catch (SQLException e) {
 			System.out.println("Staff member was not deleted");
 			e.getMessage();
 		}
@@ -122,7 +134,7 @@ public class DAOStaff implements IFDAOStaff {
 				staff = null;	
 			}
 		}
-		catch (Exception e) {
+		catch (SQLException e) {
 			System.out.println("Query exception: "+e);
 		}
 		return staff;
@@ -141,11 +153,14 @@ public class DAOStaff implements IFDAOStaff {
 			while (results.next()) {
 				Staff staff = new Staff();
 				staff = buildStaff(results);
+				if (retrieveAssociation) {
+					// no associations
+				}
 				list.add(staff);
 			}
 			stmt.close();
 		}
-		catch (Exception e) {
+		catch (SQLException e) {
 			System.out.println("Query exception : " + e);
 			e.printStackTrace();
 		}
