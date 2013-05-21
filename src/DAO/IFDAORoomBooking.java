@@ -23,4 +23,6 @@ public interface IFDAORoomBooking {
 	// delete RoomBooking
 	// returns int, see Statement.executeUpdate()
 	public int delete(int id);
+	
+	public int getLastInsertedID();
 }

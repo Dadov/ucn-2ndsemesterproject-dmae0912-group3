@@ -54,7 +54,7 @@ public class DAORoomBooking implements IFDAORoomBooking {
 		
 		
        catch(SQLException ex){ //error, exception call;
-          System.out.println("roomBooking was inserted in the database");
+          System.out.println("roomBooking was not inserted in the database");
        }
 		insertRoomsBooked(roomBooking.getRoomsBooked(),-1);//insert booked rooms in RoomsBooked table, see the method
 
@@ -86,7 +86,7 @@ public class DAORoomBooking implements IFDAORoomBooking {
 			
 			
 	       catch(SQLException ex){ //error, exception call;
-	          System.out.println("roomsBooked were inserted in the database");
+	          System.out.println("roomsBooked were not inserted in the database");
 	       }
 
        return rc; //returns the row count to controller;
@@ -213,7 +213,9 @@ public class DAORoomBooking implements IFDAORoomBooking {
 			while(results.next()) { //there is another row;
 				
 				roomBooking = buildRoomBooking(results);	//calls a method which will populate RoomBooking the instance with data;
-				roomBooking.setRoomsBooked(getRoomsBooked(wClause,false));//adds list of rooms booked to roomBooking object
+				int id = roomBooking.getId();
+				String wClause2 = "roomBookingID = " + id; //where clause needed for retrieving room list for room booking
+				roomBooking.setRoomsBooked(getRoomsBooked(wClause2,false));//adds list of rooms booked to roomBooking object
 	            bookingList.add(roomBooking); //adding the built object to the list;
 			}//while loop ends, because there are no more rows;
 	        stmt.close();       

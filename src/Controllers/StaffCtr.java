@@ -3,6 +3,7 @@ package Controllers;
 import java.util.ArrayList;
 
 import DAO.DAOStaff;
+import DAO.DBConnection;
 import DAO.IFDAOStaff;
 import Models.Instructor;
 import Models.Manager;
@@ -14,6 +15,10 @@ public class StaffCtr {
 
 	public StaffCtr() {
 		
+	}
+	public static void main(String[] args){
+		StaffCtr staffCtr = new StaffCtr();
+		staffCtr.newEmployee("cpr", "fname", "lname", "country", "ZIP", "address", "email", "password", 52, "Instructor");
 	}
 		//METHODS FOR Staff
 		// creates a new employee
@@ -49,14 +54,14 @@ public class StaffCtr {
 			employee.setSalary(salary);
 
 			try {
-				// TODO DBConnection.startTransaction();
+				DBConnection.startTransaction();
 				IFDAOStaff daoStaff = new DAOStaff();
 				daoStaff.insert(employee);
-				// TODO DBConnection.commitTransaction();
+				DBConnection.commitTransaction();
 			} catch (Exception e) {
 				System.out
 						.println("Error while creating booking in RoomBookingCtr");
-				// TODO DBConnection.rollbackTransaction();
+				DBConnection.rollbackTransaction();
 				e.getMessage();
 				e.printStackTrace();
 			}

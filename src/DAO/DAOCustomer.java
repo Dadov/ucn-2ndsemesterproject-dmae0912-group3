@@ -36,7 +36,6 @@ public class DAOCustomer implements IFDAOCustomer {
 	con = DBConnection.getInstance().getDBCon();
     }
 
-    
     /** Get Methods */
     
     @Override
@@ -324,9 +323,20 @@ public class DAOCustomer implements IFDAOCustomer {
     private Customer buildCustomer(ResultSet data) {
 	
 	//needed, because it will contain the data (container);
-	Customer customer = new Customer(); 
+    	Customer customer = new Customer(); 
+    	
 	
 	try { //populating the container;					/* VALUE		*/
+		customer.setPersonID(data.getInt("personID"));	/* personID		*/
+	    customer.setCPR(data.getString("CPR"));		/* CPR			*/
+	    customer.setFname(data.getString("fname"));		/* fname		*/
+	    customer.setLname(data.getString("lname"));		/* lname		*/
+	    customer.setAddress(data.getString("address"));	/* address		*/
+	    customer.setZIP(data.getString("locationZIP"));	/* locationZIP (FK)	*/
+	    customer.setCountry(data.getString("country"));	/* country (FK)		*/
+	    customer.setEmail(data.getString("email"));		/* email		*/
+	    customer.setPassword(data.getString("password"));	/* password		*/
+	    customer.setCity(data.getString("city"));		/* city			*/
 	    customer.setRegistrationDate(data.getString("registrationDate"));	/* registrationDate	*/
 	    customer.setNoOfStays(data.getInt("noOfStays"));			/* noOfStays		*/
 	  
@@ -347,7 +357,8 @@ public class DAOCustomer implements IFDAOCustomer {
      */
     private String buildQuery(String wClause) {
 	
-	String query = "SET DATEFORMAT dmy;" + " SELECT * FROM Customer";	/* selects all columns in Customer */
+	String query = "SET DATEFORMAT dmy;" + "SELECT * FROM Customer RIGHT JOIN Person " +
+			"ON Customer.CustomerID=Person.PersonID"+" RIGHT JOIN Location ON Person.locationZIP=Location.ZIP"; 	/* selects all columns in Person */
 	
 	if(wClause.length()>0) {
 	    query += " WHERE " + wClause; //adding the conditions to the query;
