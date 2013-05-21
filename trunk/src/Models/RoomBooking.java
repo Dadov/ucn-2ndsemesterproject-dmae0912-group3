@@ -24,7 +24,14 @@ public class RoomBooking {
 		this.dateStart = dateStart;
 		this.dateEnd = dateEnd;
 	}
-
+	public RoomBooking(Customer customer, ArrayList<Room> roomsBooked,
+			String dateBooked, String dateStart, String dateEnd) {
+		this.customer = customer;
+		this.roomsBooked = roomsBooked;
+		this.dateBooked = dateBooked;
+		this.dateStart = dateStart;
+		this.dateEnd = dateEnd;
+	}
 	public int getId() {
 		return id;
 	}
