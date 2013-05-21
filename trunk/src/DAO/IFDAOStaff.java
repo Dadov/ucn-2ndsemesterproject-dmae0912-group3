@@ -10,9 +10,9 @@ public interface IFDAOStaff {
 
 	public ArrayList<Staff> getAllStaff(boolean retrieveAssociation);
 
-	public int insert(Staff Staff);
+	public int insert(Staff Staff, String staffType);
 
-	public int update(Staff Staff);
+	public int update(Staff Staff, String staffType);
 
 	public int delete(int ID);
 }

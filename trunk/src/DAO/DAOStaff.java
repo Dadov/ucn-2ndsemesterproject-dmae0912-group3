@@ -28,7 +28,7 @@ public class DAOStaff implements IFDAOStaff {
 
 	// inserts a new member of staff
 	@Override
-	public int insert(Staff staff) {
+	public int insert(Staff staff, String staffType) {
 		// row count is set to -1
 		int rc = -1;
 		//DAOPerson object needed to be able to insert data in Person table first
@@ -37,9 +37,10 @@ public class DAOStaff implements IFDAOStaff {
 		
 		// creates query for inserting data in Staff table
 		String query = "SET DATEFORMAT dmy;" +
-				"INSERT INTO Staff(staffID, salary) VALUES(" +
+				"INSERT INTO Staff(staffID, salary, staffType) VALUES (" +
 				"(SELECT IDENT_CURRENT('Staff')), " +
-				staff.getSalary() + ");";
+				staff.getSalary() + ", '" +
+				staffType + "');";
 		System.out.println("Insert query : " + query);
 		// creates statement and executes query
 		try {
@@ -58,7 +59,7 @@ public class DAOStaff implements IFDAOStaff {
 
 	// updates a member of staff
 	@Override
-	public int update(Staff staff) {
+	public int update(Staff staff, String staffType) {
 		// row count set to -1
 		int rc = -1;
 		//DAOPerson object needed to be able to update data in Person table first
@@ -68,7 +69,8 @@ public class DAOStaff implements IFDAOStaff {
 		// creates query for updating data in Staff table
 		String query = "SET DATEFORMAT dmy;" +
 				"UPDATE Staff SET " +
-				"salary = " + staff.getSalary() + 
+				"salary = " + staff.getSalary() + ", " +
+				"staffType + '" + staffType + "', " +
 				"WHERE staffID = " + staff.getPersonID() + ";";
 		System.out.println("Update query : " + query);
 		// creates statement and executes query
@@ -105,7 +107,7 @@ public class DAOStaff implements IFDAOStaff {
 			stmt.close();
 		}
 		catch (SQLException e) {
-			System.out.println("Staff member was not deleted");
+			System.out.println("Staff member was not deleted from the database");
 			e.getMessage();
 		}
 		return rc;
@@ -170,7 +172,7 @@ public class DAOStaff implements IFDAOStaff {
 	// builds a staff member
 	private Staff buildStaff(ResultSet results) {
 		Staff staff = new Staff();
-		// fills the Agency object with date from the database
+		// fills the Agency object with data from the database
 		try {
 			staff.setPersonID(results.getInt("staffID"));
 			staff.setSalary(results.getFloat("salary"));
