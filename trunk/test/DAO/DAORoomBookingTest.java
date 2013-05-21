@@ -80,7 +80,27 @@ public class DAORoomBookingTest {
 				when(dbCon.getDBCon()).thenReturn(con);
 	}
 
-	
+	/**
+	 * Test method for {@link DAO.DAORoomBooking#getRoomBooking(int, boolean)}.
+	 * @throws SQLException 
+	 */
+	@Test
+	public final void testGetRoomBooking() throws SQLException {
+		con = DBConnection.getInstance().getDBCon();
+		con.setAutoCommit(false);
+		// group statements into transaction so we can roll back after test
+		daoRoomBook = new DAORoomBooking();
+		try{
+		daoRoomBook.insert(roomBook);
+		roomBook.setId(daoRoomBook.getLastInsertedID());
+		RoomBooking rb = daoRoomBook.getRoomBooking(daoRoomBook.getLastInsertedID(),false);
+		assertEquals(roomBook.toString(), rb.toString());
+	}
+		finally{
+			con.rollback();
+			con.close();
+		}
+	}
 
 
 	/**
@@ -90,8 +110,8 @@ public class DAORoomBookingTest {
 	@Test
 	public final void testCRUD() throws SQLException {
 		con = DBConnection.getInstance().getDBCon();
-		// group statements into transaction so we can roll back after test
 		con.setAutoCommit(false);
+		// group statements into transaction so we can roll back after test
 		daoRoomBook = new DAORoomBooking();
 
 		try {
@@ -120,12 +140,11 @@ public class DAORoomBookingTest {
 					daoRoomBook.getRoomBooking(lastRoomBooking.getId(),false).toString());
 
 			// delete test
-			//daoRoomBook.delete(lastRoomBooking.getId());
-			//assertNull(daoRoomBook.getRoomBooking(lastRoomBooking.getId(), false));
+			daoRoomBook.delete(lastRoomBooking.getId());
+			assertNull(daoRoomBook.getRoomBooking(lastRoomBooking.getId(), false));
 
 		} finally {
 			con.rollback();
-			con.close();
 		}
 	}
 
