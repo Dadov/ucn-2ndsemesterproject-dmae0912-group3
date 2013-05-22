@@ -2,7 +2,7 @@ package DAO; //indicates the location of the class;
 
 import java.sql.Connection;	//a connection with the db must be established;
 import java.sql.ResultSet;	//storage for the data which is going to be retrieved from the db; 
-import java.sql.SQLException;	//exceptions must be handle, if an operation fails;
+import java.sql.SQLException;	//exceptions must be handled, if an operation fails;
 import java.sql.Statement;	//SQL queries, built in this class, must be executed;
 
 //in case, multiple Person instances must be retrieved;
@@ -63,7 +63,7 @@ public class DAOPerson implements IFDAOPerson {
     public Person getPerson(String CPR, boolean retrieveAssociation) {
 	
 	//Defining the search criteria, to find Person by personCPR;
-	String wClause = "CPR = " + CPR;
+	String wClause = "CPR = '" + CPR + "'";
 		
 	//See private Person singleWhere(wClause, retrieveAssociation);
 	return singleWhere(wClause, retrieveAssociation);
@@ -81,7 +81,7 @@ public class DAOPerson implements IFDAOPerson {
     public ArrayList<Person> getPerson(String fname, String lname, boolean retrieveAssociation) {
 
 	//Defining the search criteria, to find Person by first and last name;
-	String wClause = "fname = " + fname + " AND lname = " + lname;
+	String wClause = "fname = '" + fname + "' AND lname = '" + lname + "'";
 			
 	//See private ArrayList<Person> miscWhere(wClause, retrieveAssociation);
 	return miscWhere(wClause, retrieveAssociation);

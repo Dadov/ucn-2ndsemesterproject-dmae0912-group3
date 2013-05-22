@@ -219,6 +219,15 @@ public class DAOCustomer implements IFDAOCustomer {
 	ResultSet results; 
 	//empty Customer instance, which is going to be used as container for the fetched data;
 	Customer customer = new Customer(); 
+	
+	//needed to retrieve Customer's personal data(CPR, Fname, Lname, etc.);
+	IFDAOPerson daoPerson = new DAOPerson();
+	
+	//Customer customer = (Customer) daoPerson.getPerson(Integer.parseInt(wClause.replaceAll("\\D+","")), false);
+	//Person person = daoPerson.getPerson(Integer.parseInt(wClause.replaceAll("\\D+","")), false);
+	//Customer customer = new customer();
+	//customer = (customer) person;	
+	//Person person = new Customer();
 		
 	//building SELECT query, see private String buildQuery(wClause);
 	String query = buildQuery(wClause);
@@ -230,13 +239,15 @@ public class DAOCustomer implements IFDAOCustomer {
 	    
 	    //executes the query and gets Customer data;
 	    results = stmt.executeQuery(query);
-	    
+	     
 	    //checks if there is any Customer at all;
 	    //if there is, Customer will be built;
 	    if(results.next()) {
 		
-		//populates Customer instance with retrieved data;
-		customer = buildCustomer(results);
+		//populates Customer instance with data from Person and Location tables;
+		customer = (Customer) daoPerson.getPerson(Integer.parseInt(wClause.replaceAll("\\D+","")), false);
+		//populates Customer instance with data from Customer table;
+		customer = buildCustomer(results, customer);
 		stmt.close();
 	    
 		//there shouldn't be any retrieve association;
@@ -273,6 +284,9 @@ public class DAOCustomer implements IFDAOCustomer {
 	//empty Customer instance, which is going to be used as container for the fetched data;
 	Customer customer = new Customer(); 	
 	
+	//needed to retrieve Customer's personal data(CPR, Fname, Lname, etc.);
+	IFDAOPerson daoPerson = new DAOPerson();
+	
 	//building SELECT query, see private String buildQuery(wClause);
 	String query = buildQuery(wClause);
 		
@@ -288,8 +302,10 @@ public class DAOCustomer implements IFDAOCustomer {
 	    //also, multiple Customer instances are going to be built;
 	    while(results.next()) {
 		
-		//populates Customer instance with retrieved data;
-		customer = buildCustomer(results);
+		//populates Customer instance with data from Person and Location tables;
+		customer = (Customer) daoPerson.getPerson(Integer.parseInt(wClause.replaceAll("\\D+","")), false);
+		//populates Customer instance with data from Customer table;
+		customer = buildCustomer(results, customer);
 		
 		//there shouldn't be any retrieve association;
 		//in case the boolean condition returns true it will throw an exception;
@@ -320,23 +336,23 @@ public class DAOCustomer implements IFDAOCustomer {
      * populates the instance with data retrieved from the ResultSet;
      * returns Customer instance;
      */
-    private Customer buildCustomer(ResultSet data) {
+    private Customer buildCustomer(ResultSet data, Customer customer) {
 	
 	//needed, because it will contain the data (container);
-    	Customer customer = new Customer(); 
+    	//Customer customer = new Customer(); 
     	
 	
 	try { //populating the container;					/* VALUE		*/
-		customer.setPersonID(data.getInt("personID"));	/* personID		*/
-	    customer.setCPR(data.getString("CPR"));		/* CPR			*/
-	    customer.setFname(data.getString("fname"));		/* fname		*/
-	    customer.setLname(data.getString("lname"));		/* lname		*/
-	    customer.setAddress(data.getString("address"));	/* address		*/
-	    customer.setZIP(data.getString("locationZIP"));	/* locationZIP (FK)	*/
-	    customer.setCountry(data.getString("country"));	/* country (FK)		*/
-	    customer.setEmail(data.getString("email"));		/* email		*/
-	    customer.setPassword(data.getString("password"));	/* password		*/
-	    customer.setCity(data.getString("city"));		/* city			*/
+	    //customer.setPersonID(data.getInt("personID"));	/* personID		*/
+	   // customer.setCPR(data.getString("CPR"));		/* CPR			*/
+	   // customer.setFname(data.getString("fname"));		/* fname		*/
+	    //customer.setLname(data.getString("lname"));		/* lname		*/
+	    //customer.setAddress(data.getString("address"));	/* address		*/
+	    //customer.setZIP(data.getString("locationZIP"));	/* locationZIP (FK)	*/
+	    //customer.setCountry(data.getString("country"));	/* country (FK)		*/
+	    //customer.setEmail(data.getString("email"));		/* email		*/
+	    //customer.setPassword(data.getString("password"));	/* password		*/
+	    //customer.setCity(data.getString("city"));		/* city			*/
 	    customer.setRegistrationDate(data.getString("registrationDate"));	/* registrationDate	*/
 	    customer.setNoOfStays(data.getInt("noOfStays"));			/* noOfStays		*/
 	  
