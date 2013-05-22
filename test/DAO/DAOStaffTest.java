@@ -52,10 +52,12 @@ public class DAOStaffTest {
 		con.setAutoCommit(false);
 		daoStaff = new DAOStaff();
 		try {
+			//insert
 			daoStaff.insert(staff,"Receptionist");
 			ArrayList<Staff> staffMembers = daoStaff.getAllStaff(false);
 			Staff lastStaff = staffMembers.get(staffMembers.size()-1);
 			
+			//get
 			assertEquals(staff.getAddress(),lastStaff.getAddress());
 			assertEquals(staff.getCity(), lastStaff.getCity());
 			assertEquals(staff.getCountry(), lastStaff.getCountry());
@@ -68,11 +70,13 @@ public class DAOStaffTest {
 			assertEquals(staff.getSalary(), lastStaff.getSalary(), 0.001);
 			assertEquals(staff.getZIP(), lastStaff.getZIP());
 			
+			//update
 			lastStaff.setAddress("test password");
 			System.out.println("Update test: " + lastStaff.getPersonID());
 			daoStaff.update(lastStaff, "Receptionist");
 			assertEquals(lastStaff.toString(), daoStaff.getStaff(lastStaff.getPersonID(), false).toString());
 			
+			//delete
 			daoStaff.delete(lastStaff.getPersonID());
 			assertNull(daoStaff.getStaff(lastStaff.getPersonID(), false));
 		}

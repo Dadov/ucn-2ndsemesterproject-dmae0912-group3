@@ -21,6 +21,13 @@ public class Agency {
 		this.providedCustomers = providedCustomers;
 	}
 
+	public Agency(String name, int agencyDiscountLevel,
+			ArrayList<Customer> providedCustomers) {
+		this.name = name;
+		this.agencyDiscountLevel = agencyDiscountLevel;
+		this.providedCustomers = providedCustomers;
+	}
+
 	public int getID() {
 		return id;
 	}
