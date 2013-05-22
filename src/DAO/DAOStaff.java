@@ -116,6 +116,7 @@ public class DAOStaff implements IFDAOStaff {
 	// used when only one staff member is to be selected)
 	private Staff singleWhere(String wClause, boolean retrieveAssociation) {
 		ResultSet results;
+		IFDAOPerson daoPerson = new DAOPerson();
 		Staff staff = new Staff();
 		String query = buildQuery(wClause);
 		System.out.println(query);
@@ -125,7 +126,8 @@ public class DAOStaff implements IFDAOStaff {
 			stmt.setQueryTimeout(5);
 			results = stmt.executeQuery(query);
 			if (results.next()) { // check whether there are any staff members in the database
-				staff = buildStaff(results);
+				staff = (Staff) daoPerson.getPerson(Integer.parseInt(wClause.replaceAll("\\D+","")), false);
+				staff = buildStaff(results,staff);
 				stmt.close();
 				if (retrieveAssociation) {
 					// no associations
@@ -145,6 +147,7 @@ public class DAOStaff implements IFDAOStaff {
 	// used when more than one staff member is to be selected
 	private ArrayList<Staff> miscWhere(String wClause, boolean retrieveAssociation) {
 		ResultSet results;
+		IFDAOPerson daoPerson = new DAOPerson();
 		ArrayList<Staff> list = new ArrayList<Staff>();
 		String query = buildQuery(wClause);
 		// reads the staff from the database
@@ -154,7 +157,8 @@ public class DAOStaff implements IFDAOStaff {
 			results = stmt.executeQuery(query);
 			while (results.next()) {
 				Staff staff = new Staff();
-				staff = buildStaff(results);
+				staff = (Staff) daoPerson.getPerson(Integer.parseInt(wClause.replaceAll("\\D+","")), false);
+				staff = buildStaff(results, staff);
 				if (retrieveAssociation) {
 					// no associations
 				}
@@ -170,9 +174,8 @@ public class DAOStaff implements IFDAOStaff {
 	}
 
 	// builds a staff member
-	private Staff buildStaff(ResultSet results) {
+	private Staff buildStaff(ResultSet results, Staff staff) {
 		String position = null;
-		Staff staff = null;
 		
 		try{
 			position = results.getString("staffType");
@@ -197,16 +200,6 @@ public class DAOStaff implements IFDAOStaff {
 		System.out.println("Object type test from buildStaff:" + cls.getName());
 		// fills the Agency object with results from the database
 		try {
-			staff.setPersonID(results.getInt("personID"));	/* personID		*/
-		    staff.setCPR(results.getString("CPR"));		/* CPR			*/
-		    staff.setFname(results.getString("fname"));		/* fname		*/
-		    staff.setLname(results.getString("lname"));		/* lname		*/
-		    staff.setAddress(results.getString("address"));	/* address		*/
-		    staff.setZIP(results.getString("locationZIP"));	/* locationZIP (FK)	*/
-		    staff.setCountry(results.getString("country"));	/* country (FK)		*/
-		    staff.setEmail(results.getString("email"));		/* email		*/
-		    staff.setPassword(results.getString("password"));	/* password		*/
-		    staff.setCity(results.getString("city"));		/* city			*/
 			staff.setPersonID(results.getInt("staffID"));
 			staff.setSalary(results.getFloat("salary"));
 		}
