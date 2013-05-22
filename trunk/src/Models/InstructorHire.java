@@ -21,6 +21,14 @@ public class InstructorHire {
 		this.activityTime = activityTime;
 	}
 
+	public InstructorHire(Customer customer, Instructor instructor,
+			ActivityBooking activityBooking, ActivityTime activityTime) {
+		this.customer = customer;
+		this.instructor = instructor;
+		this.activityBooking = activityBooking;
+		this.activityTime = activityTime;
+	}
+
 	public int getId() {
 		return id;
 	}
