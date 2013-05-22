@@ -56,7 +56,7 @@ public class StaffCtr {
 			try {
 				DBConnection.startTransaction();
 				IFDAOStaff daoStaff = new DAOStaff();
-				daoStaff.insert(employee);
+				daoStaff.insert(employee, position);
 				DBConnection.commitTransaction();
 			} catch (Exception e) {
 				System.out
@@ -84,7 +84,7 @@ public class StaffCtr {
 		// updates a booking
 		public int updateStaff(int newId, String CPR, String fname, String lname,
 				String country, String ZIP, String address, String email,
-				String password, double salary) {
+				String password, double salary, String position) {
 			IFDAOStaff daoStaff = new DAOStaff();
 			Staff employee = new Staff();
 			employee.setPersonID(newId);
@@ -97,7 +97,7 @@ public class StaffCtr {
 			employee.setEmail(email);
 			employee.setPassword(password);
 			employee.setSalary(salary);
-			return daoStaff.update(employee);
+			return daoStaff.update(employee, position);
 		}
 
 		// deletes a booking

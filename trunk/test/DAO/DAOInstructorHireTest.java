@@ -53,7 +53,8 @@ public class DAOInstructorHireTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		
+		con = DBConnection.getInstance().getDBCon();
+		con.setAutoCommit(false);
 		Instructor instructor = new Instructor();
 		instructor.setPersonID(4);
 		Customer customer = new Customer();
@@ -96,8 +97,6 @@ public class DAOInstructorHireTest {
 	 */
 	@Test
 	public final void testGetInstructorHire() throws SQLException {
-		con = DBConnection.getInstance().getDBCon();
-		con.setAutoCommit(false);
 		// group statements into transaction so we can roll back after test
 		daoHire = new DAOInstructorHire();
 		try{
@@ -110,8 +109,6 @@ public class DAOInstructorHireTest {
 		assertEquals(instructorHire.getActivityTime().toString(), ih.getActivityTime().toString());
 	}
 		finally{
-			con.rollback();
-			con.close();
 		}
 	}
 
@@ -121,8 +118,6 @@ public class DAOInstructorHireTest {
 	 */
 	@Test
 	public final void testCRUD() throws SQLException {
-		con = DBConnection.getInstance().getDBCon();
-		con.setAutoCommit(false);
 		// group statements into transaction so we can roll back after test
 		daoHire = new DAOInstructorHire();
 
@@ -148,7 +143,7 @@ public class DAOInstructorHireTest {
 			lastHire.setActivityTime(new ActivityTime("2014-09-09", "15:00"));
 			System.out.println("update test: " + lastHire.getId());
 			daoHire.update(lastHire);
-			assertEquals(lastHire.toString(), daoHire.getInstructorHire(lastHire.getId(),false).toString());
+			assertEquals(lastHire.toString(), daoHire.getInstructorHire(lastHire.getId(),true).toString());
 
 			// delete test
 			daoHire.delete(lastHire.getId());
@@ -156,7 +151,6 @@ public class DAOInstructorHireTest {
 
 		} finally {
 			con.rollback();
-			con.close();
 		}
 	}
 	public int getLastInsertedID(){

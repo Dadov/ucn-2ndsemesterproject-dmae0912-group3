@@ -12,7 +12,6 @@ import Models.ActivityTime;
 import Models.Customer;
 import Models.Instructor;
 import Models.InstructorHire;
-import Models.Staff;
 
 public class DAOInstructorHire implements IFDAOInstructorHire {
 
@@ -88,9 +87,9 @@ public class DAOInstructorHire implements IFDAOInstructorHire {
 				+ "activityBookingID = "
 				+ instructorHire.getActivityBooking().getId() + ","
 				+ "hireDate = '" + instructorHire.getActivityTime().getDate()
-				+ "'" + "hireTime = '"
+				+ "'," + "hireTime = '"
 				+ instructorHire.getActivityTime().getTime() + "'"
-				+ " WHERE instrutorHireID = " + instructorHire.getId() + ";";
+				+ " WHERE instructorHireID = " + instructorHire.getId() + ";";
 
 		System.out.println("Update query : " + query);
 

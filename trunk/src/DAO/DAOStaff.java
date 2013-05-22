@@ -192,6 +192,7 @@ public class DAOStaff implements IFDAOStaff {
 		}
 
 		
+		@SuppressWarnings("rawtypes")
 		Class cls = staff.getClass();
 		System.out.println("Object type test from buildStaff:" + cls.getName());
 		// fills the Agency object with results from the database
