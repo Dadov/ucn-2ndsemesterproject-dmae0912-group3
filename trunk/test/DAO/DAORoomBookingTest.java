@@ -26,7 +26,7 @@ import Models.RoomBooking;
  *
  */
 public class DAORoomBookingTest {
-	private Connection con;
+	private static Connection con;
 	private RoomBooking roomBook;
 	private IFDAORoomBooking daoRoomBook;
 	
@@ -42,6 +42,9 @@ public class DAORoomBookingTest {
 	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		con = DBConnection.getInstance().getDBCon();
+		con.setAutoCommit(false);
+		con.close();
 	}
 
 	/**
@@ -98,7 +101,6 @@ public class DAORoomBookingTest {
 	}
 		finally{
 			con.rollback();
-			con.close();
 		}
 	}
 
