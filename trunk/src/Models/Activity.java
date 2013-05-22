@@ -21,6 +21,12 @@ public class Activity {
 		this.activityInstructors = activityInstructors;
 	}
 
+	public Activity(Enum<ActivityType> activityType, int capacity, ArrayList<Instructor> activityInstructors) {
+		this.activityType = activityType;
+		this.capacity = capacity;
+		this.activityInstructors = activityInstructors;
+	}
+
 	public int getID() {
 		return id;
 	}
