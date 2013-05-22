@@ -159,6 +159,7 @@ public class DAOStaff implements IFDAOStaff {
 				Staff staff = new Staff();
 				staff = (Staff) daoPerson.getPerson(Integer.parseInt(wClause.replaceAll("\\D+","")), false);
 				staff = buildStaff(results, staff);
+				System.out.println("what's in staff duriibg DAOStaff.miscWhere(): " + staff.toString());
 				if (retrieveAssociation) {
 					// no associations
 				}
@@ -178,6 +179,7 @@ public class DAOStaff implements IFDAOStaff {
 		String position = null;
 		
 		try{
+			System.out.println("staffType strig from DB: " + results.getString("staffType"));
 			position = results.getString("staffType");
 		}
 		catch (Exception e){
@@ -211,8 +213,8 @@ public class DAOStaff implements IFDAOStaff {
 
 	// builds a query
 	private String buildQuery(String wClause) {
-		String query = "SET DATEFORMAT dmy;" + "SELECT * FROM Staff RIGHT JOIN Person " +
-				"ON Staff.StaffID=Person.PersonID"+" RIGHT JOIN Location ON Person.locationZIP=Location.ZIP"; 
+		String query = "SET DATEFORMAT dmy;" + "SELECT * FROM Staff JOIN Person " +
+				"ON Staff.StaffID=Person.PersonID"+" JOIN Location ON Person.locationZIP=Location.ZIP"; 
 		if (wClause.length() > 0)
 			query = query + " WHERE " + wClause;
 		return query;

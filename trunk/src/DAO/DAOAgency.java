@@ -217,6 +217,7 @@ public class DAOAgency implements IFDAOAgency {
 		try {
 			Statement stmt = con.createStatement();
 			stmt.setQueryTimeout(5);
+			System.out.println("looking for this: " + query);
 			results = stmt.executeQuery(query);
 			while(results.next()) {
 				customer = daoCustomer.getCustomer(results.getInt("customerID"),false);
@@ -260,7 +261,7 @@ public class DAOAgency implements IFDAOAgency {
 	private String buildCustomersQuery(String wClause) {
 		String query = "SET DATEFORMAT dmy;" + " SELECT customerID FROM ProvidedCustomers";
 		if (wClause.length() > 0)
-			query = query + "WHERE" + wClause;
+			query = query + " WHERE " + wClause;
 		return query;
 	}
 	
