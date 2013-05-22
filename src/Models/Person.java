@@ -29,6 +29,7 @@ public class Person {
 		this.city = city;
 		this.address = address;
 		this.email = email;
+		this.password = password;
 	}
 
 	public int getPersonID() {
