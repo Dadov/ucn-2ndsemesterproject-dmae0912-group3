@@ -31,7 +31,7 @@ import Models.InstructorHire;
  *
  */
 public class DAOInstructorHireTest {
-	private Connection con;
+	private static Connection con;
 	private InstructorHire instructorHire;
 	private IFDAOInstructorHire daoHire;
 	/**
@@ -46,6 +46,9 @@ public class DAOInstructorHireTest {
 	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		con = DBConnection.getInstance().getDBCon();
+		con.setAutoCommit(false);
+		con.close();
 	}
 
 	/**
@@ -150,7 +153,6 @@ public class DAOInstructorHireTest {
 			assertNull(daoHire.getInstructorHire(lastHire.getId(), false));
 
 		} finally {
-			con.rollback();
 		}
 	}
 	public int getLastInsertedID(){
