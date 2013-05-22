@@ -2,7 +2,7 @@ package DAO;
 
 import java.sql.*;
 import java.util.ArrayList;
-import Models.Staff;
+import Models.*;
 
 public class DAOStaff implements IFDAOStaff {
 
@@ -171,9 +171,41 @@ public class DAOStaff implements IFDAOStaff {
 
 	// builds a staff member
 	private Staff buildStaff(ResultSet results) {
-		Staff staff = new Staff();
-		// fills the Agency object with data from the database
+		String position = null;
+		Staff staff = null;
+		
+		try{
+			position = results.getString("staffType");
+		}
+		catch (Exception e){
+			System.out.println("Error in getting staffType");
+		}
+		switch(position){
+		case("Instructor"): staff = new Instructor();
+							break;
+		case("Manager"): staff = new Manager();
+							break;
+		case("Receptionist"): staff = new Receptionist();
+								break;
+		case("Secretary"):	staff = new Secretary();
+							break;
+		}
+
+		
+		Class cls = staff.getClass();
+		System.out.println("Object type test from buildStaff:" + cls.getName());
+		// fills the Agency object with results from the database
 		try {
+			staff.setPersonID(results.getInt("personID"));	/* personID		*/
+		    staff.setCPR(results.getString("CPR"));		/* CPR			*/
+		    staff.setFname(results.getString("fname"));		/* fname		*/
+		    staff.setLname(results.getString("lname"));		/* lname		*/
+		    staff.setAddress(results.getString("address"));	/* address		*/
+		    staff.setZIP(results.getString("locationZIP"));	/* locationZIP (FK)	*/
+		    staff.setCountry(results.getString("country"));	/* country (FK)		*/
+		    staff.setEmail(results.getString("email"));		/* email		*/
+		    staff.setPassword(results.getString("password"));	/* password		*/
+		    staff.setCity(results.getString("city"));		/* city			*/
 			staff.setPersonID(results.getInt("staffID"));
 			staff.setSalary(results.getFloat("salary"));
 		}
@@ -185,7 +217,8 @@ public class DAOStaff implements IFDAOStaff {
 
 	// builds a query
 	private String buildQuery(String wClause) {
-		String query = "SELECT * FROM Staff";
+		String query = "SET DATEFORMAT dmy;" + "SELECT * FROM Staff RIGHT JOIN Person " +
+				"ON Staff.StaffID=Person.PersonID"+" RIGHT JOIN Location ON Person.locationZIP=Location.ZIP"; 
 		if (wClause.length() > 0)
 			query = query + " WHERE " + wClause;
 		return query;

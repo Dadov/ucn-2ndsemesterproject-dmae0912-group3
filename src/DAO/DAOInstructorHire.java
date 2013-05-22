@@ -6,11 +6,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import Models.Activity;
 import Models.ActivityBooking;
 import Models.ActivityTime;
 import Models.Customer;
 import Models.Instructor;
 import Models.InstructorHire;
+import Models.Staff;
 
 public class DAOInstructorHire implements IFDAOInstructorHire {
 
@@ -21,24 +23,6 @@ public class DAOInstructorHire implements IFDAOInstructorHire {
 		con = DBConnection.getInstance().getDBCon();
 	}
 
-	// public static void main(String[] args){
-	//
-	// InstructorHire ih1 = new InstructorHire(1,null,null,null,null);
-	// IFDAOInstructorHire dih = new DAOInstructorHire();
-	// dih.delete(15);
-	// Customer customer = new Customer(1,"cpr", "fname", "lname", "country",
-	// "ZIP", "address", "email", "password", "registrationDate",10);
-	// ih1.setCustomer(customer);
-	// Instructor instructor = new Instructor(1,"cpr", "fname", "lname",
-	// "country", "ZIP", "address", "email", "password", 10000, null);
-	// ih1.setInstructor(instructor);
-	// ActivityTime at = new ActivityTime("21-12-2013","19:00");
-	// ih1.setActivityTime(at);
-	// ActivityBooking ab = new ActivityBooking(2, null, null, at, false, true);
-	// ih1.setActivityBooking(ab);
-	// dih.insert(ih1);
-	// System.out.println(dih.getInstructorHire(16, true).getId());
-	// }
 
 	@Override
 	public InstructorHire getInstructorHire(int ID, boolean retrieveAssociation) {
@@ -185,9 +169,8 @@ public class DAOInstructorHire implements IFDAOInstructorHire {
 
 					IFDAOStaff dbInst = new DAOStaff();
 					int instID = instructorHire.getInstructor().getPersonID();
-					Instructor instructor = (Instructor) dbInst.getStaff(
-							instID, false);
-					instructorHire.setInstructor(instructor);
+					Instructor staff = (Instructor) dbInst.getStaff(instID, false);
+					instructorHire.setInstructor(staff);
 
 					IFDAOActivityBooking dbActiv = new DAOActivityBooking();
 					int actID = instructorHire.getActivityBooking().getId();
@@ -282,16 +265,12 @@ public class DAOInstructorHire implements IFDAOInstructorHire {
 	}
 
 	private InstructorHire buildInstructorHire(ResultSet results) {
-		InstructorHire instructorHire = new InstructorHire(); // storage;
-		Customer cust = new Customer();
-		instructorHire.setCustomer(cust);// empty customer project, will be
-											// filled later
-		ActivityBooking activBook = new ActivityBooking();
-		instructorHire.setActivityBooking(activBook);
+		
+		Customer cust = new Customer();	
 		Instructor instructor = new Instructor();
-		instructorHire.setInstructor(instructor);
 		ActivityTime activTime = new ActivityTime();
-		instructorHire.setActivityTime(activTime);
+		ActivityBooking activBook = new ActivityBooking(0,new ArrayList<Customer>(),new Activity(), activTime,true,true);
+		InstructorHire instructorHire = new InstructorHire(cust,instructor,activBook,activTime); // storage;
 
 		try { // retrieving data from the InstructorHire table, by using the
 				// columns;
@@ -300,7 +279,8 @@ public class DAOInstructorHire implements IFDAOInstructorHire {
 			activBook.setId(results.getInt("activityBookingID"));
 			instructor.setPersonID(results.getInt("instructorID"));
 			activTime.setDate(results.getString("hireDate"));
-			activTime.setTime(results.getString("hireTime"));
+			String time = results.getString("hireTime");
+			activTime.setTime(time.substring(0,5));
 
 		} catch (Exception e) {
 			System.out.println("error in building the instructorHire object");
@@ -310,7 +290,7 @@ public class DAOInstructorHire implements IFDAOInstructorHire {
 
 	private String buildQuery(String wClause) {
 		String query = "SET DATEFORMAT dmy;"
-				+ " SELECT customerID, activityBookingID, instructorID, hireDate, hireTime FROM InstructorHire";
+				+ " SELECT instructorHireID, customerID, activityBookingID, instructorID, hireDate, hireTime FROM InstructorHire";
 		if (wClause.length() > 0) {
 			query = query + " WHERE " + wClause; // this query will retrieve
 													// that RoomsBooked instance
