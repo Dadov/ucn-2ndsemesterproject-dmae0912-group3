@@ -38,7 +38,7 @@ public class DAOStaff implements IFDAOStaff {
 		// creates query for inserting data in Staff table
 		String query = "SET DATEFORMAT dmy;" +
 				"INSERT INTO Staff(staffID, salary, staffType) VALUES (" +
-				"(SELECT IDENT_CURRENT('Staff')), " +
+				"(SELECT IDENT_CURRENT('Person')), " +
 				staff.getSalary() + ", '" +
 				staffType + "');";
 		System.out.println("Insert query : " + query);
@@ -51,7 +51,7 @@ public class DAOStaff implements IFDAOStaff {
 			
 		}
 		catch(SQLException e) {
-			System.out.println("Staff member was not inserted in the database");
+			System.out.println("Staff member was not inserted into the database");
 			e.getMessage();
 		}
 		return rc;

@@ -33,9 +33,8 @@ public class DAOAgency implements IFDAOAgency {
 		int rc = -1; 
 		// creates query 
 		String query = "SET DATEFORMAT dmy;" +
-				"INSERT INTO Agency(agencyID, name, discountLevel) VALUES(" +
-				agency.getID() + ",'" +
-				agency.getName() + "'," +
+				"INSERT INTO Agency(name, discountLevel) VALUES ('" +
+				agency.getName() + "', " +
 				agency.getAgencyDiscountLevel() + ");";
 		System.out.println("Insert query : " + query);
 		// creates statement and executes query
@@ -47,21 +46,22 @@ public class DAOAgency implements IFDAOAgency {
 			
 		}
 		catch(Exception e) {
-			System.out.println("Agency was not inserted in the database");
+			System.out.println("Agency was not inserted into the database");
 			e.getMessage();
 		}
 		return rc;
 	}
 	
 	// inserts customers in the ProvidedCustomers table
-	public int insertCustomers(ArrayList<Customer> customers, int id) {
+	public int insertCustomers(ArrayList<Customer> customers, int ID) {
 		int rc = -1;
-		if (id == -1)
-			id = getLastInsertedID();
+		if (ID == -1) {
+			ID = getLastInsertedID();
+		}
 		String query = "SET DATEFORMAT dmy;";
 		for (Customer customer : customers) {
 			query = query + "INSERT INTO ProvidedCustomers(agencyID, customerID) VALUES(" +
-			id + "," +
+			ID + ", " +
 			customer.getPersonID() + ");";
 		}
 		try {
@@ -71,7 +71,7 @@ public class DAOAgency implements IFDAOAgency {
 			stmt.close();
 		}
 		catch (SQLException e) {
-			System.out.println("Customer was not inserted in ProvidedCustomers");
+			System.out.println("Customers were not inserted into ProvidedCustomers");
 		}
 		return rc;
 		
@@ -85,8 +85,8 @@ public class DAOAgency implements IFDAOAgency {
 		// creates query
 		String query = "SET DATEFORMAT dmy;" +
 				"UPDATE Agency SET " +
-				"name = '" + agency.getName() + "'," +
-				"discountLevel = " + agency.getAgencyDiscountLevel() + 
+				"name = '" + agency.getName() + "', " +
+				"discountLevel = " + agency.getAgencyDiscountLevel() + " " +
 				"WHERE agencyID = " + agency.getID() + ";";
 		System.out.println("Update query : " + query);
 		// creates statement and executes query
@@ -126,9 +126,9 @@ public class DAOAgency implements IFDAOAgency {
 	}
 
 	// deletes all the customers from ProvidedCustomers, given the agencyID
-	public int deleteCustomers(int id) {
+	public int deleteCustomers(int ID) {
 		int rc = -1;
-		String query = "DELETE FROM ProvidedCustomers WHERE agencyID = " + id + ";";
+		String query = "DELETE FROM ProvidedCustomers WHERE agencyID = " + ID + ";";
 		System.out.println("Delete query : " + query);
 		try {
 			Statement stmt = con.createStatement();
@@ -157,8 +157,13 @@ public class DAOAgency implements IFDAOAgency {
 			if (results.next()) { // check whether there are any agencies in the database
 				agency = buildAgency(results);
 				//inserts provided customers into Agency object
-				agency.setProvidedCustomers(getProvidedCustomers(wClause,false));
+				agency.setProvidedCustomers(getProvidedCustomers(wClause, false));
 				stmt.close();
+				if (retrieveAssociation) {
+					// no association to be retrieved, so retrieveAssociation should be false
+					// if retrieveAssociation is true, an IllegalArgumentException is thrown
+					throw new IllegalArgumentException("No association to be retrived in Agency table");
+				}
 			}
 			else { // no agency found
 				agency = null;	
@@ -166,6 +171,7 @@ public class DAOAgency implements IFDAOAgency {
 		}
 		catch (Exception e) {
 			System.out.println("Query exception: " + e);
+			e.printStackTrace();
 		}
 		return agency;
 	}
@@ -188,6 +194,11 @@ public class DAOAgency implements IFDAOAgency {
 				list.add(agency);
 			}
 			stmt.close();
+			if (retrieveAssociation) {
+				// no association to be retrieved, so retrieveAssociation should be false
+				// if retrieveAssociation is true, an IllegalArgumentException is thrown
+				throw new IllegalArgumentException ("No association to be retrieved in Agency table");
+			}
 		}
 		catch (Exception e) {
 			System.out.println("Query exception : " + e);
@@ -257,13 +268,13 @@ public class DAOAgency implements IFDAOAgency {
 	public int getLastInsertedID() {
 		ResultSet results;
 		String query = "SELECT IDENT_CURRENT('Agency') AS agencyID;";
-		int id = 0;
+		int ID = 0;
 		try {
 			Statement stmt = con.createStatement();
 			stmt.setQueryTimeout(5);
 			results = stmt.executeQuery(query);
 			if (results.next()) {
-				id = results.getInt("agencyID");
+				ID = results.getInt("agencyID");
 			}
 			stmt.close();
 		}
@@ -271,7 +282,7 @@ public class DAOAgency implements IFDAOAgency {
 			System.out.println("Failed in getting last inserted ID");
 			e.getMessage();
 		}
-		return id;
+		return ID;
 	}
 	
 }
