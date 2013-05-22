@@ -8,8 +8,10 @@ import java.sql.Statement;	//SQL queries, built in this class, must be executed;
 //in case, multiple Person instances must be retrieved;
 import java.util.ArrayList;
 
+import Models.Customer;
 //business class, where data fetched from the db will be stored;
 import Models.Person;
+import Models.Staff;
 
 /**
  * separates the db access code from the business class Person; 
@@ -357,9 +359,20 @@ public class DAOPerson implements IFDAOPerson {
      * returns Person instance;
      */
     private Person buildPerson(ResultSet data) {
-	
-	Person person = new Person(); //needed, because it will contain the data (container);
-	
+    	String position = null;
+		Person person = null; //needed, because it will contain the data (container);
+		
+		try{
+			position = data.getString("personType");
+		}
+		catch (Exception e){
+			System.out.println("Error in getting staffType");
+		}
+		
+		if(position.equals("Customer")) person = new Customer();
+		else person = new Staff();
+			
+		
 	try { //populating the container;			/* VALUE		*/
 	    person.setPersonID(data.getInt("personID"));	/* personID		*/
 	    person.setCPR(data.getString("CPR"));		/* CPR			*/
