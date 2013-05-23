@@ -19,12 +19,13 @@ import Models.Room;
 import Models.RoomType;
 
 public class DAORoomTest {
-	private Connection con;
+	private static Connection con;
 	private Room room;
 	private IFDAORoom daoRoom;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		//con.commit();
 	}
 
 	@AfterClass
@@ -33,7 +34,7 @@ public class DAORoomTest {
 		// tests
 		Connection con = DBConnection.getInstance().getDBCon();
 		con.setAutoCommit(false);
-		con.close();
+		//con.close();
 	}
 
 	@Before

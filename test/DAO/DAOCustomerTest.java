@@ -26,7 +26,7 @@ import java.util.ArrayList; //Needed, because multiple Customer instances might 
  */
 public class DAOCustomerTest {
     
-    private Connection con;
+    private static Connection con;
     private Customer c1, c2; //Person instances;
     private IFDAOCustomer dao;
     
@@ -45,6 +45,8 @@ public class DAOCustomerTest {
      * the class are executed; 
      */
     public static void tearDownAfterClass() throws Exception {
+    	con.setAutoCommit(false);
+    	//con.close();
     }
 
     
@@ -96,8 +98,6 @@ public class DAOCustomerTest {
     public void testCRUD() throws SQLException {
 	//gets the Connection instance in order to start transactions;
 	con = DBConnection.getInstance().getDBCon();
-	//autoCommit is set to false, so rollback can be used after tests;
-	con.setAutoCommit(true);
 	dao = new DAOCustomer();
 	
 	try {
@@ -143,8 +143,7 @@ public class DAOCustomerTest {
 	    
 	} finally {
 	    //rollback is used, to undo all changes that were made during testings;
-	    //con.rollback();
-	    con.close();
+	    con.rollback();
 	}
     }
 }
