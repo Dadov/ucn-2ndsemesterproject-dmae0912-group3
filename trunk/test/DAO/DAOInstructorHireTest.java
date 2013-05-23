@@ -48,7 +48,7 @@ public class DAOInstructorHireTest {
 	public static void tearDownAfterClass() throws Exception {
 		con = DBConnection.getInstance().getDBCon();
 		con.setAutoCommit(false);
-		con.close();
+		//con.close();
 	}
 
 	/**

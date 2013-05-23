@@ -20,7 +20,7 @@ import Models.ActivityType;
 import Models.Instructor;
 
 public class DAOActivityTest {
-	private Connection con;
+	private static Connection con;
 	private Activity activity;
 	private IFDAOActivity daoActivity;
 	
@@ -30,6 +30,8 @@ public class DAOActivityTest {
 	
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		con.setAutoCommit(false);
+		//con.close();
 	}
 	
 	@Before
@@ -95,7 +97,6 @@ public class DAOActivityTest {
 		}
 		finally {
 			con.rollback();
-			con.close();
 		}
 	}
 }

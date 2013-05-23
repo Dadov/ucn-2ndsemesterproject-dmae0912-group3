@@ -14,6 +14,7 @@ import org.junit.Test; //needed to indicate testing;
 import java.sql.Connection; //a connection with the db must be established;
 import java.sql.SQLException; //exceptions must be handled, in case an operation fails;
 
+import Models.Customer;
 import Models.Person; //the subject for testing;
 import java.util.ArrayList; //Needed, because multiple Person instances might be retrieved;
 
@@ -26,7 +27,7 @@ import java.util.ArrayList; //Needed, because multiple Person instances might be
  */
 public class DAOPersonTest {
 
-    private Connection con;
+    private static Connection con;
     private Person p1, p2; //Person instances;
     private IFDAOPerson dao;
     
@@ -44,6 +45,8 @@ public class DAOPersonTest {
      * the class are executed;
      */
     public static void tearDownAfterClass() throws Exception {
+    	con.setAutoCommit(false);
+		//con.close();
     }
     
     @Before
@@ -53,14 +56,14 @@ public class DAOPersonTest {
      * at least two are needed, so update method can be tested;
      */
     public void setUp() throws Exception {
-	p1 = new Person(0, "111188-0000", "Jan", "Anderson", 
+	p1 = new Customer(0, "111188-0000", "Jan", "Anderson", 
 			"Danmark", "9000", "Aalborg", "Enrich Vej 10", 
-			"monkey@mail.com", "grant");
+			"monkey@mail.com", "grant", "2010-10-10", 0);
 	//System.out.println(p1.toString());
 	
-	p2 = new Person(1, "010190-0000", "Emily", "Johanson", 
+	p2 = new Customer(1, "010190-0000", "Emily", "Johanson", 
 			"Danmark", "9000", "Aalborg", "Hobrovej 100", 
-			"wildMonkey@crazy.com", "allow");
+			"wildMonkey@crazy.com", "allow", null, 0);
 	//System.out.println(p2.toString());
     }
     
@@ -189,7 +192,6 @@ public class DAOPersonTest {
 	} finally {
 	    //rollback is used, to undo all changes that were made during testings;
 	    con.rollback();
-	    con.close();
 	}
     }
 }

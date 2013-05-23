@@ -18,7 +18,7 @@ import Models.Customer;
 
 public class DAOAgencyTest {
 	
-	private Connection con;
+	private static Connection con;
 	private Agency agency;
 	private IFDAOAgency daoAgency;
 
@@ -28,6 +28,8 @@ public class DAOAgencyTest {
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		con.setAutoCommit(false);
+		//con.close();
 	}
 
 	@Before
@@ -83,7 +85,6 @@ public class DAOAgencyTest {
 		}
 		finally {
 			con.rollback();
-			con.close();
 		}
 	}
 

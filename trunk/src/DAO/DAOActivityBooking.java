@@ -103,7 +103,7 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 				"activityDate = '" + activityBooking.getActivityTime().getDate() + "', " +
 				"activityTime = '" + activityBooking.getActivityTime().getTime() + "', " +
 				"openActivity = " + openActivity + ", " +
-				"instructorHired = " + instrHired + ") " +
+				"instructorHired = " + instrHired + " " +
 				"WHERE activityBookingID = " + activityBooking.getID() + ";";
 		System.out.println("Update query : " + query);
 		// creates statement and executes query
@@ -268,10 +268,11 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 		// fills the ActivityBooking object with date from the database
 		try {
 			activityBooking.setID(results.getInt("activityBookingID"));
+			activityBooking.getActivity().setID(results.getInt("activityID"));
 			activityBooking.setOpenActivity(results.getBoolean("openActivity"));
 			activityBooking.setInstructorHired(results.getBoolean("instructorHired"));
 			String date = results.getString("activityDate");
-			String time = results.getString("activityTime");
+			String time = results.getString("activityTime").substring(0,5);
 			ActivityTime activityTime = new ActivityTime(date, time);
 			activityBooking.setActivityTime(activityTime);
 		}
