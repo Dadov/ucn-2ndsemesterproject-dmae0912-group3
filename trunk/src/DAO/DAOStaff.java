@@ -17,7 +17,7 @@ public class DAOStaff implements IFDAOStaff {
 	@Override
 	public Staff getStaff(int ID, boolean retrieveAssociation) {
 		String wClause = " staffID = '" + ID + "'";
-		return singleWhere(wClause, retrieveAssociation);
+		return singleWhere(wClause, retrieveAssociation, ID);
 	}
 
 	// gets all members of staff
@@ -114,7 +114,7 @@ public class DAOStaff implements IFDAOStaff {
 	}
 
 	// used when only one staff member is to be selected)
-	private Staff singleWhere(String wClause, boolean retrieveAssociation) {
+	private Staff singleWhere(String wClause, boolean retrieveAssociation, int ID) {
 		ResultSet results;
 		IFDAOPerson daoPerson = new DAOPerson();
 		Staff staff = new Staff();
@@ -126,7 +126,7 @@ public class DAOStaff implements IFDAOStaff {
 			stmt.setQueryTimeout(5);
 			results = stmt.executeQuery(query);
 			if (results.next()) { // check whether there are any staff members in the database
-				staff = (Staff) daoPerson.getPerson(Integer.parseInt(wClause.replaceAll("\\D+","")), false);
+				staff = (Staff) daoPerson.getPerson(ID, false);
 				staff = buildStaff(results,staff);
 				stmt.close();
 				if (retrieveAssociation) {
@@ -147,7 +147,7 @@ public class DAOStaff implements IFDAOStaff {
 	// used when more than one staff member is to be selected
 	private ArrayList<Staff> miscWhere(String wClause, boolean retrieveAssociation) {
 		ResultSet results;
-		IFDAOPerson daoPerson = new DAOPerson();
+		
 		ArrayList<Staff> list = new ArrayList<Staff>();
 		String query = buildQuery(wClause);
 		// reads the staff from the database
@@ -157,13 +157,15 @@ public class DAOStaff implements IFDAOStaff {
 			results = stmt.executeQuery(query);
 			while (results.next()) {
 				Staff staff = new Staff();
-				staff = (Staff) daoPerson.getPerson(Integer.parseInt(wClause.replaceAll("\\D+","")), false);
+				IFDAOPerson dbp = new DAOPerson();
+				int ID = results.getInt("staffID");
+				staff = (Staff) dbp.getPerson(ID, false);
 				staff = buildStaff(results, staff);
-				System.out.println("what's in staff duriibg DAOStaff.miscWhere(): " + staff.toString());
+				System.out.println("what's in staff during DAOStaff.miscWhere(): " + staff.toString());
 				if (retrieveAssociation) {
 					// no associations
 				}
-				list.add(staff);
+				list.add((Staff) staff);
 			}
 			stmt.close();
 		}
@@ -186,13 +188,13 @@ public class DAOStaff implements IFDAOStaff {
 			System.out.println("Error in getting staffType");
 		}
 		switch(position){
-		case("Instructor"): staff = new Instructor();
+		case("Instructor"): staff = new Instructor(staff);
 							break;
-		case("Manager"): staff = new Manager();
+		case("Manager"): staff = new Manager(staff);
 							break;
-		case("Receptionist"): staff = new Receptionist();
+		case("Receptionist"): staff = new Receptionist(staff);
 								break;
-		case("Secretary"):	staff = new Secretary();
+		case("Secretary"):	staff = new Secretary(staff);
 							break;
 		}
 
@@ -213,8 +215,7 @@ public class DAOStaff implements IFDAOStaff {
 
 	// builds a query
 	private String buildQuery(String wClause) {
-		String query = "SET DATEFORMAT dmy;" + "SELECT * FROM Staff JOIN Person " +
-				"ON Staff.StaffID=Person.PersonID"+" JOIN Location ON Person.locationZIP=Location.ZIP"; 
+		String query = "SET DATEFORMAT dmy;" + "SELECT * FROM Staff ";
 		if (wClause.length() > 0)
 			query = query + " WHERE " + wClause;
 		return query;
