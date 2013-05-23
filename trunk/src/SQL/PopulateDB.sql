@@ -20,10 +20,10 @@ INSERT INTO Room(roomType, price, note) VALUES('Family', 100, '');
 GO 40
 
 /* Activities/Facilities as described in case */
-INSERT INTO Activity(activityType, capacity) VALUES('TennisCourt', 4);
+INSERT INTO Activity(activityType, capacity, instructorPrice) VALUES('TennisCourt', 4, 30);
 GO 6
 
-INSERT INTO Activity(activityType, capacity) VALUES('BadmintonCourt', 4);
+INSERT INTO Activity(activityType, capacity, instructorPrice) VALUES('BadmintonCourt', 4, 30);
 GO 4
 
 INSERT INTO Activity(activityType, capacity) VALUES('VolleyballCourt', 12);
@@ -33,6 +33,10 @@ INSERT INTO Activity(activityType, capacity) VALUES('HandballCourt', 14);
 GO 2
 
 INSERT INTO Activity(activityType, capacity) VALUES('FitnessCenter', 20);
+
+INSERT INTO Activity(activityType, capacity, instructorPrice) VALUES('Golf', 100000, 40);
+
+INSERT INTO Activity(activityType, capacity, instructorPrice) VALUES('Swimming', 100000, 40);
 
 /* Some trustworthy travel agencies */
 INSERT INTO Agency(name, discountLevel)

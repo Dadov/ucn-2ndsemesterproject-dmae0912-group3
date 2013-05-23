@@ -95,6 +95,7 @@ CREATE TABLE Activity (
     activityID int not null identity,
     activityType varchar(255) not null,
     capacity int not null,
+    instructorPrice int,
     UNIQUE ( activityID ),
     PRIMARY KEY ( activityID )
 );

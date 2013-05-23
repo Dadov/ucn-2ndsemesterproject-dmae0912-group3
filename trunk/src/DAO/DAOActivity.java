@@ -33,9 +33,10 @@ public class DAOActivity implements IFDAOActivity {
 		int rc = -1;
 		// creates query
 		String query = "SET DATEFORMAT dmy;" +
-				"INSERT INTO Activity(activityType, capacity) VALUES('" +
+				"INSERT INTO Activity(activityType, capacity, instructorPrice) VALUES('" +
 				activity.getActivityType() + "', " +
-				activity.getCapacity() + ");";
+				activity.getCapacity() + ", " +
+				activity.getInstructorPrice() +	");";
 		System.out.println("Insert query : " + query);
 		// creates statement and executes query
 		try {
@@ -80,12 +81,14 @@ public class DAOActivity implements IFDAOActivity {
 	public int update(Activity activity) {
 		// row count set to -1
 		int rc = -1;
+		deleteInstructors(activity.getID());
 		// creates query
 		String query = "SET DATEFORMAT dmy;" +
 				"UPDATE ACTIVITY SET " +
 				"activityType = '" + activity.getActivityType() + "', " +
-				"capacity = " + activity.getCapacity() + " " +
-				"WHERE activityID = " + activity.getID() + ";";
+				"capacity = " + activity.getCapacity() + ", " +
+				"instructorPrice = " + activity.getInstructorPrice() +
+				" WHERE activityID = " + activity.getID() + ";";
 		System.out.println("Update query : " + query);
 		// creates statement and executes query
 		try {
@@ -98,6 +101,7 @@ public class DAOActivity implements IFDAOActivity {
 			System.out.println("Acivity update failed.");
 			e.getMessage();
 		}
+		insertInstructor(activity.getActivityInstructors(), activity.getID());
 		return rc;
 	}
 
@@ -106,6 +110,7 @@ public class DAOActivity implements IFDAOActivity {
 	public int delete(int ID) {
 		// row count set to -1
 		int rc = -1;
+		deleteInstructors(ID);
 		// creates query
 		String query = "DELETE FROM ACTIVITY WHERE activityID = " + ID + ";";
 		System.out.println("Delete query :" + query);
@@ -239,6 +244,7 @@ public class DAOActivity implements IFDAOActivity {
 			activity.setID(results.getInt("activityID"));
 			activity.setActivityType(ActivityType.valueOf(results.getString("activityType")));
 			activity.setCapacity(results.getInt("capacity"));
+			activity.setInstructorPrice(results.getInt("instructorPrice"));
 		}
 		catch (Exception e) {
 			System.out.println("Error in building the Activity object");

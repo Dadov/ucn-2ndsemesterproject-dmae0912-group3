@@ -141,12 +141,13 @@ public class ActivitiesCtr {
 		
 		//METHODS FOR ACTIVITY
 		// starts a new booking
-				public void newActivity(ArrayList<Instructor> instructors, ActivityType activityType, int capacity) {
+				public void newActivity(ArrayList<Instructor> instructors, ActivityType activityType, int capacity, int instructorPrice) {
 					Activity activity = new Activity();
 					activity.getID();
 					activity.setActivityInstructors(instructors);
 					activity.setActivityType(activityType);
 					activity.setCapacity(capacity);
+					activity.setInstructorPrice(instructorPrice);
 
 					try {
 						// TODO DBConnection.startTransaction();
@@ -177,13 +178,14 @@ public class ActivitiesCtr {
 				}
 
 				// updates a activity
-				public int updateactivity(int newId, ArrayList<Instructor> instructors, ActivityType activityType, int capacity) {
+				public int updateactivity(int newId, ArrayList<Instructor> instructors, ActivityType activityType, int capacity, int instructorPrice) {
 					IFDAOActivity daoActivity = new DAOActivity();
 					Activity activity = new Activity();
 					activity.setID(newId);
 					activity.setActivityInstructors(instructors);
 					activity.setActivityType(activityType);
 					activity.setCapacity(capacity);
+					activity.setInstructorPrice(instructorPrice);
 					return daoActivity.update(activity);
 				}
 
