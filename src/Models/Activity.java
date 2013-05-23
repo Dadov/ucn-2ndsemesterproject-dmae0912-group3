@@ -8,23 +8,26 @@ public class Activity {
 	private Enum<ActivityType> activityType;
 	private int capacity;
 	private ArrayList<Instructor> activityInstructors;
+	private int instructorPrice;
 
 	public Activity() {
 
 	}
 
 	public Activity(int id, Enum<ActivityType> activityType, int capacity,
-			ArrayList<Instructor> activityInstructors) {
+			ArrayList<Instructor> activityInstructors, int instructorPrice) {
 		this.id = id;
 		this.activityType = activityType;
 		this.capacity = capacity;
 		this.activityInstructors = activityInstructors;
+		this.instructorPrice = instructorPrice;
 	}
 
-	public Activity(Enum<ActivityType> activityType, int capacity, ArrayList<Instructor> activityInstructors) {
+	public Activity(Enum<ActivityType> activityType, int capacity, ArrayList<Instructor> activityInstructors, int instructorPrice) {
 		this.activityType = activityType;
 		this.capacity = capacity;
 		this.activityInstructors = activityInstructors;
+		this.instructorPrice = instructorPrice;
 	}
 
 	public int getID() {
@@ -63,7 +66,16 @@ public class Activity {
 	public String toString() {
 		return "Activity [id=" + id + ", activityType=" + activityType
 				+ ", capacity=" + capacity + ", activityInstructors="
-				+ activityInstructors + "]";
+				+ activityInstructors + ", instructorPrice=" + instructorPrice
+				+ "]";
+	}
+
+	public int getInstructorPrice() {
+		return instructorPrice;
+	}
+
+	public void setInstructorPrice(int instructorPrice) {
+		this.instructorPrice = instructorPrice;
 	}
 
 }

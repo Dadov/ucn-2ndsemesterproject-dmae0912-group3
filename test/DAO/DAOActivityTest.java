@@ -41,7 +41,7 @@ public class DAOActivityTest {
 		ArrayList<Instructor> instructors = new ArrayList<Instructor>();
 		instructors.add(instructor1);
 		instructors.add(instructor2);
-		activity = new Activity(ActivityType.TennisCourt, 20, instructors);
+		activity = new Activity(ActivityType.TennisCourt, 20, instructors, 30);
 	}
 	
 	@After
@@ -63,13 +63,14 @@ public class DAOActivityTest {
 			// insert
 			daoActivity.insert(activity);
 			activity.setID(daoActivity.getLastInsertedID());
-			ArrayList<Activity> activities = daoActivity.getAllActivities(false);
+			ArrayList<Activity> activities = daoActivity.getAllActivities(true);
 			Activity lastActivity = activities.get(activities.size()-1);
 			System.out.println("Last activity is: " + lastActivity.toString());
 			
 			//get
 			assertEquals(activity.getActivityType(), lastActivity.getActivityType());
 			assertEquals(activity.getCapacity(), lastActivity.getCapacity());
+			assertEquals(activity.getInstructorPrice(), lastActivity.getInstructorPrice());
 			int lastID = daoActivity.getLastInsertedID();
 			System.out.println("last id inserted is: " + lastID);
 			// left out the next assertEquals, not working, probably because there is some error in DAOStaff
