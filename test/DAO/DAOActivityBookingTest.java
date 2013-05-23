@@ -16,6 +16,7 @@ import org.junit.Test;
 
 import Models.Customer;
 import Models.Activity;
+import Models.ActivityType;
 import Models.ActivityBooking;
 
 public class DAOActivityBookingTest {
@@ -44,7 +45,7 @@ public class DAOActivityBookingTest {
 		customer.setPersonID(3);
 		activitiesBooked.add(activity);
 		activitiesBooked.add(activity2);
-		activityBooking = new ActivityBooking(customer, activitiesBooked, "2013-10-20", "2013-10-21", "2013-10-22");
+		activityBooking = new ActivityBooking();
 	}
 	
 	@After
@@ -69,7 +70,7 @@ public class DAOActivityBookingTest {
 			assertEquals(activityBooking.toString(), activitybooking.toString());
 		}
 			finally{
-				com.rollback();
+				con.rollback();
 			}
 		}
 	
@@ -84,7 +85,21 @@ public class DAOActivityBookingTest {
 			ArrayList<ActivityBooking> activityBookings = daoActivityBooking.getAllActivityBookings(false);
 			ActivityBooking lastActivityBooking = activityBookings.get(activityBookings.size() -1);
 			
-			assertEquals(activityBooking
+			assertEquals(activityBooking.getId(), lastActivityBooking.getId());
+			assertEquals(activityBooking.getCustomers(), lastActivityBooking.getCustomers());
+			assertEquals(activityBooking.getActivity(), lastActivityBooking.getActivity());
+			assertEquals(activityBooking.getActivityTime().toString(), lastActivityBooking.getActivityTime().toString());
+			
+			// update test
+			// TODO
+			
+			
+			// delete test
+			daoActivityBooking.delete(lastActivityBooking.getId());
+			assertNull(daoActivityBooking.getActivityBooking(lastActivityBooking.getId(), false));
+			
+		} finally {
+			con.rollback();
 		}
 	}
 
