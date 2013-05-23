@@ -66,9 +66,12 @@ public class DAOInstructorHireTest {
 		customer = dbc.getCustomer(11, false);
 		instructor = (Instructor) dbs.getStaff(4, true);
 		IFDAOActivity dba = new DAOActivity();
-		Activity activity = dba.getActivity(1, false);
+		Activity activity = dba.getActivity(33, false);
 		ActivityTime activityTime = new ActivityTime("2013-10-10", "19:00");
-		ActivityBooking activityBooking = new ActivityBooking(5,new ArrayList<Customer>(),activity,activityTime,true,true);
+		ActivityBooking activityBooking = new ActivityBooking(1, new ArrayList<Customer>(),activity,activityTime,true,true);
+		IFDAOActivityBooking dbab = new DAOActivityBooking();
+		dbab.insert(activityBooking);
+		activityBooking.setID(dbab.getLastInsertedID());
 		instructorHire = new InstructorHire(customer, instructor, activityBooking, activityTime);
 		
 	}

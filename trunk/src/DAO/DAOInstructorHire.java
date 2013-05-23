@@ -53,7 +53,7 @@ public class DAOInstructorHire implements IFDAOInstructorHire {
 				+ " INSERT INTO InstructorHire(customerID, instructorID, activityBookingID, hireDate, hireTime) VALUES("
 				+ instructorHire.getCustomer().getPersonID() + ","
 				+ instructorHire.getInstructor().getPersonID() + ","
-				+ instructorHire.getActivityBooking().getId() + ",'"
+				+ instructorHire.getActivityBooking().getID() + ",'"
 				+ instructorHire.getActivityTime().getDate() + "','"
 				+ instructorHire.getActivityTime().getTime() + "');";
 
@@ -85,7 +85,7 @@ public class DAOInstructorHire implements IFDAOInstructorHire {
 				+ "," + "instructorID = "
 				+ instructorHire.getInstructor().getPersonID() + ","
 				+ "activityBookingID = "
-				+ instructorHire.getActivityBooking().getId() + ","
+				+ instructorHire.getActivityBooking().getID() + ","
 				+ "hireDate = '" + instructorHire.getActivityTime().getDate()
 				+ "'," + "hireTime = '"
 				+ instructorHire.getActivityTime().getTime() + "'"
@@ -172,7 +172,7 @@ public class DAOInstructorHire implements IFDAOInstructorHire {
 					instructorHire.setInstructor(staff);
 
 					IFDAOActivityBooking dbActiv = new DAOActivityBooking();
-					int actID = instructorHire.getActivityBooking().getId();
+					int actID = instructorHire.getActivityBooking().getID();
 					ActivityBooking activityBooking = dbActiv
 							.getActivityBooking(actID, false);
 					instructorHire.setActivityBooking(activityBooking);
@@ -245,7 +245,7 @@ public class DAOInstructorHire implements IFDAOInstructorHire {
 					instructorHire1.setInstructor(instructor);
 
 					IFDAOActivityBooking dbActiv = new DAOActivityBooking();
-					int actID = instructorHire.getActivityBooking().getId();
+					int actID = instructorHire.getActivityBooking().getID();
 					ActivityBooking activityBooking = dbActiv
 							.getActivityBooking(actID, false);
 					instructorHire1.setActivityBooking(activityBooking);
@@ -275,7 +275,7 @@ public class DAOInstructorHire implements IFDAOInstructorHire {
 				// columns;
 			instructorHire.setId(results.getInt("instructorHireID"));
 			cust.setPersonID(results.getInt("customerID"));
-			activBook.setId(results.getInt("activityBookingID"));
+			activBook.setID(results.getInt("activityBookingID"));
 			instructor.setPersonID(results.getInt("instructorID"));
 			activTime.setDate(results.getString("hireDate"));
 			String time = results.getString("hireTime");
