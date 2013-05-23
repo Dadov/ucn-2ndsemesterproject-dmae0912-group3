@@ -15,4 +15,6 @@ public interface IFDAOActivity {
 	public int update(Activity activity);
 
 	public int delete(int ID);
+	
+	public int getLastInsertedID();
 }

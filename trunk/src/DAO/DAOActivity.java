@@ -33,10 +33,9 @@ public class DAOActivity implements IFDAOActivity {
 		int rc = -1;
 		// creates query
 		String query = "SET DATEFORMAT dmy;" +
-				"INSERT INTO Activity(activityID, activityType, capacity) VALUES(" +
-				activity.getID() + ",'" +
-				activity.getActivityType() + "'," +
-				activity.getCapacity() + ",'";
+				"INSERT INTO Activity(activityType, capacity) VALUES('" +
+				activity.getActivityType() + "', " +
+				activity.getCapacity() + ");";
 		System.out.println("Insert query : " + query);
 		// creates statement and executes query
 		try {
@@ -84,9 +83,9 @@ public class DAOActivity implements IFDAOActivity {
 		// creates query
 		String query = "SET DATEFORMAT dmy;" +
 				"UPDATE ACTIVITY SET " +
-				"activityType = " + activity.getActivityType() + "';" +
-				"capacity = " + activity.getCapacity() + ",'" +
-				"WHERE activityID = " + activity.getID() + ",'";
+				"activityType = '" + activity.getActivityType() + "', " +
+				"capacity = " + activity.getCapacity() + " " +
+				"WHERE activityID = " + activity.getID() + ";";
 		System.out.println("Update query : " + query);
 		// creates statement and executes query
 		try {
@@ -108,7 +107,7 @@ public class DAOActivity implements IFDAOActivity {
 		// row count set to -1
 		int rc = -1;
 		// creates query
-		String query = "DELETE FROM ACTIVITY WHERE activityID = " + ID + ",'";
+		String query = "DELETE FROM ACTIVITY WHERE activityID = " + ID + ";";
 		System.out.println("Delete query :" + query);
 		// creates statement and executes query
 		try {
@@ -159,6 +158,7 @@ public class DAOActivity implements IFDAOActivity {
 				activity.setActivityInstructors(getActivityInstructors(wClause,false));
 				stmt.close();
 				if (retrieveAssociation) {
+					// no association to be retrieved
 				}
 			}
 			else { // no activity found
@@ -172,7 +172,6 @@ public class DAOActivity implements IFDAOActivity {
 	}
 
 	//used when more than one activity is to be selected
-	@SuppressWarnings("unused")
 	private ArrayList<Activity> miscWhere(String wClause, boolean retrieveAssociation) {
 		ResultSet results;
 		ArrayList<Activity> list = new ArrayList<Activity>();
@@ -191,8 +190,7 @@ public class DAOActivity implements IFDAOActivity {
 			}
 			stmt.close();
 			if (retrieveAssociation) {
-				for (Activity activity : list) {
-				}
+				// no association to be retrieved
 			}
 		}
 		catch (Exception e) {
@@ -215,7 +213,7 @@ public class DAOActivity implements IFDAOActivity {
 			results = stmt.executeQuery(query);
 			while(results.next()) {
 				try{
-					instructor = (Instructor) daoStaff.getStaff(results.getInt("instructorID"),false);
+					instructor = (Instructor) daoStaff.getStaff(results.getInt("instructorID"), false);
 				}
 				catch(ClassCastException cce){
 				}
@@ -227,6 +225,7 @@ public class DAOActivity implements IFDAOActivity {
 			System.out.println("Query exception : " + e);
 			e.printStackTrace();
 		}
+		System.out.println("Instructors : " + activityInstructors.toString());
 		return activityInstructors;
 	}
 	
@@ -259,7 +258,7 @@ public class DAOActivity implements IFDAOActivity {
 	private String buildInstructorsQuery(String wClause) {
 		String query = "SET DATEFORMAT dmy;" + " SELECT instructorID FROM ActivityInstructors";
 		if (wClause.length() > 0)
-			query = query + "WHERE" + wClause;
+			query = query + " WHERE " + wClause;
 		return query;
 	}
 	
