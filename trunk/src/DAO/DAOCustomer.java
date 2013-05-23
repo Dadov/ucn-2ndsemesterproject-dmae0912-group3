@@ -285,7 +285,7 @@ public class DAOCustomer implements IFDAOCustomer {
 	Customer customer = new Customer(); 	
 	
 	//needed to retrieve Customer's personal data(CPR, Fname, Lname, etc.);
-	IFDAOPerson daoPerson = new DAOPerson();
+	//IFDAOPerson daoPerson = new DAOPerson();
 	
 	//building SELECT query, see private String buildQuery(wClause);
 	String query = buildQuery(wClause);
@@ -303,7 +303,6 @@ public class DAOCustomer implements IFDAOCustomer {
 	    while(results.next()) {
 		
 		//populates Customer instance with data from Person and Location tables;
-		customer = (Customer) daoPerson.getPerson(Integer.parseInt(wClause.replaceAll("\\D+","")), false);
 		//populates Customer instance with data from Customer table;
 		customer = buildCustomer(results, customer);
 		
@@ -343,17 +342,17 @@ public class DAOCustomer implements IFDAOCustomer {
     	
 	
 	try { //populating the container;					/* VALUE		*/
-	    //customer.setPersonID(data.getInt("personID"));	/* personID		*/
-	   // customer.setCPR(data.getString("CPR"));		/* CPR			*/
-	   // customer.setFname(data.getString("fname"));		/* fname		*/
-	    //customer.setLname(data.getString("lname"));		/* lname		*/
-	    //customer.setAddress(data.getString("address"));	/* address		*/
-	    //customer.setZIP(data.getString("locationZIP"));	/* locationZIP (FK)	*/
-	    //customer.setCountry(data.getString("country"));	/* country (FK)		*/
-	    //customer.setEmail(data.getString("email"));		/* email		*/
-	    //customer.setPassword(data.getString("password"));	/* password		*/
-	    //customer.setCity(data.getString("city"));		/* city			*/
-	    customer.setRegistrationDate(data.getString("registrationDate"));	/* registrationDate	*/
+	    customer.setPersonID(data.getInt("personID"));	/* personID		*/
+	    customer.setCPR(data.getString("CPR"));		/* CPR			*/
+	    customer.setFname(data.getString("fname"));		/* fname		*/
+	    customer.setLname(data.getString("lname"));		/* lname		*/
+	    customer.setAddress(data.getString("address"));	/* address		*/
+	    customer.setZIP(data.getString("locationZIP"));	/* locationZIP (FK)	*/
+	    customer.setCountry(data.getString("country"));	/* country (FK)		*/
+	    customer.setEmail(data.getString("email"));		/* email		*/
+	    customer.setPassword(data.getString("password"));	/* password		*/
+	    customer.setCity(data.getString("city"));		/* city			*/
+	    customer.setRegistrationDate(data.getString("dateFormated"));	/* registrationDate	*/
 	    customer.setNoOfStays(data.getInt("noOfStays"));			/* noOfStays		*/
 	  
 	} catch(Exception cantBuild) {
@@ -373,9 +372,8 @@ public class DAOCustomer implements IFDAOCustomer {
      */
     private String buildQuery(String wClause) {
 	
-	String query = "SET DATEFORMAT dmy;" + "SELECT * FROM Customer RIGHT JOIN Person " +
-			"ON Customer.CustomerID=Person.PersonID"+" RIGHT JOIN Location ON Person.locationZIP=Location.ZIP"; 	/* selects all columns in Person */
-	
+	String query = "SELECT *, CONVERT(CHAR(10), registrationDate, 105) AS dateFormated FROM Customer RIGHT JOIN Person ON Customer.CustomerID=Person.PersonID RIGHT JOIN Location ON Person.locationZIP=Location.ZIP"; 	/* selects all columns in Person */
+	System.out.println(query);
 	if(wClause.length()>0) {
 	    query += " WHERE " + wClause; //adding the conditions to the query;
 	}
