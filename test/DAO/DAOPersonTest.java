@@ -5,14 +5,14 @@ import static org.junit.Assert.assertNull; //needed to check that the DELETE ope
 import static org.mockito.Mockito.mock; //needed to make a mock of DBConnection;
 import static org.mockito.Mockito.when; //needed to verify that getDBCon() has succeeded;
 
-import java.sql.Connection; //a connection with the db must be established;
-import java.sql.SQLException; //exceptions must be handled, in case an operation fails;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before; //needed to prepare everything before testing;
 import org.junit.BeforeClass; 
 import org.junit.Test; //needed to indicate testing;
+
+import java.sql.Connection; //a connection with the db must be established;
+import java.sql.SQLException; //exceptions must be handled, in case an operation fails;
 
 import Models.Person; //the subject for testing;
 import java.util.ArrayList; //Needed, because multiple Person instances might be retrieved;
@@ -28,7 +28,7 @@ public class DAOPersonTest {
 
     private Connection con;
     private Person p1, p2; //Person instances;
-    private DAOPerson dao;
+    private IFDAOPerson dao;
     
     @BeforeClass
     /*
@@ -104,7 +104,7 @@ public class DAOPersonTest {
 	try {
 	    //INSERT Person;
 	    dao.insert(p1, "Customer"); //inserts the Person data;
-	    //getAllPerson is used, because it is least complex;
+	    //getAllPersons() is used, because it is least complex;
 	    ArrayList<Person> persons = dao.getAllPersons(false);
 	    Person lastInserted = persons.get(persons.size()-1);
 	    //we have to compare field by field, because p1 doesn't have ID;
@@ -122,66 +122,72 @@ public class DAOPersonTest {
 	    //needed to retrieve the ID, because p1 doesn't have one;
 	    int personID = lastInserted.getPersonID();
 	    Person resultByID = dao.getPerson(personID, false);
-	    //comparing field by field;
-	    assertEquals(p1.getAddress(), resultByID.getAddress());
-	    assertEquals(p1.getCity(), resultByID.getCity());
-	    assertEquals(p1.getCountry(), resultByID.getCountry());
-	    assertEquals(p1.getCPR(), resultByID.getCPR());
-	    assertEquals(p1.getEmail(), resultByID.getEmail());
-	    assertEquals(p1.getFname(), resultByID.getFname());
-	    assertEquals(p1.getLname(), resultByID.getLname());
-	    assertEquals(p1.getPassword(), resultByID.getPassword());
-	    assertEquals(p1.getZIP(), resultByID.getZIP());
+	    //comparing toString by toString;
+	    assertEquals(lastInserted.toString(), resultByID.toString());
+	    //assertEquals(lastInserted, resultByID);
+	    //assertEquals(p1.getAddress(), resultByID.getAddress());
+	    //assertEquals(p1.getCity(), resultByID.getCity());
+	    //assertEquals(p1.getCountry(), resultByID.getCountry());
+	    //assertEquals(p1.getCPR(), resultByID.getCPR());
+	    //assertEquals(p1.getEmail(), resultByID.getEmail());
+	    //assertEquals(p1.getFname(), resultByID.getFname());
+	    //assertEquals(p1.getLname(), resultByID.getLname());
+	    //assertEquals(p1.getPassword(), resultByID.getPassword());
+	    //assertEquals(p1.getZIP(), resultByID.getZIP());
 	    
 	    //GET Person by CPR number;
 	    Person resultByCPR = dao.getPerson(p1.getCPR(), false);
-	    //comparing field by field;
-	    assertEquals(p1.getAddress(), resultByCPR.getAddress());
-	    assertEquals(p1.getCity(), resultByCPR.getCity());
-	    assertEquals(p1.getCountry(), resultByCPR.getCountry());
-	    assertEquals(p1.getCPR(), resultByCPR.getCPR());
-	    assertEquals(p1.getEmail(), resultByCPR.getEmail());
-	    assertEquals(p1.getFname(), resultByCPR.getFname());
-	    assertEquals(p1.getLname(), resultByCPR.getLname());
-	    assertEquals(p1.getPassword(), resultByCPR.getPassword());
-	    assertEquals(p1.getZIP(), resultByCPR.getZIP());
+	    //comparing toString by toString;
+	    assertEquals(lastInserted.toString(), resultByCPR.toString());
+	    //assertEquals(p1.getAddress(), resultByCPR.getAddress());
+	    //assertEquals(p1.getCity(), resultByCPR.getCity());
+	    //assertEquals(p1.getCountry(), resultByCPR.getCountry());
+	    //assertEquals(p1.getCPR(), resultByCPR.getCPR());
+	    //assertEquals(p1.getEmail(), resultByCPR.getEmail());
+	    //assertEquals(p1.getFname(), resultByCPR.getFname());
+	    //assertEquals(p1.getLname(), resultByCPR.getLname());
+	    //assertEquals(p1.getPassword(), resultByCPR.getPassword());
+	    //assertEquals(p1.getZIP(), resultByCPR.getZIP());
 	    
 	    //GET Person by First and Last name;
 	    Person resultByLFname = dao.getPerson(p1.getFname(), p1.getLname(), false).get(0);
-	    //comparing field by field;
-	    assertEquals(p1.getAddress(), resultByLFname.getAddress());
-	    assertEquals(p1.getCity(), resultByLFname.getCity());
-	    assertEquals(p1.getCountry(), resultByLFname.getCountry());
-	    assertEquals(p1.getCPR(), resultByLFname.getCPR());
-	    assertEquals(p1.getEmail(), resultByLFname.getEmail());
-	    assertEquals(p1.getFname(), resultByLFname.getFname());
-	    assertEquals(p1.getLname(), resultByLFname.getLname());
-	    assertEquals(p1.getPassword(), resultByLFname.getPassword());
-	    assertEquals(p1.getZIP(), resultByLFname.getZIP());
+	    //comparing toString by toString;
+	    assertEquals(lastInserted.toString(), resultByLFname.toString());
+	    //assertEquals(p1.getAddress(), resultByLFname.getAddress());
+	    //assertEquals(p1.getCity(), resultByLFname.getCity());
+	    //assertEquals(p1.getCountry(), resultByLFname.getCountry());
+	    //assertEquals(p1.getCPR(), resultByLFname.getCPR());
+	    //assertEquals(p1.getEmail(), resultByLFname.getEmail());
+	    //assertEquals(p1.getFname(), resultByLFname.getFname());
+	    //assertEquals(p1.getLname(), resultByLFname.getLname());
+	    //assertEquals(p1.getPassword(), resultByLFname.getPassword());
+	    //assertEquals(p1.getZIP(), resultByLFname.getZIP());
 	    
 	    //UPDATE Person;
 	    //changes p1 data with p2 data;
 	    p2.setPersonID(personID); //needed, because p2 doesn't have ID;
 	    dao.update(p2, "Customer");
-	    //updates the collection, so the last insertion can be retrieved;
+	    //updates the persons collection, so the last update can be retrieved;
 	    persons = dao.getAllPersons(false);
 	    lastInserted = persons.get(persons.size()-1);
-	    //comparing field by field;
-	    assertEquals(p2.getAddress(), lastInserted.getAddress());
-	    assertEquals(p2.getCity(), lastInserted.getCity());
-	    assertEquals(p2.getCountry(), lastInserted.getCountry());
-	    assertEquals(p2.getCPR(), lastInserted.getCPR());
-	    assertEquals(p2.getEmail(), lastInserted.getEmail());
-	    assertEquals(p2.getFname(), lastInserted.getFname());
-	    assertEquals(p2.getLname(), lastInserted.getLname());
-	    assertEquals(p2.getPassword(), lastInserted.getPassword());
-	    assertEquals(p2.getZIP(), lastInserted.getZIP());
+	    //comparing toString by toString;
+	    assertEquals(p2.toString(), lastInserted.toString());
+	    //assertEquals(p2.getAddress(), lastInserted.getAddress());
+	    //assertEquals(p2.getCity(), lastInserted.getCity());
+	    //assertEquals(p2.getCountry(), lastInserted.getCountry());
+	    //assertEquals(p2.getCPR(), lastInserted.getCPR());
+	    //assertEquals(p2.getEmail(), lastInserted.getEmail());
+	    //assertEquals(p2.getFname(), lastInserted.getFname());
+	    //assertEquals(p2.getLname(), lastInserted.getLname());
+	    //assertEquals(p2.getPassword(), lastInserted.getPassword());
+	    //assertEquals(p2.getZIP(), lastInserted.getZIP());
 	    
 	    //DELETE Person;
 	    dao.delete(personID);
 	    assertNull(dao.getPerson(personID, false));
 	    
 	} finally {
+	    //rollback is used, to undo all changes that were made during testings;
 	    con.rollback();
 	    con.close();
 	}
