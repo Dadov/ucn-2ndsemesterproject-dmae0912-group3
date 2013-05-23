@@ -19,20 +19,19 @@ public class MainGUI {
 	 */
 	private void initialize() {
 		// Create and set up the window.
-		JFrame jFrame = new JFrame("Skynet");
-		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame = new JFrame("Skynet");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		Dimension dimension = new Dimension(1000, 600);
-		jFrame.setMinimumSize(dimension);
-		System.out.println(jFrame.getSize());
+		frame.setMinimumSize(new Dimension(1000, 600));
+		System.out.println(frame.getSize());
 
 		// Display the window.
-		jFrame.pack();
-		jFrame.getContentPane().setLayout(new CardLayout(0, 0));
-		jFrame.setVisible(true);
+		frame.pack();
+		frame.getContentPane().setLayout(new CardLayout(0, 0));
+		frame.setVisible(true);
 
 		loginGUI = new LoginGUI();
-		jFrame.getContentPane().add(loginGUI, "loginGUI");
+		frame.getContentPane().add(loginGUI, "loginGUI");
 	}
 
 	public static void main(String[] args) {
