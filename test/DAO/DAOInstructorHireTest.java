@@ -57,14 +57,13 @@ public class DAOInstructorHireTest {
 	@Before
 	public void setUp() throws Exception {
 		con = DBConnection.getInstance().getDBCon();
-		con.setAutoCommit(false);
 		Instructor instructor = new Instructor();
 		instructor.setPersonID(4);
 		Customer customer = new Customer();
-		customer.setPersonID(2);
+		customer.setPersonID(11);
 		IFDAOStaff dbs= new DAOStaff();
 		IFDAOCustomer dbc = new DAOCustomer();
-		customer = dbc.getCustomer(2, false);
+		customer = dbc.getCustomer(11, false);
 		instructor = (Instructor) dbs.getStaff(4, true);
 		IFDAOActivity dba = new DAOActivity();
 		Activity activity = dba.getActivity(1, false);

@@ -57,7 +57,7 @@ public class DAORoomBookingTest {
 		Room r2 = dbRoom.getRoom(2,false);
 		ArrayList<Room> roomsBooked = new ArrayList<Room>();
 		Customer customer = new Customer();
-		customer.setPersonID(2);
+		customer.setPersonID(11);
 		roomsBooked.add(room);
 		roomsBooked.add(r2);
 		roomBook = new RoomBooking(customer , roomsBooked, "2013-10-20", "2013-10-21", "2013-10-22");
@@ -129,6 +129,7 @@ public class DAORoomBookingTest {
 			// DAO part
 
 			// cannot compare by toString since we don't have Room number
+			assertEquals(roomBook.getCustomer().toString(), lastRoomBooking.getCustomer().toString());
 			assertEquals(roomBook.getDateBooked(), lastRoomBooking.getDateBooked());
 			assertEquals(roomBook.getDateEnd(), lastRoomBooking.getDateEnd());
 			assertEquals(roomBook.getDateStart(), lastRoomBooking.getDateStart());

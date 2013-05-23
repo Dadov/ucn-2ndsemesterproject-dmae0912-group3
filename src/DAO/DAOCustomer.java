@@ -245,9 +245,9 @@ public class DAOCustomer implements IFDAOCustomer {
 	    //checks if there is any Customer at all;
 	    //if there is, Customer will be built;
 	    if(results.next()) {
-		
+		int ID = results.getInt("customerID");
 		//populates Customer instance with data from Person and Location tables;
-		customer = (Customer) daoPerson.getPerson(Integer.parseInt(wClause.replaceAll("\\D+","")), false);
+		customer = (Customer) daoPerson.getPerson(ID, false);
 		//populates Customer instance with data from Customer table;
 		customer = buildCustomer(results, customer);
 		stmt.close();
@@ -278,7 +278,7 @@ public class DAOCustomer implements IFDAOCustomer {
      * prompts for wClause and retrieveAssociation;
      */
     private ArrayList<Customer> miscWhere(String wClause, boolean retrieveAssociation) {
-	
+    IFDAOPerson daoPerson = new DAOPerson();
 	//the data thats is going to be retrieved from the db will be stored here;
 	ResultSet results;
 	//ArrayList is needed because multiple Customer instances are going to be built;	
@@ -303,10 +303,12 @@ public class DAOCustomer implements IFDAOCustomer {
 	    //while loop is used, because multiple ResultSets are expected;
 	    //also, multiple Customer instances are going to be built;
 	    while(results.next()) {
-		
-		//populates Customer instance with data from Person and Location tables;
-		//populates Customer instance with data from Customer table;
-		customer = buildCustomer(results, customer);
+	    	int ID = results.getInt("customerID");
+			//populates Customer instance with data from Person and Location tables;
+			customer = (Customer) daoPerson.getPerson(ID, false);
+			//populates Customer instance with data from Person and Location tables;
+			//populates Customer instance with data from Customer table;
+			customer = buildCustomer(results, customer);
 		
 		//there shouldn't be any retrieve association;
 		//in case the boolean condition returns true it will throw an exception;
@@ -344,16 +346,6 @@ public class DAOCustomer implements IFDAOCustomer {
     	
 	
 	try { //populating the container;					/* VALUE		*/
-	    customer.setPersonID(data.getInt("personID"));	/* personID		*/
-	    customer.setCPR(data.getString("CPR"));		/* CPR			*/
-	    customer.setFname(data.getString("fname"));		/* fname		*/
-	    customer.setLname(data.getString("lname"));		/* lname		*/
-	    customer.setAddress(data.getString("address"));	/* address		*/
-	    customer.setZIP(data.getString("locationZIP"));	/* locationZIP (FK)	*/
-	    customer.setCountry(data.getString("country"));	/* country (FK)		*/
-	    customer.setEmail(data.getString("email"));		/* email		*/
-	    customer.setPassword(data.getString("password"));	/* password		*/
-	    customer.setCity(data.getString("city"));		/* city			*/
 	    customer.setRegistrationDate(data.getString("dateFormated"));	/* registrationDate	*/
 	    customer.setNoOfStays(data.getInt("noOfStays"));			/* noOfStays		*/
 	  
@@ -374,7 +366,7 @@ public class DAOCustomer implements IFDAOCustomer {
      */
     private String buildQuery(String wClause) {
 	
-	String query = "SELECT *, CONVERT(CHAR(10), registrationDate, 105) AS dateFormated FROM Customer RIGHT JOIN Person ON Customer.CustomerID=Person.PersonID RIGHT JOIN Location ON Person.locationZIP=Location.ZIP"; 	/* selects all columns in Person */
+	String query = "SELECT *, CONVERT(CHAR(10), registrationDate, 105) AS dateFormated FROM Customer" ; 	/* selects all columns in Person */
 	System.out.println(query);
 	if(wClause.length()>0) {
 	    query += " WHERE " + wClause; //adding the conditions to the query;
