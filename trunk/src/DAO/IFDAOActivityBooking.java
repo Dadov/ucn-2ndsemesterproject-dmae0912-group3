@@ -16,5 +16,7 @@ public interface IFDAOActivityBooking {
 	public int update(ActivityBooking activityBooking);
 
 	public int delete(int ID);
+	
+	public int getLastInsertedID();
 
 }

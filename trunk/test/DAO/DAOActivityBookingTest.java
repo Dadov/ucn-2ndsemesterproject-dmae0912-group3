@@ -14,13 +14,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import Models.ActivityTime;
 import Models.Customer;
 import Models.Activity;
-import Models.ActivityType;
 import Models.ActivityBooking;
 
 public class DAOActivityBookingTest {
-	private static Connection con;
+	private Connection con;
 	private ActivityBooking activityBooking;
 	private IFDAOActivityBooking daoActivityBooking;
 	
@@ -30,22 +30,19 @@ public class DAOActivityBookingTest {
 	
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-		con = DBConnection.getInstance().getDBCon();
-		con.setAutoCommit(false);
-		con.close();
+		
 	}
 	
 	@Before
 	public void setUp() throws Exception {
-		IFDAOActivity dbActivity = new DAOActivity();
-		Activity activity = dbActivity.getActivity("TennisCourt", false);
-		Activity activity2 = dbActivity.getActivity("BadmintonCourt", false);
-		ArrayList<Activity> activitiesBooked = new ArrayList<Activity>();
-		Customer customer = new Customer();
-		customer.setPersonID(3);
-		activitiesBooked.add(activity);
-		activitiesBooked.add(activity2);
-		activityBooking = new ActivityBooking();
+		Customer customer1 = new Customer();
+		Customer customer2 = new Customer();
+		ArrayList<Customer> customers = new ArrayList<Customer>();
+		customers.add(customer1);
+		customers.add(customer2);
+		Activity activity = new Activity();
+		ActivityTime activityTime = new ActivityTime("24-09-2010", "15:00");
+		activityBooking = new ActivityBooking(customers, activity, activityTime, false, false);
 	}
 	
 	@After
@@ -53,53 +50,73 @@ public class DAOActivityBookingTest {
 	}
 	
 	@Test
-	public final void testDAOActivityBooking() {
+	public void testDAOActivityBooking() {
 		DBConnection dbCon = mock(DBConnection.class);
 		when(dbCon.getDBCon()).thenReturn(con);
 	}
 	
 	@Test
-	public final void testGetActivityBooking() throws SQLException {
+	public void testGetActivityBooking() throws SQLException {
 		con = DBConnection.getInstance().getDBCon();
 		con.setAutoCommit(false);
 		daoActivityBooking = new DAOActivityBooking();
-		try{
+		try {
 			daoActivityBooking.insert(activityBooking);
-			activityBooking.setId(daoActivityBooking.getLastInsertedID());
-			ActivityBooking activitybooking = daoActivityBooking.getActivityBooking(daoActivityBooking.getLastInsertedID(),false);
-			assertEquals(activityBooking.toString(), activitybooking.toString());
+			int lastID = daoActivityBooking.getLastInsertedID();
+			activityBooking.setID(lastID);
+			ActivityBooking lastActivityBooking = daoActivityBooking.getActivityBooking(lastID, true);
+			System.out.println("Last activity: " + lastActivityBooking);
+			assertEquals(activityBooking, lastActivityBooking);
 		}
-			finally{
-				con.rollback();
-			}
+		finally {
+			con.rollback();
+			con.close();
 		}
+	}
 	
 	@Test
-	public final void testCRUD() throws SQLException {
+	public void testCRUD() throws SQLException {
 		con = DBConnection.getInstance().getDBCon();
 		con.setAutoCommit(false);
 		daoActivityBooking = new DAOActivityBooking();
 		
 		try{
+			//insert test
 			daoActivityBooking.insert(activityBooking);
-			ArrayList<ActivityBooking> activityBookings = daoActivityBooking.getAllActivityBookings(false);
-			ActivityBooking lastActivityBooking = activityBookings.get(activityBookings.size() -1);
+			int lastID = daoActivityBooking.getLastInsertedID();
+			activityBooking.setID(lastID);
+			ArrayList<ActivityBooking> activityBookings = daoActivityBooking.getAllActivityBookings(true);
+			ActivityBooking lastActivityBooking = activityBookings.get(activityBookings.size()-1);
 			
-			assertEquals(activityBooking.getId(), lastActivityBooking.getId());
-			assertEquals(activityBooking.getCustomers(), lastActivityBooking.getCustomers());
-			assertEquals(activityBooking.getActivity(), lastActivityBooking.getActivity());
-			assertEquals(activityBooking.getActivityTime().toString(), lastActivityBooking.getActivityTime().toString());
+			//get test
+			assertEquals(activityBooking.getID(), 
+					lastActivityBooking.getID());
+			assertEquals(activityBooking.getCustomers().toString(), 
+					lastActivityBooking.getCustomers().toString());
+			assertEquals(activityBooking.getActivity().toString(), 
+					lastActivityBooking.getActivity().toString());
+			assertEquals(activityBooking.getActivityTime().toString(), 
+					lastActivityBooking.getActivityTime().toString());
 			
 			// update test
-			// TODO
+			ActivityTime activityTime = new ActivityTime("12-07-2007", "12:00");
+			lastActivityBooking.setActivityTime(activityTime);
+			lastActivityBooking.setInstructorHired(true);
+			lastActivityBooking.setOpenActivity(true);
+			daoActivityBooking.update(activityBooking);
+			assertEquals(lastActivityBooking.toString(),
+					daoActivityBooking.getActivityBooking(daoActivityBooking.getLastInsertedID(), true).toString());
+			
 			
 			
 			// delete test
-			daoActivityBooking.delete(lastActivityBooking.getId());
-			assertNull(daoActivityBooking.getActivityBooking(lastActivityBooking.getId(), false));
+			daoActivityBooking.delete(lastActivityBooking.getID());
+			assertNull(daoActivityBooking.getActivityBooking(lastActivityBooking.getID(), true));
 			
-		} finally {
+		} 
+		finally {
 			con.rollback();
+			con.close();
 		}
 	}
 

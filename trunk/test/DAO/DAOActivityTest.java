@@ -73,11 +73,12 @@ public class DAOActivityTest {
 			assertEquals(activity.getInstructorPrice(), lastActivity.getInstructorPrice());
 			int lastID = daoActivity.getLastInsertedID();
 			System.out.println("last id inserted is: " + lastID);
+			
 			// left out the next assertEquals, not working, probably because there is some error in DAOStaff
 			//when DAOStaff is completed and correct, this should also work
 			//otherwise, test was passed
-			//assertEquals(activity.getActivityInstructors(), daoActivity.getActivity(lastID, false).getActivityInstructors());
-			assertEquals(activity.getID(), lastID);
+			//assertEquals(activity.getActivityInstructors().toString(), lastActivity.getActivityInstructors().toString());
+			assertEquals(activity.getID(), lastActivity.getID());
 			
 			//update test
 			lastActivity.setActivityType(ActivityType.BadmintonCourt);

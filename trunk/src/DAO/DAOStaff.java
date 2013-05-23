@@ -40,7 +40,7 @@ public class DAOStaff implements IFDAOStaff {
 				"INSERT INTO Staff(staffID, salary, staffType) VALUES (" +
 				"(SELECT IDENT_CURRENT('Person')), " +
 				staff.getSalary() + ", '" +
-				staffType + "');";
+				staffType + "');"; 
 		System.out.println("Insert query : " + query);
 		// creates statement and executes query
 		try {
@@ -116,10 +116,10 @@ public class DAOStaff implements IFDAOStaff {
 	// used when only one staff member is to be selected)
 	private Staff singleWhere(String wClause, boolean retrieveAssociation, int ID) {
 		ResultSet results;
-		IFDAOPerson daoPerson = new DAOPerson();
 		Staff staff = new Staff();
 		String query = buildQuery(wClause);
 		System.out.println(query);
+		IFDAOPerson daoPerson = new DAOPerson();
 		// reads the staff member from the database
 		try {
 			Statement stmt = con.createStatement();
@@ -147,7 +147,6 @@ public class DAOStaff implements IFDAOStaff {
 	// used when more than one staff member is to be selected
 	private ArrayList<Staff> miscWhere(String wClause, boolean retrieveAssociation) {
 		ResultSet results;
-		
 		ArrayList<Staff> list = new ArrayList<Staff>();
 		String query = buildQuery(wClause);
 		// reads the staff from the database
@@ -204,6 +203,16 @@ public class DAOStaff implements IFDAOStaff {
 		System.out.println("Object type test from buildStaff:" + cls.getName());
 		// fills the Agency object with results from the database
 		try {
+			staff.setPersonID(results.getInt("personID"));	/* personID		*/
+		    staff.setCPR(results.getString("CPR"));		/* CPR			*/
+		    staff.setFname(results.getString("fname"));		/* fname		*/
+		    staff.setLname(results.getString("lname"));		/* lname		*/
+		    staff.setAddress(results.getString("address"));	/* address		*/
+		    staff.setZIP(results.getString("locationZIP"));	/* locationZIP (FK)	*/
+		    staff.setCountry(results.getString("country"));	/* country (FK)		*/
+		    staff.setEmail(results.getString("email"));		/* email		*/
+		    staff.setPassword(results.getString("password"));	/* password		*/
+		    staff.setCity(results.getString("city"));		/* city			*/
 			staff.setPersonID(results.getInt("staffID"));
 			staff.setSalary(results.getFloat("salary"));
 		}
