@@ -56,11 +56,11 @@ public class DAOCustomerTest {
      */
     public void setUp() throws Exception {
 	c1 = new Customer(0, "111188-0000", "Jan", "Anderson", 
-			"Danmark", "9000", "Aalborg", "Enrich Vej 10", 
+			"Denmark", "9000", "Aalborg", "Enrich Vej 10", 
 			"monkey@mail.com", "grant", "14-05-2013", 10);
 	
 	c2 = new Customer(1, "010190-0000", "Emily", "Johanson", 
-			"Danmark", "9000", "Aalborg", "Hobrovej 100", 
+			"Denmark", "9000", "Aalborg", "Hobrovej 100", 
 			"wildMonkey@crazy.com", "allow", "16-05-2013" , 0);
     }
 
