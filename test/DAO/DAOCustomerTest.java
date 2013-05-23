@@ -15,7 +15,6 @@ import org.junit.BeforeClass;
 import org.junit.Test; //needed to indicate testing;
 
 import Models.Customer; //the subject for testing;
-import Models.Person;
 
 import java.util.ArrayList; //Needed, because multiple Customer instances might be retrieved;
 
@@ -108,17 +107,17 @@ public class DAOCustomerTest {
 	    ArrayList<Customer> customers = dao.getAllCustomers(false);
 	    Customer lastInserted = customers.get(customers.size()-1);
 	    //we have to compare field by field, because c1 doesn't have ID;
-	   // assertEquals(c1.getAddress(), lastInserted.getAddress());
-	    //assertEquals(c1.getCity(), lastInserted.getCity());
-	    //assertEquals(c1.getCountry(), lastInserted.getCountry());
-	    //assertEquals(c1.getCPR(), lastInserted.getCPR());
-	    //assertEquals(c1.getEmail(), lastInserted.getEmail());
-	    //assertEquals(c1.getFname(), lastInserted.getFname());
-	    //assertEquals(c1.getLname(), lastInserted.getLname());
+	    assertEquals(c1.getAddress(), lastInserted.getAddress());
+	    assertEquals(c1.getCity(), lastInserted.getCity());
+	    assertEquals(c1.getCountry(), lastInserted.getCountry());
+	    assertEquals(c1.getCPR(), lastInserted.getCPR());
+	    assertEquals(c1.getEmail(), lastInserted.getEmail());
+	    assertEquals(c1.getFname(), lastInserted.getFname());
+	    assertEquals(c1.getLname(), lastInserted.getLname());
 	    assertEquals(c1.getNoOfStays(), lastInserted.getNoOfStays());
-	    //assertEquals(c1.getPassword(), lastInserted.getPassword());
+	    assertEquals(c1.getPassword(), lastInserted.getPassword());
 	    assertEquals(c1.getRegistrationDate(), lastInserted.getRegistrationDate());
-	    //assertEquals(c1.getZIP(), lastInserted.getZIP());
+	    assertEquals(c1.getZIP(), lastInserted.getZIP());
 	    
 	    //GET Customer by ID;
 	    //needed to retrieve the ID first, because c1 doesn't have one;
@@ -130,6 +129,7 @@ public class DAOCustomerTest {
 	    //UPDATE Customer;
 	    //changes c1 data with c2 data;
 	    c2.setPersonID(customerID); //needed, because c2 doesn't have ID;
+	    System.out.println("customerID = " + customerID);
 	    dao.update(c2);
 	    //updates the customers collection, so the last update can be retrieved;
 	    customers = dao.getAllCustomers(false);
