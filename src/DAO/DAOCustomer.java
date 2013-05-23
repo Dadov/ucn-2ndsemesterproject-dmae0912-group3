@@ -142,10 +142,11 @@ public class DAOCustomer implements IFDAOCustomer {
 	String query =  "SET DATEFORMAT dmy;" + 						/* SETS DATA FORMAT	*/
 			"UPDATE Customer SET "  +						/* SETS NEW DATA FOR	*/
 			"registrationDate = '" 	+ customer.getRegistrationDate()+ "', " +	/* registrationDate	*/
-			"noOfStays = '" 	+ customer.getNoOfStays()	+ ", "  +	/* noOfStays		*/
+			"noOfStays = " 	+ customer.getNoOfStays()  +	/* noOfStays		*/
 			"WHERE customerID = " 	+ customer.getPersonID()	+ ";";		/* SPECIFIES FOR WHICH	*/
 												/* TO APPLY THE UPDATES	*/
 	//UPDATE query building completed;
+	System.out.println(query);
 	
 	try { //executing the query and updating Customer data;
 	    	
@@ -154,11 +155,12 @@ public class DAOCustomer implements IFDAOCustomer {
 		
 	    //executes the query and gets the row count number;
 	    rc = stmt.executeUpdate(query);
+	    System.out.println(rc);
 	    stmt.close();
 	    
 	} catch(SQLException cantUpdate) {
-	    System.out.println("Error: UPDATE Customer fails ");
-	    cantUpdate.getCause(); //shows the cause for exception;
+	    System.out.println("Error: UPDATE Customer fails " + cantUpdate.getCause());
+	    //; //shows the cause for exception;
 	}
 	
 	return rc;
