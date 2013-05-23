@@ -39,14 +39,12 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 		else instrHired = 0;
 		// creates query
 		String query = "SET DATEFORMAT dmy;" +
-				"INSERT INTO ActivityBooking(activityBookingID, activityID, activityDate, activityTime, openActivity, instructorHired) VALUES(" +
-				activityBooking.getId() + "," +
+				"INSERT INTO ActivityBooking(activityID, activityDate, activityTime, openActivity, instructorHired) VALUES(" +
 				activityBooking.getActivity().getID() + ",'" +
-				activityBooking.getActivityTime().getDate() + "','" +
-				activityBooking.getActivityTime().getTime() + "'," +
-				openActivity + "," +
-				instrHired + 
-				")";
+				activityBooking.getActivityTime().getDate() + "', '" +
+				activityBooking.getActivityTime().getTime() + "', " +
+				openActivity + ", " +
+				instrHired + ");";
 				
 		System.out.println("Insert query : " + query);
 		// creates statement and executes query
@@ -101,12 +99,12 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 		// creates query
 		String query = "SET DATEFORMAT dmy;" +
 				"UPDATE ActivityBooking SET " +
-				"activityID = " + activityBooking.getActivity().getID() + "," +
-				"activityDate = '" + activityBooking.getActivityTime().getDate() + "'," +
-				"activityTime = '" + activityBooking.getActivityTime().getTime() + "'," +
-				"openActivity = " + openActivity + "," +
-				"instructorHired = " + instrHired + ")" +
-				"WHERE activityBookingID = " + activityBooking.getId() + ";";
+				"activityID = " + activityBooking.getActivity().getID() + ", " +
+				"activityDate = '" + activityBooking.getActivityTime().getDate() + "', " +
+				"activityTime = '" + activityBooking.getActivityTime().getTime() + "', " +
+				"openActivity = " + openActivity + ", " +
+				"instructorHired = " + instrHired + ") " +
+				"WHERE activityBookingID = " + activityBooking.getID() + ";";
 		System.out.println("Update query : " + query);
 		// creates statement and executes query
 		try {
@@ -119,12 +117,12 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 			System.out.println("ActivityBooking update failed.");
 			e.getMessage();
 		}
-		deleteCustomers(activityBooking.getId());
-		insertCustomers(activityBooking.getCustomers(), activityBooking.getId());
+		deleteCustomers(activityBooking.getID());
+		insertCustomers(activityBooking.getCustomers(), activityBooking.getID());
 		return rc;
 	}
 	
-	// deletes an activity booking
+	// deletes an activity booking from the database
 	@Override
 	public int delete(int ID) {
 		// row count set to -1
@@ -141,7 +139,7 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 			stmt.close();
 		}
 		catch (Exception e) {
-			System.out.println("BookingActivity was not deleted");
+			System.out.println("ActivityBooking was not deleted from database");
 			e.getMessage();
 		}
 		return rc;
@@ -184,8 +182,9 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 				stmt.close();
 				if (retrieveAssociation) {
 					IFDAOActivity daoActivity = new DAOActivity();
-					int aID = activityBooking.getActivity().getID();
-					Activity activity = daoActivity.getActivity(aID, false);
+					int anID = activityBooking.getActivity().getID();
+					System.out.println("ID in singleWhere: " + anID);
+					Activity activity = daoActivity.getActivity(anID, false);
 					activityBooking.setActivity(activity);
 				}
 			}
@@ -196,6 +195,7 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 		catch (Exception e) {
 			System.out.println("Query exception: " + e);
 		}
+		System.out.println("Single ActivityBooking: " + activityBooking);
 		return activityBooking;
 	}
 	
@@ -220,8 +220,8 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 			if (retrieveAssociation) {
 				for (ActivityBooking activityBooking : list) {
 					IFDAOActivity daoActivity = new DAOActivity();
-					int aID = activityBooking.getActivity().getID();
-					Activity activity = daoActivity.getActivity(aID, false);
+					int anID = activityBooking.getActivity().getID();
+					Activity activity = daoActivity.getActivity(anID, false);
 					activityBooking.setActivity(activity);
 				}
 			}
@@ -245,7 +245,7 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 			stmt.setQueryTimeout(5);
 			results = stmt.executeQuery(query);
 			while(results.next()) {
-				customer = daoCustomer.getCustomer(results.getInt("customerID"),false);
+				customer = daoCustomer.getCustomer(results.getInt("customerID"), false);
 				activityCustomers.add(customer);
 			}
 			stmt.close();
@@ -254,6 +254,7 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 			System.out.println("Query exception : " + e);
 			e.printStackTrace();
 		}
+		System.out.println("Get activity customers: " + activityCustomers);
 		return activityCustomers;
 	}
 
@@ -266,7 +267,7 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 		activityBooking.setActivity(activity);
 		// fills the ActivityBooking object with date from the database
 		try {
-			activityBooking.setId(results.getInt("activityBookingID"));
+			activityBooking.setID(results.getInt("activityBookingID"));
 			activityBooking.setOpenActivity(results.getBoolean("openActivity"));
 			activityBooking.setInstructorHired(results.getBoolean("instructorHired"));
 			String date = results.getString("activityDate");
@@ -292,7 +293,7 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 	private String buildCustomersQuery(String wClause) {
 		String query = "SET DATEFORMAT dmy;" + " SELECT customerID FROM ActivityCustomers";
 		if (wClause.length() > 0)
-			query = query + "WHERE" + wClause;
+			query = query + " WHERE " + wClause;
 		return query;
 	}
 		

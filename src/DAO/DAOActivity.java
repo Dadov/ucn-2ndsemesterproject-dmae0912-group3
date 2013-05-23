@@ -230,7 +230,6 @@ public class DAOActivity implements IFDAOActivity {
 			System.out.println("Query exception : " + e);
 			e.printStackTrace();
 		}
-		System.out.println("Instructors : " + activityInstructors.toString());
 		return activityInstructors;
 	}
 	

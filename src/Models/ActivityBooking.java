@@ -26,11 +26,21 @@ public class ActivityBooking {
 		this.instructorHired = instructorHired;
 	}
 
-	public int getId() {
+	public ActivityBooking(ArrayList<Customer> customers,
+			Activity activity, ActivityTime activityTime, boolean openActivity,
+			boolean instructorHired) {
+		this.customers = customers;
+		this.activity = activity;
+		this.activityTime = activityTime;
+		this.openActivity = openActivity;
+		this.instructorHired = instructorHired;
+	}
+
+	public int getID() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setID(int id) {
 		this.id = id;
 	}
 

@@ -49,6 +49,7 @@ public class DAOAgency implements IFDAOAgency {
 			System.out.println("Agency was not inserted into the database");
 			e.getMessage();
 		}
+		insertCustomers(agency.getProvidedCustomers(),-1);
 		return rc;
 	}
 	
