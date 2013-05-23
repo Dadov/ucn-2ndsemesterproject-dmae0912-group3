@@ -17,7 +17,7 @@ import Models.Staff;
 
 public class DAOStaffTest {
 	
-	private Connection con;
+	private static Connection con;
 	private Staff staff;
 	private IFDAOStaff daoStaff;
 
@@ -27,6 +27,9 @@ public class DAOStaffTest {
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		con = DBConnection.getInstance().getDBCon();
+		con.setAutoCommit(false);
+		con.close();
 	}
 
 	@Before
@@ -66,7 +69,6 @@ public class DAOStaffTest {
 			assertEquals(staff.getFname(), lastStaff.getFname());
 			assertEquals(staff.getLname(), lastStaff.getLname());
 			assertEquals(staff.getPassword(), lastStaff.getPassword());
-			assertEquals(staff.getPersonID(), lastStaff.getPersonID());
 			assertEquals(staff.getSalary(), lastStaff.getSalary(), 0.001);
 			assertEquals(staff.getZIP(), lastStaff.getZIP());
 			
@@ -82,7 +84,6 @@ public class DAOStaffTest {
 		}
 		finally {
 			con.rollback();
-			con.close();
 		}
 	}
 
