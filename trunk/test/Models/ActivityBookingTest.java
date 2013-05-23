@@ -46,8 +46,8 @@ public class ActivityBookingTest {
 
 	@Test
 	public void testSetId() {
-		activityBooking.setId(1);
-		assertEquals(1, activityBooking.getId());
+		activityBooking.setID(1);
+		assertEquals(1, activityBooking.getID());
 	}
 
 	@Test
