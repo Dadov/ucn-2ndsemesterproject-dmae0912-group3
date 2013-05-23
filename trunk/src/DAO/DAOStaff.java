@@ -203,16 +203,6 @@ public class DAOStaff implements IFDAOStaff {
 		System.out.println("Object type test from buildStaff:" + cls.getName());
 		// fills the Agency object with results from the database
 		try {
-			staff.setPersonID(results.getInt("personID"));	/* personID		*/
-		    staff.setCPR(results.getString("CPR"));		/* CPR			*/
-		    staff.setFname(results.getString("fname"));		/* fname		*/
-		    staff.setLname(results.getString("lname"));		/* lname		*/
-		    staff.setAddress(results.getString("address"));	/* address		*/
-		    staff.setZIP(results.getString("locationZIP"));	/* locationZIP (FK)	*/
-		    staff.setCountry(results.getString("country"));	/* country (FK)		*/
-		    staff.setEmail(results.getString("email"));		/* email		*/
-		    staff.setPassword(results.getString("password"));	/* password		*/
-		    staff.setCity(results.getString("city"));		/* city			*/
 			staff.setPersonID(results.getInt("staffID"));
 			staff.setSalary(results.getFloat("salary"));
 		}
