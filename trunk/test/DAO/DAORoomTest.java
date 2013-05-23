@@ -29,6 +29,11 @@ public class DAORoomTest {
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		// cannot use con.close() after each @Test unit have to do it after all
+		// tests
+		Connection con = DBConnection.getInstance().getDBCon();
+		con.setAutoCommit(false);
+		con.close();
 	}
 
 	@Before
@@ -96,7 +101,7 @@ public class DAORoomTest {
 
 			// update test
 			lastRoom.setNote("update test");
-			System.out.println("update test: " + lastRoom.getNumber());
+			System.out.println("Update test number: " + lastRoom.getNumber());
 			daoRoom.update(lastRoom);
 			assertEquals(lastRoom.toString(),
 					daoRoom.getRoom(lastRoom.getNumber(), false).toString());
@@ -107,7 +112,7 @@ public class DAORoomTest {
 
 		} finally {
 			con.rollback();
-			con.close();
+			// con.close();
 		}
 	}
 
@@ -117,8 +122,21 @@ public class DAORoomTest {
 	}
 
 	@Test
-	public void testFindFreeRooms() {
-		// TODO fail("Not yet implemented");
+	public void testFindFreeRooms() throws SQLException {
+		con = DBConnection.getInstance().getDBCon();
+		con.setAutoCommit(false);
+		daoRoom = new DAORoom();
+
+		try {
+			ArrayList<Room> rooms;
+			rooms = daoRoom.findFreeRooms("13-08-2014", "24-08-2014",
+					RoomType.Single);
+			System.out.println(rooms.toString());
+
+		} finally {
+			con.rollback();
+			// con.close();
+		}
 	}
 
 }

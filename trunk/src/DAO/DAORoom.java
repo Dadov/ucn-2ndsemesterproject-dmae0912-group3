@@ -34,14 +34,13 @@ public class DAORoom implements IFDAORoom {
 		// TODO not tested, yet
 
 		// constructing fancy query for retrieving only free rooms
-		String query = "SET DATEFORMAT dmy; "
-				+ "SELECT * FROM Room WHERE /* roomType = 'Family' and */ number not in ("
-				+ "SELECT roomNumber FROM RoomsBooked WHERE roomBookingID in ("
-				+ "SELECT bookingID FROM RoomBooking WHERE dateStart >= '"
+		String query = "number not in "
+				+ "(SELECT roomNumber FROM RoomsBooked WHERE roomBookingID in "
+				+ "(SELECT bookingID FROM RoomBooking WHERE dateStart >= '"
 				+ startDate + "' and dateEnd <=  '" + endDate + "'));";
-		System.out.println(query);
 
 		return miscWhere(query, false);
+
 	}
 
 	@Override
@@ -51,7 +50,7 @@ public class DAORoom implements IFDAORoom {
 		String query = "INSERT INTO ROOM (roomType, price, note) VALUES ('"
 				+ room.getRoomType() + "'," + room.getPrice() + ",'"
 				+ room.getNote() + "');";
-		System.out.println("Insert'Room' query:  " + query);
+		System.out.println("Insert 'Room' query:  " + query);
 
 		try {
 			Statement stmt = con.createStatement();
@@ -75,7 +74,7 @@ public class DAORoom implements IFDAORoom {
 				+ roomObj.getRoomType() + "'," + "price = "
 				+ roomObj.getPrice() + "," + "note = '" + roomObj.getNote()
 				+ "' WHERE number = " + roomObj.getNumber() + ";";
-		System.out.println("Update query :" + query);
+		System.out.println("Update 'Room' query :" + query);
 
 		try {
 			Statement stmt = con.createStatement();
@@ -95,7 +94,7 @@ public class DAORoom implements IFDAORoom {
 		int rc = -1;
 
 		String query = "DELETE FROM Room WHERE number = " + number + ";";
-		System.out.println("Delete query: " + query);
+		System.out.println("Delete 'Room' query: " + query);
 
 		try {
 			Statement stmt = con.createStatement();
@@ -115,7 +114,7 @@ public class DAORoom implements IFDAORoom {
 		Room roomObj = new Room();
 
 		String query = buildQuery(wClause);
-		System.out.println(query);
+		System.out.println("singleWhere query (DAORoom): " + query);
 
 		try {
 			Statement stmt = con.createStatement();
@@ -138,7 +137,7 @@ public class DAORoom implements IFDAORoom {
 			}
 
 		} catch (Exception e) {
-			System.out.println("Query exception: ");
+			System.out.println("Query exception (DAORoom singleWhere): ");
 			e.getMessage();
 		}
 		return roomObj;
@@ -150,6 +149,7 @@ public class DAORoom implements IFDAORoom {
 		ArrayList<Room> list = new ArrayList<Room>();
 
 		String query = buildQuery(wClause);
+		System.out.println("miscWhere query (DAORoom): " + query);
 
 		try {
 			Statement stmt = con.createStatement();
@@ -169,10 +169,10 @@ public class DAORoom implements IFDAORoom {
 			}
 
 		} catch (Exception e) {
-			System.out.println("Query exception: ");
+			System.out.println("Query exception (DAORoom miscWhere): ");
+			e.printStackTrace();
 			e.getMessage();
 		}
-		System.out.println(list.toString());
 
 		return list;
 	}
@@ -192,7 +192,7 @@ public class DAORoom implements IFDAORoom {
 	}
 
 	private String buildQuery(String wClause) {
-		String query = "SELECT * FROM Room";
+		String query = "SET DATEFORMAT dmy; SELECT * FROM Room";
 
 		if (wClause.length() > 0)
 			query = query + " WHERE " + wClause;
