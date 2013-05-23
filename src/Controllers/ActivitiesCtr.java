@@ -84,7 +84,6 @@ public class ActivitiesCtr {
 		public void newActivityBooking(ArrayList<Customer> customers, Activity activity, ActivityTime activityTime, boolean openActivity,
 				boolean instructorHired) {
 			ActivityBooking booking = new ActivityBooking();
-			booking.getId();
 			booking.setCustomers(customers);
 			booking.setActivity(activity);
 			booking.setActivityTime(activityTime);
@@ -124,7 +123,7 @@ public class ActivitiesCtr {
 				boolean instructorHired) {
 			IFDAOActivityBooking daoBooking = new DAOActivityBooking();
 			ActivityBooking booking = new ActivityBooking();
-			booking.setId(newId);
+			booking.setID(newId);
 			booking.setCustomers(customers);
 			booking.setActivity(activity);
 			booking.setActivityTime(activityTime);
