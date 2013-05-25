@@ -1,13 +1,30 @@
 package GUI;
 
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 
 public class MainGUI {
 	private JFrame frame;
+	private JPanel menuWrapper;
+	private JPanel loginWrapper;
 	private LoginGUI loginGUI;
+	private ActivitiesGUI activitiesGUI;
+	private CustomersGUI customersGUI;
+	private RoomsGUI roomsGUI;
+	private StaffGUI staffGUI;
+	private JPanel optionsPanel;
+	private JPanel contentPanel;
+	private JPanel optionsBorder;
+	private JPanel contentBorder;
 
 	public MainGUI() {
 
@@ -30,8 +47,40 @@ public class MainGUI {
 		frame.getContentPane().setLayout(new CardLayout(0, 0));
 		frame.setVisible(true);
 
+		loginWrapper = new JPanel();
+		frame.getContentPane().add(loginWrapper, "name_8641309153887");
+		loginWrapper.setLayout(new BorderLayout(0, 0));
+
 		loginGUI = new LoginGUI();
-		frame.getContentPane().add(loginGUI, "loginGUI");
+		loginGUI.setAlignmentX(Component.CENTER_ALIGNMENT);
+		loginWrapper.add(loginGUI, BorderLayout.NORTH);
+		FlowLayout flowLayout = (FlowLayout) loginGUI.getLayout();
+		flowLayout.setAlignment(FlowLayout.LEFT);
+
+		menuWrapper = new JPanel();
+		// case/switch depending on who's logged in add specific GUI parts, eg.
+		// customer sees on Activities
+		// and managers sees everything
+		frame.getContentPane().add(menuWrapper, "name_10074865581856");
+
+		optionsBorder = new JPanel();
+		optionsBorder.setBorder(new TitledBorder(UIManager
+				.getBorder("TitledBorder.border"), "Options",
+				TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		menuWrapper.add(optionsBorder);
+
+		optionsPanel = new JPanel();
+		optionsBorder.add(optionsPanel);
+		optionsPanel.setPreferredSize(new Dimension(150, 550));
+
+		contentBorder = new JPanel();
+		contentBorder.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null,
+				null));
+		menuWrapper.add(contentBorder);
+
+		contentPanel = new JPanel();
+		contentBorder.add(contentPanel);
+		contentPanel.setPreferredSize(new Dimension(780, 565));
 	}
 
 	public static void main(String[] args) {
