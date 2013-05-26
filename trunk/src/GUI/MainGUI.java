@@ -20,15 +20,20 @@ public class MainGUI {
 	private JPanel menuWrapper;
 	private JPanel loginWrapper;
 	private LoginGUI loginGUI;
+	private JButton activitvitiesButton;
+	private JButton customersButton;
+	private JButton roomsButton;
+	private JButton staffButtom;
+	// these gonna be used soon
 	private ActivitiesGUI activitiesGUI;
 	private CustomersGUI customersGUI;
 	private RoomsGUI roomsGUI;
 	private StaffGUI staffGUI;
+	// end
 	private JPanel optionsPanel;
 	private JPanel contentPanel;
 	private JPanel optionsBorder;
 	private JPanel contentBorder;
-	private int rank;
 
 	public MainGUI() {
 
@@ -38,10 +43,6 @@ public class MainGUI {
 	 * Create the GUI and show it. For thread safety, this method should be
 	 * invoked from the event-dispatching thread.
 	 */
-	private void setRank(int rank) {
-		this.rank = rank;
-	}
-
 	private void initialize() {
 		// Create and set up the window.
 		frame = new JFrame("Skynet");
@@ -79,63 +80,71 @@ public class MainGUI {
 
 		optionsPanel = new JPanel();
 		optionsBorder.add(optionsPanel);
-		optionsPanel.setPreferredSize(new Dimension(150, 550));
+		optionsPanel.setPreferredSize(new Dimension(150, 515));
 
 		// TODO case switch dependent on user here
-		JButton activitvitiesButton;
-		JButton customersButton;
-		JButton roomsButton;
-		JButton staffButtom;
 		// TODO only printing the messages so the switch/case is working
-		// int rank = 0;
-
 		loginGUI.loginButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setRank(loginGUI.login());
+				int rank = loginGUI.login();
+
+				switch (rank) {
+				// TODO invalid login, avoid doing anything
+				case (0):
+					System.out
+							.println("Invalid login, Error message from MainGUI");
+					break;
+				// manager
+				case (1):
+					System.out
+							.println("Manager logged in, message from MainGUI");
+					activitvitiesButton = new MenuButton("Activities");
+					customersButton = new MenuButton("Customers");
+					roomsButton = new MenuButton("Rooms");
+					staffButtom = new MenuButton("Staff");
+					optionsPanel.add(activitvitiesButton);
+					optionsPanel.add(customersButton);
+					optionsPanel.add(roomsButton);
+					optionsPanel.add(staffButtom);
+					break;
+				// receptionist / secretary
+				case (2):
+					System.out
+							.println("Receptionist/Secretary logged in, message from MainGUI");
+					activitvitiesButton = new MenuButton("Activities");
+					customersButton = new MenuButton("Customers");
+					roomsButton = new MenuButton("Rooms");
+					optionsPanel.add(activitvitiesButton);
+					optionsPanel.add(customersButton);
+					optionsPanel.add(roomsButton);
+					break;
+				// instructor
+				case (3):
+					System.out
+							.println("Instructor logged in, message from MainGUI");
+					activitvitiesButton = new MenuButton("Activities");
+					customersButton = new MenuButton("Customers");
+					optionsPanel.add(activitvitiesButton);
+					optionsPanel.add(customersButton);
+					break;
+				// customer
+				case (4):
+					System.out
+							.println("Customer logged in, message from MainGUI");
+					activitvitiesButton = new MenuButton("Activities");
+					optionsPanel.add(activitvitiesButton);
+				}
+				// TODO
+				if (rank > 0 && rank < 5) {
+					CardLayout cl = (CardLayout) (frame.getContentPane()
+							.getLayout());
+					cl.show(frame.getContentPane(), "name_10074865581856");
+				} else {
+					System.out
+							.println("Invalid login, from card switch this should throw exception or even popup warning later.");
+				}
 			}
 		});
-		switch (rank) {
-		// TODO invalid login
-		case (0):
-			System.out.println("Invalid login, Error message from MainGUI");
-			break;
-		// manager
-		case (1):
-			System.out.println("Manager logged in, message from MainGUI");
-			activitvitiesButton = new MenuButton("Activities");
-			customersButton = new MenuButton("Customers");
-			roomsButton = new MenuButton("Rooms");
-			staffButtom = new MenuButton("Staff");
-			optionsPanel.add(activitvitiesButton);
-			optionsPanel.add(customersButton);
-			optionsPanel.add(roomsButton);
-			optionsPanel.add(staffButtom);
-			break;
-		// receptionist / secretary
-		case (2):
-			System.out
-					.println("Receptionist/Secretary logged in, message from MainGUI");
-			activitvitiesButton = new MenuButton("Activities");
-			customersButton = new MenuButton("Customers");
-			roomsButton = new MenuButton("Rooms");
-			optionsPanel.add(activitvitiesButton);
-			optionsPanel.add(customersButton);
-			optionsPanel.add(roomsButton);
-			break;
-		// instructor
-		case (3):
-			System.out.println("Instructor logged in, message from MainGUI");
-			activitvitiesButton = new MenuButton("Activities");
-			customersButton = new MenuButton("Customers");
-			optionsPanel.add(activitvitiesButton);
-			optionsPanel.add(customersButton);
-			break;
-		// customer
-		case (4):
-			System.out.println("Customer logged in, message from MainGUI");
-			activitvitiesButton = new MenuButton("Activities");
-			optionsPanel.add(activitvitiesButton);
-		}
 
 		// TODO part to be deleted after switch(rank) will be working
 		// JButton activitvitiesButton = new MenuButton("Activities");
@@ -158,7 +167,7 @@ public class MainGUI {
 
 		contentPanel = new JPanel();
 		contentBorder.add(contentPanel);
-		contentPanel.setPreferredSize(new Dimension(780, 565));
+		contentPanel.setPreferredSize(new Dimension(780, 535));
 
 	}
 
