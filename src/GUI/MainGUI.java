@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextPane;
 import javax.swing.UIManager;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
@@ -24,16 +25,20 @@ public class MainGUI {
 	private JButton customersButton;
 	private JButton roomsButton;
 	private JButton staffButtom;
-	// these gonna be used soon
 	private ActivitiesGUI activitiesGUI;
 	private CustomersGUI customersGUI;
 	private RoomsGUI roomsGUI;
 	private StaffGUI staffGUI;
-	// end
 	private JPanel optionsPanel;
 	private JPanel contentPanel;
 	private JPanel optionsBorder;
 	private JPanel contentBorder;
+	// wth is this?:
+	// private JPanel panel;
+	private JTextPane txtThisIsThe;
+	private JTextPane txtpnThisIsCustomers;
+	private JTextPane txtpnThisIsRoomsgui;
+	private JTextPane txtpnThisIsStaffgui;
 
 	public MainGUI() {
 
@@ -82,11 +87,16 @@ public class MainGUI {
 		optionsBorder.add(optionsPanel);
 		optionsPanel.setPreferredSize(new Dimension(150, 515));
 
-		// TODO case switch dependent on user here
-		// TODO only printing the messages so the switch/case is working
+		// TODO moving buttons up so can work with them generally
+		activitvitiesButton = new MenuButton("Activities");
+		customersButton = new MenuButton("Customers");
+		roomsButton = new MenuButton("Rooms");
+		staffButtom = new MenuButton("Staff");
+
 		loginGUI.loginButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int rank = loginGUI.login();
+				// int rank = 1;
 
 				switch (rank) {
 				// TODO invalid login, avoid doing anything
@@ -98,10 +108,10 @@ public class MainGUI {
 				case (1):
 					System.out
 							.println("Manager logged in, message from MainGUI");
-					activitvitiesButton = new MenuButton("Activities");
-					customersButton = new MenuButton("Customers");
-					roomsButton = new MenuButton("Rooms");
-					staffButtom = new MenuButton("Staff");
+					// activitvitiesButton = new MenuButton("Activities");
+					// customersButton = new MenuButton("Customers");
+					// roomsButton = new MenuButton("Rooms");
+					// staffButtom = new MenuButton("Staff");
 					optionsPanel.add(activitvitiesButton);
 					optionsPanel.add(customersButton);
 					optionsPanel.add(roomsButton);
@@ -111,9 +121,9 @@ public class MainGUI {
 				case (2):
 					System.out
 							.println("Receptionist/Secretary logged in, message from MainGUI");
-					activitvitiesButton = new MenuButton("Activities");
-					customersButton = new MenuButton("Customers");
-					roomsButton = new MenuButton("Rooms");
+					// activitvitiesButton = new MenuButton("Activities");
+					// customersButton = new MenuButton("Customers");
+					// roomsButton = new MenuButton("Rooms");
 					optionsPanel.add(activitvitiesButton);
 					optionsPanel.add(customersButton);
 					optionsPanel.add(roomsButton);
@@ -122,8 +132,8 @@ public class MainGUI {
 				case (3):
 					System.out
 							.println("Instructor logged in, message from MainGUI");
-					activitvitiesButton = new MenuButton("Activities");
-					customersButton = new MenuButton("Customers");
+					// activitvitiesButton = new MenuButton("Activities");
+					// customersButton = new MenuButton("Customers");
 					optionsPanel.add(activitvitiesButton);
 					optionsPanel.add(customersButton);
 					break;
@@ -131,7 +141,7 @@ public class MainGUI {
 				case (4):
 					System.out
 							.println("Customer logged in, message from MainGUI");
-					activitvitiesButton = new MenuButton("Activities");
+					// activitvitiesButton = new MenuButton("Activities");
 					optionsPanel.add(activitvitiesButton);
 				}
 				// TODO
@@ -146,20 +156,6 @@ public class MainGUI {
 			}
 		});
 
-		// TODO part to be deleted after switch(rank) will be working
-		// JButton activitvitiesButton = new MenuButton("Activities");
-		// optionsPanel.add(activitvitiesButton);
-		//
-		// JButton customersButton = new MenuButton("Customers");
-		// optionsPanel.add(customersButton);
-		//
-		// JButton roomsButton = new MenuButton("Rooms");
-		// optionsPanel.add(roomsButton);
-		//
-		// JButton staffButtom = new MenuButton("Staff");
-		// optionsPanel.add(staffButtom);
-		// TODO end of part to be deleted
-
 		contentBorder = new JPanel();
 		contentBorder.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null,
 				null));
@@ -168,7 +164,63 @@ public class MainGUI {
 		contentPanel = new JPanel();
 		contentBorder.add(contentPanel);
 		contentPanel.setPreferredSize(new Dimension(780, 535));
+		contentPanel.setLayout(new CardLayout(0, 0));
 
+		activitiesGUI = new ActivitiesGUI();
+		contentPanel.add(activitiesGUI, "ActivitiesGUI");
+
+		txtThisIsThe = new JTextPane();
+		txtThisIsThe.setText("this is the ActivitiesGUI");
+		activitiesGUI.add(txtThisIsThe);
+
+		customersGUI = new CustomersGUI();
+		contentPanel.add(customersGUI, "CustomersGUI");
+
+		txtpnThisIsCustomers = new JTextPane();
+		txtpnThisIsCustomers.setText("this is the CustomersGUI");
+		customersGUI.add(txtpnThisIsCustomers);
+
+		roomsGUI = new RoomsGUI();
+		contentPanel.add(roomsGUI, "RoomsGUI");
+
+		txtpnThisIsRoomsgui = new JTextPane();
+		txtpnThisIsRoomsgui.setText("this is the RoomsGUI");
+		roomsGUI.add(txtpnThisIsRoomsgui);
+
+		staffGUI = new StaffGUI();
+		contentPanel.add(staffGUI, "StaffGUI");
+
+		txtpnThisIsStaffgui = new JTextPane();
+		txtpnThisIsStaffgui.setText("this is theStaffGUI");
+		staffGUI.add(txtpnThisIsStaffgui);
+
+		activitvitiesButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CardLayout cl = (CardLayout) contentPanel.getLayout();
+				cl.show(contentPanel, "ActivitiesGUI");
+			}
+		});
+
+		customersButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CardLayout cl = (CardLayout) contentPanel.getLayout();
+				cl.show(contentPanel, "CustomersGUI");
+			}
+		});
+
+		roomsButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CardLayout cl = (CardLayout) contentPanel.getLayout();
+				cl.show(contentPanel, "RoomsGUI");
+			}
+		});
+
+		staffButtom.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CardLayout cl = (CardLayout) contentPanel.getLayout();
+				cl.show(contentPanel, "StaffGUI");
+			}
+		});
 	}
 
 	public static void main(String[] args) {
