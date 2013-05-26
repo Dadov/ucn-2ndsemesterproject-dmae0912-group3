@@ -1,5 +1,7 @@
 package Controllers;
 
+import java.util.Arrays;
+
 import Models.Customer;
 import Models.Instructor;
 import Models.Manager;
@@ -13,33 +15,22 @@ public class PersonCtr {
 
 	}
 
-	// for login
 	public int personLogin(int ID, char[] password) {
+		int rank = 0;
 
 		try {
-			// TODO tried to use StaffCtr, did not work
 			StaffCtr staffCtr = new StaffCtr();
 			Staff staff = staffCtr.getEmployee(ID);
-
-			// DAOStaff daoStaff = new DAOStaff();
-			System.out.println("ID looking for in staff: " + ID);
-			// Staff staff = daoStaff.getStaff(ID, false);
-
-			// if (staff.equals(null)) {
-			// System.out.println("tu je null pica, staff");
-			// }
-
-			// System.out.println(staff.toString());
-			// System.out.println(staff.getPassword().toCharArray());
 			if (staff != null
-					&& staff.getPassword().toCharArray().equals(password)) {
+					&& Arrays.equals(staff.getPassword().toCharArray(),
+							password)) {
 				if (staff instanceof Manager) {
-					return 1;
+					rank = 1;
 				} else if (staff instanceof Secretary
 						|| staff instanceof Receptionist) {
-					return 2;
+					rank = 2;
 				} else if (staff instanceof Instructor) {
-					return 3;
+					rank = 3;
 				}
 			}
 
@@ -51,22 +42,13 @@ public class PersonCtr {
 		}
 
 		try {
-			// TODO tried to use StaffCtr, did not work
 			CustomersCtr customersCtr = new CustomersCtr();
 			Customer customer = customersCtr.getCustomer(ID);
 
-			// DAOCustomer daoCustomer = new DAOCustomer();
-			System.out.println("ID looking for in customer: " + ID);
-			// Customer customer = daoCustomer.getCustomer(ID, false);
-
-			// if (customer.equals(null)) {
-			// System.out.println("tu je null pica, customer");
-			// }
-
-			// System.out.println(customer.toString());
 			if (customer != null
-					&& customer.getPassword().toCharArray().equals(password)) {
-				return 4;
+					&& Arrays.equals(customer.getPassword().toCharArray(),
+							password)) {
+				rank = 4;
 			}
 
 		} catch (Exception e) {
@@ -77,6 +59,7 @@ public class PersonCtr {
 		}
 
 		// if none of the above pass, return 0 == invalid login
-		return 0;
+		System.out.println("Rank to be returned from PersonCtr " + rank);
+		return rank;
 	}
 }

@@ -30,7 +30,6 @@ public class LoginGUI extends JPanel {
 	// text pane as a placeholder
 	private JTextPane textPane;
 	private JPanel newsBorder;
-	private Component rigidArea;
 	private JPanel loginBorder;
 	private JTextField loginID;
 	private JPasswordField loginPassword;
@@ -47,15 +46,11 @@ public class LoginGUI extends JPanel {
 		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
 		loginPanel = new JPanel();
-		loginPanel.setPreferredSize(new Dimension(150, 580));
+		loginPanel.setPreferredSize(new Dimension(150, 520));
 		loginPanel.setAlignmentY(Component.BOTTOM_ALIGNMENT);
 		loginPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		add(loginPanel);
 		loginPanel.setLayout(new BoxLayout(loginPanel, BoxLayout.Y_AXIS));
-
-		rigidArea = Box.createRigidArea(new Dimension(20, 20));
-		rigidArea.setPreferredSize(new Dimension(0, 450));
-		loginPanel.add(rigidArea);
 
 		loginBorder = new JPanel();
 		loginBorder.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -96,7 +91,7 @@ public class LoginGUI extends JPanel {
 
 		newsPanel = new JPanel();
 		newsBorder.add(newsPanel);
-		newsPanel.setPreferredSize(new Dimension(750, 545));
+		newsPanel.setPreferredSize(new Dimension(750, 490));
 
 		textPane = new JTextPane();
 		textPane.setPreferredSize(new Dimension(750, 500));
@@ -106,10 +101,8 @@ public class LoginGUI extends JPanel {
 
 	public int login() {
 		PersonCtr personCtr = new PersonCtr();
-		int ID = Integer.parseInt(loginID.getText());
-
-		int rank = personCtr.personLogin(ID, loginPassword.getPassword());
-
+		int rank = personCtr.personLogin(Integer.parseInt(loginID.getText()),
+				loginPassword.getPassword());
 		return rank;
 	}
 
