@@ -3,15 +3,20 @@ package GUI;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
+
+import Controllers.PersonCtr;
 
 public class LoginGUI extends JPanel {
 
@@ -27,8 +32,8 @@ public class LoginGUI extends JPanel {
 	private JPanel newsBorder;
 	private Component rigidArea;
 	private JPanel loginBorder;
-	private JTextField loginUsername;
-	private JTextField loginPassword;
+	private JTextField loginID;
+	private JPasswordField loginPassword;
 	private JButton loginButton;
 
 	public LoginGUI() {
@@ -60,15 +65,21 @@ public class LoginGUI extends JPanel {
 		loginPanel.add(loginBorder);
 		loginBorder.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
-		loginUsername = new JTextField();
-		loginBorder.add(loginUsername);
-		loginUsername.setColumns(10);
+		loginID = new JTextField();
+		loginBorder.add(loginID);
+		loginID.setColumns(10);
 
-		loginPassword = new JTextField();
+		loginPassword = new JPasswordField();
 		loginBorder.add(loginPassword);
 		loginPassword.setColumns(10);
 
 		loginButton = new JButton("Login");
+		loginButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				login();
+			}
+		});
 		loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 		loginButton.setActionCommand("Login");
 		loginBorder.add(loginButton);
@@ -91,5 +102,18 @@ public class LoginGUI extends JPanel {
 		textPane.setPreferredSize(new Dimension(750, 500));
 		textPane.setText("Welcome to Morocco Holiday center. \n\n\n Some news might be here. \n\n\n Login swaggot!");
 		newsPanel.add(textPane);
+	}
+
+	public int login() {
+		PersonCtr personCtr = new PersonCtr();
+		int ID = Integer.parseInt(loginID.getText());
+
+		int rank = personCtr.personLogin(ID, loginPassword.getPassword());
+
+		return rank;
+	}
+
+	public JButton loginButton() {
+		return loginButton;
 	}
 }
