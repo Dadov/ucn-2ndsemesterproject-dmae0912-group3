@@ -57,7 +57,7 @@ public class DAORoomBookingTest {
 		Room r2 = dbRoom.getRoom(2,false);
 		ArrayList<Room> roomsBooked = new ArrayList<Room>();
 		Customer customer = new Customer();
-		customer.setPersonID(11);
+		customer.setPersonID(2);
 		roomsBooked.add(room);
 		roomsBooked.add(r2);
 		roomBook = new RoomBooking(customer , roomsBooked, "2013-10-20", "2013-10-21", "2013-10-22");
@@ -96,8 +96,11 @@ public class DAORoomBookingTest {
 		try{
 		daoRoomBook.insert(roomBook);
 		roomBook.setId(daoRoomBook.getLastInsertedID());
-		RoomBooking rb = daoRoomBook.getRoomBooking(daoRoomBook.getLastInsertedID(),false);
+		System.out.println("Room booking to insert: " + roomBook);
+		RoomBooking rb = daoRoomBook.getRoomBooking(daoRoomBook.getLastInsertedID(),true);
+		System.out.println("Last room booking: " + rb);
 		assertEquals(roomBook.toString(), rb.toString());
+		
 	}
 		finally{
 			con.rollback();

@@ -16,7 +16,7 @@ public class DAOStaff implements IFDAOStaff {
 	// gets one member of staff, given the ID 
 	@Override
 	public Staff getStaff(int ID, boolean retrieveAssociation) {
-		String wClause = " staffID = '" + ID + "'";
+		String wClause = " staffID = " + ID + "";
 		return singleWhere(wClause, retrieveAssociation, ID);
 	}
 
@@ -36,7 +36,7 @@ public class DAOStaff implements IFDAOStaff {
 		daoPerson.insert(staff, "Staff");
 		
 		// creates query for inserting data in Staff table
-		String query = "SET DATEFORMAT dmy;" +
+		String query = "SET DATEFORMAT dmy; " +
 				"INSERT INTO Staff(staffID, salary, staffType) VALUES (" +
 				"(SELECT IDENT_CURRENT('Person')), " +
 				staff.getSalary() + ", '" +
@@ -67,7 +67,7 @@ public class DAOStaff implements IFDAOStaff {
 		daoPerson.update(staff, "Staff");
 		
 		// creates query for updating data in Staff table
-		String query = "SET DATEFORMAT dmy;" +
+		String query = "SET DATEFORMAT dmy; " +
 				"UPDATE Staff SET " +
 				"salary = " + staff.getSalary() + ", " +
 				"staffType + '" + staffType + "', " +
@@ -131,6 +131,8 @@ public class DAOStaff implements IFDAOStaff {
 				stmt.close();
 				if (retrieveAssociation) {
 					// no associations
+					throw new IllegalArgumentException(
+							"No association to be retrieved from Staff table");
 				}
 			
 			}
@@ -139,7 +141,7 @@ public class DAOStaff implements IFDAOStaff {
 			}
 		}
 		catch (SQLException e) {
-			System.out.println("Query exception: "+e);
+			System.out.println("Query exception in singleWhere(DAOStaff): " + e);
 		}
 		return staff;
 	}
@@ -163,13 +165,14 @@ public class DAOStaff implements IFDAOStaff {
 				System.out.println("what's in staff during DAOStaff.miscWhere(): " + staff.toString());
 				if (retrieveAssociation) {
 					// no associations
+					throw new IllegalArgumentException("There is no association to be retrieved from Staff table");
 				}
 				list.add((Staff) staff);
 			}
 			stmt.close();
 		}
 		catch (SQLException e) {
-			System.out.println("Query exception : " + e);
+			System.out.println("Query exception in miscWhere (DAOStAff): " + e);
 			e.printStackTrace();
 		}
 		return list;
@@ -180,7 +183,7 @@ public class DAOStaff implements IFDAOStaff {
 		String position = null;
 		
 		try{
-			System.out.println("staffType strig from DB: " + results.getString("staffType"));
+			System.out.println("staffType string from DB: " + results.getString("staffType"));
 			position = results.getString("staffType");
 		}
 		catch (Exception e){

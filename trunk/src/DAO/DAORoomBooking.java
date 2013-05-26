@@ -22,6 +22,8 @@ public class DAORoomBooking implements IFDAORoomBooking {
 	public RoomBooking getRoomBooking(int id, boolean retrieveAssociation) {
 		String wClause = "bookingID = " + id; //Creates a search criteria, this will make to get that RoomBooking, which fulfils the clause;
 		String wClause2 = "roomBookingID = " + id; //where clause needed for retrieving room list for room booking 
+		System.out.println("wClause: " + wClause);
+		System.out.println("wClause2: " + wClause2);
 		return singleWhere(wClause, wClause2, retrieveAssociation);  
 	}
 
@@ -57,8 +59,9 @@ public class DAORoomBooking implements IFDAORoomBooking {
           System.out.println("roomBooking was not inserted in the database");
        }
 		insertRoomsBooked(roomBooking.getRoomsBooked(),-1);//insert booked rooms in RoomsBooked table, see the method
-
-       return rc; //returns the row count to controller;
+		
+		System.out.println("Row count in insert (DAORoomBooking): " + rc);
+        return rc; //returns the row count to controller;
 	}
 	
 	/**
@@ -172,7 +175,8 @@ public class DAORoomBooking implements IFDAORoomBooking {
 		RoomBooking roomBooking = new RoomBooking(); //creates an empty RoomBooking instance, which will be populated with retrieved data;
                 
 	    String query = buildBookingQuery(wClause); //creates SELECT query for RoomBooking table
-		try { //fetching the RoomBooking data from the database;
+		System.out.println("Booking Query in singleWhere (DAORoomBooking): " + query);
+	    try { //fetching the RoomBooking data from the database;
 	 		Statement stmt = con.createStatement(); //Creates a statement, that will be executed;
 	 		stmt.setQueryTimeout(5);
 	 		results = stmt.executeQuery(query); //Storing the results from the statement execution;
@@ -181,7 +185,7 @@ public class DAORoomBooking implements IFDAORoomBooking {
 	 			roomBooking = buildRoomBooking(results);//builds roomBooking
 	 			roomBooking.setRoomsBooked(getRoomsBooked(wClause2,false));//adds list of rooms booked to roomBooking object
                 stmt.close();
-                if(retrieveAssociation) {//retrievs the customer object
+                if(retrieveAssociation) {//retrieves the customer object
                 	IFDAOCustomer dbCust = new DAOCustomer();
                 	int custID = roomBooking.getCustomer().getPersonID();
                 	Customer cust = dbCust.getCustomer(custID, false);
@@ -189,12 +193,14 @@ public class DAORoomBooking implements IFDAORoomBooking {
                 }
 			} else { //nothing was found
 				roomBooking = null;
+				System.out.println("We got to else again");
 			}
 		}//try ends;
 		
 	 	catch(Exception e) {
 	 		System.out.println("Query exception: "+e);
 	 	}
+		System.out.println("roomBooking in singleWhere (DAORoomBooking): " + roomBooking);
 		return roomBooking;
 	}
 
@@ -282,7 +288,7 @@ public class DAORoomBooking implements IFDAORoomBooking {
 						
 		}
 		catch(Exception e) {
-			System.out.println("error in building the employee object"); 
+			System.out.println("error in building the RoomBooking object"); 
 		}
          return roomBooking;
 	}
@@ -323,6 +329,7 @@ public class DAORoomBooking implements IFDAORoomBooking {
 			System.out.println("Getting of ID failed");
 			e.getMessage();
 		}
+		System.out.println("Last inserted ID in DAORoomBooking: " + id);
 		return id;
 	}
 

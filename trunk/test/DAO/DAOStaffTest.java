@@ -34,7 +34,7 @@ public class DAOStaffTest {
 
 	@Before
 	public void setUp() throws Exception {
-		staff = new Staff(12, "120945-3401", "Granny", "Smith", 
+		staff = new Staff("120945-3401", "Granny", "Smith", 
 				"Japan", "3400", "Ching Chong", "Chookok Street 19",
 				"granny_smith@chingchong.com", "grsmchicho", 20.50);
 	}
@@ -73,7 +73,7 @@ public class DAOStaffTest {
 			assertEquals(staff.getZIP(), lastStaff.getZIP());
 			
 			//update
-			lastStaff.setAddress("test password");
+			lastStaff.setAddress("test address");
 			System.out.println("Update test: " + lastStaff.getPersonID());
 			daoStaff.update(lastStaff, "Receptionist");
 			assertEquals(lastStaff.toString(), daoStaff.getStaff(lastStaff.getPersonID(), false).toString());

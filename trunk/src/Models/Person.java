@@ -31,6 +31,20 @@ public class Person {
 		this.email = email;
 		this.password = password;
 	}
+	
+	public Person(String CPR, String fname, String lname,
+			String country, String ZIP, String city, String address,
+			String email, String password) {
+		this.CPR = CPR;
+		this.fname = fname;
+		this.lname = lname;
+		this.country = country;
+		this.ZIP = ZIP;
+		this.city = city;
+		this.address = address;
+		this.email = email;
+		this.password = password;
+	}
 
 	public int getPersonID() {
 		return personID;
