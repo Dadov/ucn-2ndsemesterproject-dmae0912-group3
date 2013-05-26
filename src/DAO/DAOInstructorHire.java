@@ -29,7 +29,7 @@ public class DAOInstructorHire implements IFDAOInstructorHire {
 														// criteria, this will
 														// make to get that
 														// instructorHire, which
-														// fulfils the clause;
+														// fulfills the clause;
 		return singleWhere(wClause, retrieveAssociation);
 	}
 
@@ -46,7 +46,7 @@ public class DAOInstructorHire implements IFDAOInstructorHire {
 	@Override
 	public int insert(InstructorHire instructorHire) {
 		int rc = -1; // row count, it is set to -1, to guarantee nothing will
-						// happen, in case the method fails to fulfil the task;
+						// happen, in case the method fails to fulfill the task;
 
 		// creates a query for data insertion;
 		String query = "SET DATEFORMAT dmy;"
@@ -77,10 +77,10 @@ public class DAOInstructorHire implements IFDAOInstructorHire {
 	@Override
 	public int update(InstructorHire instructorHire) {
 		int rc = -1; // row count, it is set to -1, to guarantee nothing will
-						// happen, in case the method fails to fulfil the task;
+						// happen, in case the method fails to fulfill the task;
 
 		// creates update data query;
-		String query = "SET DATEFORMAT dmy;" + " UPDATE instructorHire SET "
+		String query = "SET DATEFORMAT dmy; " + " UPDATE InstructorHire SET "
 				+ "customerID = " + instructorHire.getCustomer().getPersonID()
 				+ "," + "instructorID = "
 				+ instructorHire.getInstructor().getPersonID() + ","
@@ -110,7 +110,7 @@ public class DAOInstructorHire implements IFDAOInstructorHire {
 	@Override
 	public int delete(int ID) {
 		int rc = -1; // row count, it is set to -1, to guarantee nothing will
-						// happen, in case the method fails to fulfil the task;
+						// happen, in case the method fails to fulfill the task;
 		// creates a deletion query;
 		String query = "DELETE FROM InstructorHire WHERE instructorHireID = "
 				+ ID + ";";
@@ -160,7 +160,7 @@ public class DAOInstructorHire implements IFDAOInstructorHire {
 				instructorHire = buildInstructorHire(results);// builds
 																// instructorHire
 				stmt.close();
-				if (retrieveAssociation) {// retrievs the customer object
+				if (retrieveAssociation) {// retrieves the customer object
 					IFDAOCustomer dbCust = new DAOCustomer();
 					int custID = instructorHire.getCustomer().getPersonID();
 					Customer cust = dbCust.getCustomer(custID, false);

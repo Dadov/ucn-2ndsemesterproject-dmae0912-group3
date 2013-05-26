@@ -32,8 +32,7 @@ public class DAOActivity implements IFDAOActivity {
 		// row count is set to -1
 		int rc = -1;
 		// creates query
-		String query = "SET DATEFORMAT dmy;" +
-				"INSERT INTO Activity(activityType, capacity, instructorPrice) VALUES('" +
+		String query = "INSERT INTO Activity(activityType, capacity, instructorPrice) VALUES('" +
 				activity.getActivityType() + "', " +
 				activity.getCapacity() + ", " +
 				activity.getInstructorPrice() +	");";
@@ -83,8 +82,7 @@ public class DAOActivity implements IFDAOActivity {
 		int rc = -1;
 		deleteInstructors(activity.getID());
 		// creates query
-		String query = "SET DATEFORMAT dmy;" +
-				"UPDATE ACTIVITY SET " +
+		String query = "UPDATE ACTIVITY SET " +
 				"activityType = '" + activity.getActivityType() + "', " +
 				"capacity = " + activity.getCapacity() + ", " +
 				"instructorPrice = " + activity.getInstructorPrice() +
@@ -151,7 +149,7 @@ public class DAOActivity implements IFDAOActivity {
 		ResultSet results;
 		Activity activity = new Activity();
 		String query = buildQuery(wClause);
-		System.out.println(query);
+		System.out.println("singleWhere query (DAOActivity): " + query);
 		// reads the activity from the database
 		try {
 			Statement stmt = con.createStatement();
@@ -164,6 +162,8 @@ public class DAOActivity implements IFDAOActivity {
 				stmt.close();
 				if (retrieveAssociation) {
 					// no association to be retrieved
+					throw new IllegalArgumentException(
+							"There is no association to be retrieved from Activity table");
 				}
 			}
 			else { // no activity found
@@ -171,7 +171,8 @@ public class DAOActivity implements IFDAOActivity {
 			}
 		}
 		catch (Exception e) {
-			System.out.println("Query exception: " + e);
+			System.out.println("Query exception (DAOActivity singleWhere): ");
+			e.getMessage();
 		}
 		return activity;
 	}
@@ -181,6 +182,7 @@ public class DAOActivity implements IFDAOActivity {
 		ResultSet results;
 		ArrayList<Activity> list = new ArrayList<Activity>();
 		String query = buildQuery(wClause);
+		System.out.println("miscWhere query (DAOActivity): " + query);
 		// reads the activity from the database
 		try {
 			Statement stmt = con.createStatement();
@@ -196,11 +198,14 @@ public class DAOActivity implements IFDAOActivity {
 			stmt.close();
 			if (retrieveAssociation) {
 				// no association to be retrieved
+				throw new IllegalArgumentException(
+						"There is no association to be retrieved from Activity table");
 			}
 		}
 		catch (Exception e) {
-			System.out.println("Query exception : " + e);
+			System.out.println("Query exception : ");
 			e.printStackTrace();
+			e.getMessage();
 		}
 		return list;
 	}
@@ -253,7 +258,7 @@ public class DAOActivity implements IFDAOActivity {
 
 	// builds a query for retrieving information from the Activity table
 	private String buildQuery(String wClause) {
-		String query = "SET DATEFORMAT dmy;" + "SELECT * FROM Activity";
+		String query = "SET DATEFORMAT dmy; SELECT * FROM Activity";
 		if (wClause.length() > 0)
 			query = query + " WHERE " + wClause;
 		return query;

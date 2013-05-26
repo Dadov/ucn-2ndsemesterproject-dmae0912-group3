@@ -19,6 +19,16 @@ public class Customer extends Person {
 		this.noOfStays = noOfStays;
 	}
 
+	public Customer(String CPR, String fname, String lname,
+			String country, String ZIP, String city, String address,
+			String email, String password, String registrationDate,
+			int noOfStays) {
+		super(CPR, fname, lname, country, ZIP, city, address, email,
+				password);
+		this.registrationDate = registrationDate;
+		this.noOfStays = noOfStays;
+	}
+
 	public String getRegistrationDate() {
 		return registrationDate;
 	}

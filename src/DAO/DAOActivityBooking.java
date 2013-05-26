@@ -54,7 +54,7 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 			rc = stmt.executeUpdate(query);
 			stmt.close();
 		}
-		catch(Exception e) {
+		catch(SQLException e) {
 			System.out.println("ActivityBooking was not inserted into the database");
 			e.getMessage();
 		}
@@ -67,7 +67,7 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 		int rc = -1;
 		if (id == -1)
 			id = getLastInsertedID();
-		String query = "SET DATEFORMAT dmy;";
+		String query = "";
 		for (Customer customer : customers) {
 			query = query + "INSERT INTO ActivityCustomers(activityBookingID, customerID) VALUES(" +
 			id + "," +
@@ -80,7 +80,7 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 			stmt.close();
 		}
 		catch (SQLException e) {
-			System.out.println("Customer was not inserted into ActivityCustomers");
+			System.out.println("Customers were not inserted into ActivityCustomers");
 		}
 		return rc;
 	}

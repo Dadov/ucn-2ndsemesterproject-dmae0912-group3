@@ -16,6 +16,14 @@ public class Staff extends Person {
 		this.salary = salary;
 	}
 
+	public Staff(String CPR, String fname, String lname,
+			String country, String ZIP, String city, String address,
+			String email, String password, double salary) {
+		super(CPR, fname, lname, country, ZIP, city, address, email,
+				password);
+		this.salary = salary;
+	}
+
 	public double getSalary() {
 		return salary;
 	}
