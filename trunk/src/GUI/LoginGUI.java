@@ -46,7 +46,7 @@ public class LoginGUI extends JPanel {
 		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
 		loginPanel = new JPanel();
-		loginPanel.setPreferredSize(new Dimension(150, 520));
+		loginPanel.setPreferredSize(new Dimension(150, 530));
 		loginPanel.setAlignmentY(Component.BOTTOM_ALIGNMENT);
 		loginPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		add(loginPanel);
@@ -91,7 +91,7 @@ public class LoginGUI extends JPanel {
 
 		newsPanel = new JPanel();
 		newsBorder.add(newsPanel);
-		newsPanel.setPreferredSize(new Dimension(750, 490));
+		newsPanel.setPreferredSize(new Dimension(780, 500));
 
 		textPane = new JTextPane();
 		textPane.setPreferredSize(new Dimension(750, 500));
