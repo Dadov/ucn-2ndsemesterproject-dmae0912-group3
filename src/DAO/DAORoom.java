@@ -34,8 +34,8 @@ public class DAORoom implements IFDAORoom {
 		// TODO not tested, yet
 
 		// constructing fancy query for retrieving only free rooms
-		String query = "number not in "
-				+ "(SELECT roomNumber FROM RoomsBooked WHERE roomBookingID in "
+		String query = " roomType = '" + roomType + "' AND number NOT IN "
+				+ "(SELECT roomNumber FROM RoomsBooked WHERE roomBookingID IN "
 				+ "(SELECT bookingID FROM RoomBooking WHERE dateStart >= '"
 				+ startDate + "' and dateEnd <=  '" + endDate + "'));";
 
