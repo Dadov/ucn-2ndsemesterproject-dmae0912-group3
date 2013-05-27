@@ -25,6 +25,17 @@ public class DAOActivity implements IFDAOActivity {
 	public ArrayList<Activity> getAllActivities(boolean retrieveAssociation) {
 		return miscWhere("", retrieveAssociation);
 	}
+	public ArrayList<Activity> findFreeActivities(String date, String time,
+			Enum<ActivityType> activityType) {
+		// TODO not tested, yet
+
+		// constructing fancy query for retrieving only free activities
+		String query = " activityType = " + activityType.name() + " and activityID not in (" +
+				"	SELECT activityID FROM ActivityBooking WHERE activityDate = " + date + " and activityTime = " + time +")";
+
+		return miscWhere(query, false);
+
+	}
 
 	// inserts a new activity
 	@Override
