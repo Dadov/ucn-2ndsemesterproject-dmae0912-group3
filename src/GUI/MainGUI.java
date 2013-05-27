@@ -11,7 +11,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTextPane;
 import javax.swing.UIManager;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
@@ -33,12 +32,6 @@ public class MainGUI {
 	private JPanel contentPanel;
 	private JPanel optionsBorder;
 	private JPanel contentBorder;
-	// wth is this?:
-	// private JPanel panel;
-	private JTextPane txtThisIsThe;
-	private JTextPane txtpnThisIsCustomers;
-	private JTextPane txtpnThisIsRoomsgui;
-	private JTextPane txtpnThisIsStaffgui;
 
 	public MainGUI() {
 
@@ -95,8 +88,8 @@ public class MainGUI {
 
 		loginGUI.loginButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int rank = loginGUI.login();
-				// int rank = 1;
+				// int rank = loginGUI.login();
+				int rank = 1;
 
 				switch (rank) {
 				// TODO invalid login, avoid doing anything
@@ -169,30 +162,14 @@ public class MainGUI {
 		activitiesGUI = new ActivitiesGUI();
 		contentPanel.add(activitiesGUI, "ActivitiesGUI");
 
-		txtThisIsThe = new JTextPane();
-		txtThisIsThe.setText("this is the ActivitiesGUI");
-		activitiesGUI.add(txtThisIsThe);
-
 		customersGUI = new CustomersGUI();
 		contentPanel.add(customersGUI, "CustomersGUI");
-
-		txtpnThisIsCustomers = new JTextPane();
-		txtpnThisIsCustomers.setText("this is the CustomersGUI");
-		customersGUI.add(txtpnThisIsCustomers);
 
 		roomsGUI = new RoomsGUI();
 		contentPanel.add(roomsGUI, "RoomsGUI");
 
-		txtpnThisIsRoomsgui = new JTextPane();
-		txtpnThisIsRoomsgui.setText("this is the RoomsGUI");
-		roomsGUI.add(txtpnThisIsRoomsgui);
-
 		staffGUI = new StaffGUI();
 		contentPanel.add(staffGUI, "StaffGUI");
-
-		txtpnThisIsStaffgui = new JTextPane();
-		txtpnThisIsStaffgui.setText("this is theStaffGUI");
-		staffGUI.add(txtpnThisIsStaffgui);
 
 		activitvitiesButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
