@@ -34,7 +34,7 @@ public class DAOStaffTest {
 
 	@Before
 	public void setUp() throws Exception {
-		staff = new Staff("120945-3401", "Granny", "Smith", 
+		staff = new Staff(0, "120945-3401", "Granny", "Smith", 
 				"Japan", "3400", "Ching Chong", "Chookok Street 19",
 				"granny_smith@chingchong.com", "grsmchicho", 20.50);
 	}

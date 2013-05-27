@@ -143,6 +143,7 @@ public class DAOCustomerTest {
 	    
 	} finally {
 	    //rollback is used, to undo all changes that were made during testings;
+		con.setAutoCommit(false);
 	    con.rollback();
 	}
     }

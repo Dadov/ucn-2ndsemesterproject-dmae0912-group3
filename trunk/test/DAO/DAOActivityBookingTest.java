@@ -5,7 +5,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import org.junit.After;
@@ -15,9 +17,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import Models.ActivityTime;
+import Models.ActivityType;
 import Models.Customer;
 import Models.Activity;
 import Models.ActivityBooking;
+import Models.Instructor;
 
 public class DAOActivityBookingTest {
 	private static Connection con;
@@ -38,18 +42,52 @@ public class DAOActivityBookingTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		IFDAOCustomer daoc = new DAOCustomer();
-		Customer customer1 = daoc.getCustomer(11, false);
-		Customer customer2 = daoc.getCustomer(12, false);
+		con = DBConnection.getInstance().getDBCon();
+		IFDAOCustomer dbc = new DAOCustomer();
+		Customer c1 = new Customer(0,"987654-3210","No","One","Boulevarden 55","9000","Aalborg","noone@nomail.dk", "shitsinked", "Instructor", "10-10-2013", 100);
+		dbc.insert(c1);
+		c1.setPersonID(getLastInsertedID(2));
+		Customer customer = new Customer(0, "111188-0000", "Jan", "Anderson", 
+				"Denmark", "9000", "Aalborg", "Enrich Vej 10", 
+				"monkey@mail.com", "grant", "14-05-2013", 10);
+		dbc.insert(customer);
+		customer.setPersonID(getLastInsertedID(2));
 		ArrayList<Customer> customers = new ArrayList<Customer>();
-		customers.add(customer1);
-		customers.add(customer2);
+		customers.add(c1);
+		customers.add(customer);
 		IFDAOActivity daoa= new DAOActivity();
-		Activity activity = daoa.getActivity(33, true);
+		Activity activity = new Activity(ActivityType.BadmintonCourt, 4, new ArrayList<Instructor>(), 100);
+		daoa.insert(activity);
+		activity.setID(getLastInsertedID(3));
 		ActivityTime activityTime = new ActivityTime("2010-09-10", "15:00");
 		activityBooking = new ActivityBooking(customers, activity, activityTime, false, false);
 	}
 	
+	private int getLastInsertedID(int i) {
+		ResultSet results; //the results retrieved from the database will be stored here;
+		String query = null;
+		switch(i){
+		case 2: query = "SELECT IDENT_CURRENT('Person') AS ID;";
+			break;
+		case 3: query = "SELECT IDENT_CURRENT('Activity') AS ID;";
+		}
+		int id = 0;
+		try { //creating a statement and deleting a selected RoomBooking from database;
+			Statement stmt = con.createStatement();
+			stmt.setQueryTimeout(5);
+			results = stmt.executeQuery(query);
+			if(results.next()) { //retrieves the last ID
+	 			id = results.getInt("ID");
+			}
+			stmt.close();	
+		}
+		catch (Exception e) { //error, exception call;
+			System.out.println("Getting of ID failed");
+			e.getMessage();
+		}
+		return id;
+	}
+
 	@After
 	public void tearDown() throws Exception {
 	}

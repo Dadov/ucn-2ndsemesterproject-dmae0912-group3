@@ -22,6 +22,7 @@ import org.junit.Test;
 import Models.Activity;
 import Models.ActivityBooking;
 import Models.ActivityTime;
+import Models.ActivityType;
 import Models.Customer;
 import Models.Instructor;
 import Models.InstructorHire;
@@ -57,18 +58,26 @@ public class DAOInstructorHireTest {
 	@Before
 	public void setUp() throws Exception {
 		con = DBConnection.getInstance().getDBCon();
-		Instructor instructor = new Instructor();
-		instructor.setPersonID(4);
-		Customer customer = new Customer();
-		customer.setPersonID(11);
 		IFDAOStaff dbs= new DAOStaff();
 		IFDAOCustomer dbc = new DAOCustomer();
-		customer = dbc.getCustomer(11, false);
-		instructor = (Instructor) dbs.getStaff(4, true);
+		Instructor instructor = new Instructor(0,"987654-3210","No","One","Boulevarden 55","9000","Aalborg","noone@nomail.dk", "shitsinked", "Instructor", 100);
+		dbs.insert(instructor, "Instructor");
+		instructor.setPersonID(getLastInsertedID(2));
+		Customer customer = new Customer(0, "111188-0000", "Jan", "Anderson", 
+				"Denmark", "9000", "Aalborg", "Enrich Vej 10", 
+				"monkey@mail.com", "grant", "14-05-2013", 10);
+		dbc.insert(customer);
+		customer.setPersonID(getLastInsertedID(2));
 		IFDAOActivity dba = new DAOActivity();
-		Activity activity = dba.getActivity(33, false);
+		ArrayList<Instructor> instructors = new ArrayList<Instructor>();
+		instructors.add(instructor);
+		Activity activity = new Activity(ActivityType.BadmintonCourt, 4, instructors , 100);
+		dba.insert(activity);
+		activity.setID(getLastInsertedID(3));
 		ActivityTime activityTime = new ActivityTime("2013-10-10", "19:00");
-		ActivityBooking activityBooking = new ActivityBooking(1, new ArrayList<Customer>(),activity,activityTime,true,true);
+		ArrayList<Customer> customers = new ArrayList<Customer>();
+		customers.add(customer);
+		ActivityBooking activityBooking = new ActivityBooking(1,customers,activity,activityTime,true,true);
 		IFDAOActivityBooking dbab = new DAOActivityBooking();
 		dbab.insert(activityBooking);
 		activityBooking.setID(dbab.getLastInsertedID());
@@ -106,8 +115,8 @@ public class DAOInstructorHireTest {
 		daoHire = new DAOInstructorHire();
 		try{
 		daoHire.insert(instructorHire);
-		instructorHire.setId(getLastInsertedID());
-		InstructorHire ih = daoHire.getInstructorHire(getLastInsertedID(),true);
+		instructorHire.setId(getLastInsertedID(1));
+		InstructorHire ih = daoHire.getInstructorHire(getLastInsertedID(1),true);
 		assertEquals(instructorHire.getCustomer().toString(), ih.getCustomer().toString());
 		assertEquals(instructorHire.getInstructor().toString(), ih.getInstructor().toString());
 		//assertEquals(instructorHire.getActivityBooking().toString(), ih.getActivityBooking().toString());
@@ -157,16 +166,23 @@ public class DAOInstructorHireTest {
 		} finally {
 		}
 	}
-	public int getLastInsertedID(){
+	public int getLastInsertedID(int i){
 		ResultSet results; //the results retrieved from the database will be stored here;
-		String query = "SELECT IDENT_CURRENT('InstructorHire') AS InstructorID;"; //selects the latest inserted ID as "BookingID" column
+		String query = null;
+		switch(i){
+		case 1: query = "SELECT IDENT_CURRENT('InstructorHire') AS ID;"; //selects the latest inserted ID as "BookingID" column
+			break;
+		case 2: query = "SELECT IDENT_CURRENT('Person') AS ID;";
+			break;
+		case 3: query = "SELECT IDENT_CURRENT('Activity') AS ID;";
+		}
 		int id = 0;
 		try { //creating a statement and deleting a selected RoomBooking from database;
 			Statement stmt = con.createStatement();
 			stmt.setQueryTimeout(5);
 			results = stmt.executeQuery(query);
 			if(results.next()) { //retrieves the last ID
-	 			id = results.getInt("InstructorID");
+	 			id = results.getInt("ID");
 			}
 			stmt.close();	
 		}

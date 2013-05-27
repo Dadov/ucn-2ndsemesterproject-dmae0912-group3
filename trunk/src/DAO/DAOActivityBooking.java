@@ -213,6 +213,7 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 				ActivityBooking activityBooking = new ActivityBooking();
 				activityBooking = buildActivityBooking(results);
 				//inserts activity customers into ActivityBooking object
+				wClause = " activityBookingID = " + activityBooking.getID();
 				activityBooking.setCustomers(getActivityCustomers(wClause,false));
 				list.add(activityBooking);
 			}
