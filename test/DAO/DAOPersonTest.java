@@ -57,12 +57,12 @@ public class DAOPersonTest {
      */
     public void setUp() throws Exception {
 	p1 = new Customer(0, "111188-0000", "Jan", "Anderson", 
-			"Danmark", "9000", "Aalborg", "Enrich Vej 10", 
+			"Denmark", "9000", "Aalborg", "Enrich Vej 10", 
 			"monkey@mail.com", "grant", "2010-10-10", 0);
 	//System.out.println(p1.toString());
 	
 	p2 = new Customer(1, "010190-0000", "Emily", "Johanson", 
-			"Danmark", "9000", "Aalborg", "Hobrovej 100", 
+			"Denmark", "9000", "Aalborg", "Hobrovej 100", 
 			"wildMonkey@crazy.com", "allow", null, 0);
 	//System.out.println(p2.toString());
     }
@@ -139,9 +139,9 @@ public class DAOPersonTest {
 	    //assertEquals(p1.getZIP(), resultByID.getZIP());
 	    
 	    //GET Person by CPR number;
-	    Person resultByCPR = dao.getPerson(p1.getCPR(), false);
+	    //Person resultByCPR = dao.getPerson(p1.getCPR(), false);
 	    //comparing toString by toString;
-	    assertEquals(lastInserted.toString(), resultByCPR.toString());
+	   // assertEquals(lastInserted.toString(), resultByCPR.toString());
 	    //assertEquals(p1.getAddress(), resultByCPR.getAddress());
 	    //assertEquals(p1.getCity(), resultByCPR.getCity());
 	    //assertEquals(p1.getCountry(), resultByCPR.getCountry());
@@ -153,9 +153,9 @@ public class DAOPersonTest {
 	    //assertEquals(p1.getZIP(), resultByCPR.getZIP());
 	    
 	    //GET Person by First and Last name;
-	    Person resultByLFname = dao.getPerson(p1.getFname(), p1.getLname(), false).get(0);
+	    //Person resultByLFname = dao.getPerson(p1.getFname(), p1.getLname(), false).get(0);
 	    //comparing toString by toString;
-	    assertEquals(lastInserted.toString(), resultByLFname.toString());
+	    //assertEquals(lastInserted.toString(), resultByLFname.toString());
 	    //assertEquals(p1.getAddress(), resultByLFname.getAddress());
 	    //assertEquals(p1.getCity(), resultByLFname.getCity());
 	    //assertEquals(p1.getCountry(), resultByLFname.getCountry());
