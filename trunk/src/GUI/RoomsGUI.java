@@ -8,22 +8,29 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableModel;
 
+import Controllers.CustomersCtr;
 import Controllers.RoomsCtr;
+import Models.Customer;
 import Models.Room;
+import Models.RoomBooking;
 import Models.RoomType;
 
 public class RoomsGUI extends JPanel {
@@ -48,10 +55,9 @@ public class RoomsGUI extends JPanel {
 	private DefaultTableModel chraTableModel;
 	private JPanel bookRoomPanel;
 	private JPanel roomBookingsPanel;
-	private JComboBox<RoomType> comboBox;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
+	private JTextField brStartDateTextField;
+	private JTextField brEndDateTextField;
+	private JTextField brCustomerIdTextField;
 	private JButton btnBookRoom;
 	private JLabel brRoomTypeLabel;
 	private JLabel brStartDateLabel;
@@ -60,16 +66,22 @@ public class RoomsGUI extends JPanel {
 	private JButton chraButton;
 	private JScrollPane rbTableScrollPane;
 	private JTable rbTable;
-	// TODO use:
 	private DefaultTableModel rbTableModel;
 	private JPanel cancelBookingPanel;
-	private JTextField textField_3;
-	private JButton btnNewButton_1;
-	private JLabel lblNewLabel;
+	private JTextField rbCustIDField;
+	private JButton rbFilterButton;
+	private JLabel rbCustIDLabel;
 	private JTextField cbpTextField;
 	private JButton cbpButton;
 	private JLabel cbpLabel;
 	private JPanel rbTablePanel;
+
+	private RoomsCtr roomsCtr;
+	private CustomersCtr customersCtr;
+	private JFormattedTextField brRoomNumField;
+	private JPanel rbFilterPanel;
+	private JPanel rbLabelPanel;
+	private JLabel rbLabel;
 
 	public RoomsGUI() {
 		setPreferredSize(new Dimension(780, 535));
@@ -189,14 +201,14 @@ public class RoomsGUI extends JPanel {
 		GridBagLayout gbl_bookRoomPanel = new GridBagLayout();
 		gbl_bookRoomPanel.columnWidths = new int[] { 30, 80, 35, 140, 35, 140,
 				35, 100, 35, 85, 0 };
-		gbl_bookRoomPanel.rowHeights = new int[] { 0, 23, 0 };
-		gbl_bookRoomPanel.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0,
+		gbl_bookRoomPanel.rowHeights = new int[] { 20, 30, 0 };
+		gbl_bookRoomPanel.columnWeights = new double[] { 0.0, 1.0, 0.0, 0.0,
 				0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		gbl_bookRoomPanel.rowWeights = new double[] { 0.0, 0.0,
 				Double.MIN_VALUE };
 		bookRoomPanel.setLayout(gbl_bookRoomPanel);
 
-		brRoomTypeLabel = new JLabel("Room Type:");
+		brRoomTypeLabel = new JLabel("Room Numbers:");
 		GridBagConstraints gbc_brRoomTypeLabel = new GridBagConstraints();
 		gbc_brRoomTypeLabel.anchor = GridBagConstraints.WEST;
 		gbc_brRoomTypeLabel.insets = new Insets(0, 0, 5, 5);
@@ -228,43 +240,47 @@ public class RoomsGUI extends JPanel {
 		gbc_brCustomerLabel.gridy = 0;
 		bookRoomPanel.add(brCustomerLabel, gbc_brCustomerLabel);
 
-		comboBox = new JComboBox<RoomType>();
-		comboBox.setModel(new DefaultComboBoxModel<RoomType>(RoomType.values()));
-		GridBagConstraints gbc_comboBox = new GridBagConstraints();
-		gbc_comboBox.anchor = GridBagConstraints.WEST;
-		gbc_comboBox.insets = new Insets(0, 0, 0, 5);
-		gbc_comboBox.gridx = 1;
-		gbc_comboBox.gridy = 1;
-		bookRoomPanel.add(comboBox, gbc_comboBox);
+		brRoomNumField = new JFormattedTextField();
+		GridBagConstraints gbc_brRoomNumField = new GridBagConstraints();
+		gbc_brRoomNumField.insets = new Insets(0, 0, 0, 5);
+		gbc_brRoomNumField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_brRoomNumField.gridx = 1;
+		gbc_brRoomNumField.gridy = 1;
+		bookRoomPanel.add(brRoomNumField, gbc_brRoomNumField);
 
-		textField = new JTextField();
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.anchor = GridBagConstraints.WEST;
-		gbc_textField.insets = new Insets(0, 0, 0, 5);
-		gbc_textField.gridx = 3;
-		gbc_textField.gridy = 1;
-		bookRoomPanel.add(textField, gbc_textField);
-		textField.setColumns(10);
+		brStartDateTextField = new JTextField();
+		GridBagConstraints gbc_brStartDateTextField = new GridBagConstraints();
+		gbc_brStartDateTextField.anchor = GridBagConstraints.WEST;
+		gbc_brStartDateTextField.insets = new Insets(0, 0, 0, 5);
+		gbc_brStartDateTextField.gridx = 3;
+		gbc_brStartDateTextField.gridy = 1;
+		bookRoomPanel.add(brStartDateTextField, gbc_brStartDateTextField);
+		brStartDateTextField.setColumns(10);
 
-		textField_1 = new JTextField();
-		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
-		gbc_textField_1.anchor = GridBagConstraints.WEST;
-		gbc_textField_1.insets = new Insets(0, 0, 0, 5);
-		gbc_textField_1.gridx = 5;
-		gbc_textField_1.gridy = 1;
-		bookRoomPanel.add(textField_1, gbc_textField_1);
-		textField_1.setColumns(10);
+		brEndDateTextField = new JTextField();
+		GridBagConstraints gbc_brEndDateTextField = new GridBagConstraints();
+		gbc_brEndDateTextField.anchor = GridBagConstraints.WEST;
+		gbc_brEndDateTextField.insets = new Insets(0, 0, 0, 5);
+		gbc_brEndDateTextField.gridx = 5;
+		gbc_brEndDateTextField.gridy = 1;
+		bookRoomPanel.add(brEndDateTextField, gbc_brEndDateTextField);
+		brEndDateTextField.setColumns(10);
 
-		textField_2 = new JTextField();
-		GridBagConstraints gbc_textField_2 = new GridBagConstraints();
-		gbc_textField_2.anchor = GridBagConstraints.WEST;
-		gbc_textField_2.insets = new Insets(0, 0, 0, 5);
-		gbc_textField_2.gridx = 7;
-		gbc_textField_2.gridy = 1;
-		bookRoomPanel.add(textField_2, gbc_textField_2);
-		textField_2.setColumns(10);
+		brCustomerIdTextField = new JTextField();
+		GridBagConstraints gbc_brCustomerIdTextField = new GridBagConstraints();
+		gbc_brCustomerIdTextField.anchor = GridBagConstraints.WEST;
+		gbc_brCustomerIdTextField.insets = new Insets(0, 0, 0, 5);
+		gbc_brCustomerIdTextField.gridx = 7;
+		gbc_brCustomerIdTextField.gridy = 1;
+		bookRoomPanel.add(brCustomerIdTextField, gbc_brCustomerIdTextField);
+		brCustomerIdTextField.setColumns(10);
 
-		btnBookRoom = new JButton("Book Room");
+		btnBookRoom = new JButton("Book Rooms");
+		btnBookRoom.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				bookRooms();
+			}
+		});
 		GridBagConstraints gbc_btnBookRoom = new GridBagConstraints();
 		gbc_btnBookRoom.anchor = GridBagConstraints.NORTHWEST;
 		gbc_btnBookRoom.gridx = 9;
@@ -272,32 +288,46 @@ public class RoomsGUI extends JPanel {
 		bookRoomPanel.add(btnBookRoom, gbc_btnBookRoom);
 
 		roomBookingsPanel = new JPanel();
-		FlowLayout flowLayout_1 = (FlowLayout) roomBookingsPanel.getLayout();
-		flowLayout_1.setAlignment(FlowLayout.LEFT);
 		roomBookingsPanel.setBorder(null);
 		roomBookingPanel.add(roomBookingsPanel, BorderLayout.CENTER);
+		roomBookingsPanel.setLayout(new BorderLayout(0, 0));
 
-		lblNewLabel = new JLabel("Customer ID:");
-		roomBookingsPanel.add(lblNewLabel);
+		rbLabelPanel = new JPanel();
+		FlowLayout flowLayout_2 = (FlowLayout) rbLabelPanel.getLayout();
+		flowLayout_2.setAlignment(FlowLayout.RIGHT);
+		roomBookingsPanel.add(rbLabelPanel, BorderLayout.WEST);
 
-		textField_3 = new JTextField();
-		roomBookingsPanel.add(textField_3);
-		textField_3.setColumns(10);
+		rbLabel = new JLabel("Current Bookings:");
+		rbLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		rbLabelPanel.add(rbLabel);
 
-		btnNewButton_1 = new JButton("Filter");
-		roomBookingsPanel.add(btnNewButton_1);
+		rbFilterPanel = new JPanel();
+		FlowLayout fl_rbFilterPanel = (FlowLayout) rbFilterPanel.getLayout();
+		fl_rbFilterPanel.setAlignment(FlowLayout.RIGHT);
+		roomBookingsPanel.add(rbFilterPanel, BorderLayout.EAST);
+
+		rbCustIDLabel = new JLabel("Customer ID:");
+		rbFilterPanel.add(rbCustIDLabel);
+
+		rbCustIDField = new JTextField();
+		rbFilterPanel.add(rbCustIDField);
+		rbCustIDField.setColumns(10);
+
+		rbFilterButton = new JButton("Filter");
+		rbFilterPanel.add(rbFilterButton);
 
 		rbTablePanel = new JPanel();
-		roomBookingsPanel.add(rbTablePanel);
+		roomBookingsPanel.add(rbTablePanel, BorderLayout.SOUTH);
 
 		rbTableScrollPane = new JScrollPane();
 		rbTablePanel.add(rbTableScrollPane);
 
 		rbTable = new JTable();
 		rbTable.setPreferredScrollableViewportSize(new Dimension(750, 340));
-		rbTable.setModel(new DefaultTableModel(new Object[][] { { null, null,
-				null, null }, }, new String[] { "Booking ID", "Customer ID",
-				"Date Start", "Date End" }));
+		rbTableModel = new DefaultTableModel(new Object[][] {}, new String[] {
+				"Booking ID", "Customer ID", "Date Start", "Date End" });
+		rbTable.setModel(rbTableModel);
+
 		rbTable.getColumnModel().getColumn(0).setPreferredWidth(73);
 		rbTableScrollPane.setViewportView(rbTable);
 
@@ -316,13 +346,25 @@ public class RoomsGUI extends JPanel {
 		cbpTextField.setColumns(10);
 
 		cbpButton = new JButton("Cancel Booking");
+		cbpButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				cancelRoomBooking();
+			}
+		});
 		cancelBookingPanel.add(cbpButton);
+
+		/*
+		 * Manually added methods:
+		 */
+
+		fillRbTable();
 
 	}
 
 	private void fillChraTable() {
 		chraTableModel.getDataVector().removeAllElements();
-		RoomsCtr roomsCtr = new RoomsCtr();
+
+		roomsCtr = new RoomsCtr();
 		String startDate = chraDateStartField.getText();
 		String endDate = chraDateEndField.getText();
 		RoomType roomType = (RoomType) chraRoomTypeComboBox.getSelectedItem();
@@ -338,6 +380,71 @@ public class RoomsGUI extends JPanel {
 			Object[] rowData = { number, type, price, note };
 			chraTableModel.addRow(rowData);
 		}
+
 	}
 
+	private void fillRbTable() {
+		// TODO change table columns
+		rbTableModel.getDataVector().removeAllElements();
+
+		roomsCtr = new RoomsCtr();
+		ArrayList<RoomBooking> allRoomBookings = roomsCtr.getAllBookings();
+		for (RoomBooking roombooking : allRoomBookings) {
+			int bookingID = roombooking.getId();
+			int customerID = roombooking.getCustomer().getPersonID();
+			String dateStart = roombooking.getDateStart();
+			String dateEnd = roombooking.getDateEnd();
+
+			Object[] rowData = { bookingID, customerID, dateStart, dateEnd };
+			rbTableModel.addRow(rowData);
+		}
+
+	}
+
+	private void bookRooms() {
+		// TODO DAORoomBooking seems to have problems, not adding into
+		// RoomsBooked table
+		roomsCtr = new RoomsCtr();
+		customersCtr = new CustomersCtr();
+
+		Customer customer = customersCtr.getCustomer(Integer
+				.parseInt(brCustomerIdTextField.getText()));
+
+		ArrayList<Room> rooms = new ArrayList<Room>();
+		String roomNumbersInput = brRoomNumField.getText();
+		// remove whitespace
+		roomNumbersInput.replaceAll("\\s", "");
+		// split by ","
+		String[] roomNumbers = roomNumbersInput.split(",");
+		for (int i = 0; i < roomNumbers.length; i++) {
+			roomsCtr.findRoom(Integer.parseInt(roomNumbers[i]));
+		}
+
+		String bookDate = new SimpleDateFormat("dd-MM-yyyy").format(Calendar
+				.getInstance().getTime());
+		String startDate = brStartDateTextField.getText();
+		String endDate = brEndDateTextField.getText();
+
+		roomsCtr.newBooking(customer, rooms, bookDate, startDate, endDate);
+
+		// 'refreshing' the table, maybe should add some popup
+		fillRbTable();
+	}
+
+	@SuppressWarnings("unused")
+	private void findRbByCustomer() {
+		// TODO need to add new method in DAORoomBooking
+	}
+
+	@SuppressWarnings("unused")
+	private void cancelRoomBooking() {
+		// TODO not usage of return values 'rc' yet
+		roomsCtr = new RoomsCtr();
+
+		int id = Integer.parseInt(cbpTextField.getText());
+		int rc01 = roomsCtr.deleteBooking(id);
+		int rc02 = roomsCtr.deleteRoomsBooked(id);
+		// 'refreshing' the table, maybe should add some popup
+		fillRbTable();
+	}
 }
