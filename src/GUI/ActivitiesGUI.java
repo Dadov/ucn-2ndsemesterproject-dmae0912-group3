@@ -12,6 +12,7 @@ import java.util.Date;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -26,7 +27,9 @@ import Controllers.ActivitiesCtr;
 import Controllers.CustomersCtr;
 import Models.Activity;
 import Models.ActivityBooking;
+import Models.ActivityTime;
 import Models.Customer;
+import Models.Instructor;
 import Models.InstructorHire;
 import javax.swing.JTextField;
 import com.jgoodies.forms.layout.FormLayout;
@@ -70,6 +73,8 @@ public class ActivitiesGUI extends JPanel {
 	private JPanel BookingTable;
 	private JButton btnDelete;
 	private JLabel showIdLabel;
+	private Customer c1;
+	private Instructor i1;
 	
 
 	public ActivitiesGUI() {
@@ -78,6 +83,9 @@ public class ActivitiesGUI extends JPanel {
 		hires = new ArrayList<InstructorHire>();
 		activities = new ArrayList<Activity>();
 		custCtr = new CustomersCtr();
+		c1 = null; //TODO
+		i1 = null; //TODO
+		
 		
 		
 		activitiesWrapper = new JPanel();
@@ -97,7 +105,7 @@ public class ActivitiesGUI extends JPanel {
 				"ID", "Activity", "Date", "Time", "Open Activity"
 			}
 		);
-		fillActivityTable();
+		
 		
 		JPanel BookingInput = new JPanel();
 		bookActivityTab.add(BookingInput,BorderLayout.NORTH);
@@ -411,6 +419,7 @@ public class ActivitiesGUI extends JPanel {
 		
 		String[] items = {"TennisCourt", "BadmintonCourt", "VolleyBallCourt", "HandBallCourt", "FitnessCenter"};
 		@SuppressWarnings({ "rawtypes", "unchecked" })
+		final
 		JComboBox createActivityCombo = new JComboBox(new DefaultComboBoxModel(items));
 		createActivityFieldPanel.add(createActivityCombo);
 		
@@ -418,7 +427,7 @@ public class ActivitiesGUI extends JPanel {
 				new FlowLayout(FlowLayout.LEFT));
 		createBookingRight.add(createDateFieldPanel);
 
-		JTextField createDateField = new JTextField();
+		final JFormattedTextField createDateField = new JFormattedTextField("dd-mm-yyyy");
 		createDateFieldPanel.add(createDateField);
 		createDateField.setHorizontalAlignment(SwingConstants.CENTER);
 		createDateField.setColumns(20);
@@ -427,7 +436,7 @@ public class ActivitiesGUI extends JPanel {
 				FlowLayout.LEFT));
 		createBookingRight.add(createTimeFieldPanel);
 
-		JTextField createTimeField = new JTextField();
+		final JFormattedTextField createTimeField = new JFormattedTextField("hh:mm");
 		createTimeFieldPanel.add(createTimeField);
 		createTimeField.setHorizontalAlignment(SwingConstants.CENTER);
 		createTimeField.setColumns(25);
@@ -435,7 +444,7 @@ public class ActivitiesGUI extends JPanel {
 		JPanel createOpenPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		createBookingRight.add(createOpenPanel);
 		
-		JCheckBox createOpenBox = new JCheckBox();
+		final JCheckBox createOpenBox = new JCheckBox();
 		createOpenPanel.add(createOpenBox);
 
 		
@@ -447,7 +456,34 @@ public class ActivitiesGUI extends JPanel {
 		JButton createBtnCreate = new JButton("Create");
 		createBtnCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//Activity
+				Customer customer = null;
+				int id = 0;
+				ArrayList<Customer> customers = new ArrayList<Customer>();
+				String activityType = (String) createActivityCombo.getSelectedItem();
+				String date = createDateField.getText();
+				String time = createTimeField.getText();
+				ActivityTime actTime = new ActivityTime(date, time);
+				ArrayList<Activity> activities = actCtr.findFreeActivities(date, time, activityType);
+				boolean openActivity = createOpenBox.isSelected();
+				try{
+					if(customer == null){
+						id = Integer.parseInt(JOptionPane.showInputDialog(activitiesWrapper, "Customer's ID", "Request", 1));
+						customer = custCtr.getCustomer(id);
+						customers.add(customer);
+					}
+					Activity activity = activities.get(0);
+					actCtr.newActivityBooking(customers, activity, actTime, openActivity, false);
+					JOptionPane.showMessageDialog(activitiesWrapper, "You have created new activity: " + activity.getActivityType().name(), "Message", 1);
+				}
+				catch(ArrayIndexOutOfBoundsException ae){
+					JOptionPane.showMessageDialog(activitiesWrapper, "No facility available, try another hour.", "Message", 3);
+				}
+				catch(NumberFormatException nfe){
+					JOptionPane.showMessageDialog(activitiesWrapper, "Enter valid number!", "Warning", 2);
+				}
+				catch(NullPointerException npe){
+					JOptionPane.showMessageDialog(activitiesWrapper, "Enter valid ID!", "Warning", 2);
+			}
 			}
 		});
 		createBottomMenu.add(createBtnCreate);
@@ -571,6 +607,7 @@ public class ActivitiesGUI extends JPanel {
 		scrollPane_Activity.setViewportView(activityTable);
 		fillActivitiesTable();
 		
+		
 		JButton buttonCreate = new JButton("Create new Activity");
 		buttonCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -580,10 +617,12 @@ public class ActivitiesGUI extends JPanel {
 
 		BookingInput.add(buttonCreate, "2, 2, left, top");
 		
+		showAllBookings();
 	}
 		protected void showAllBookings() {
 			CardLayout c1 = (CardLayout) BookingTable.getLayout();
 			c1.show(BookingTable, "showAllBookings");
+			fillActivityTable();
 		
 	}
 		protected void createBooking() {
@@ -627,22 +666,51 @@ public class ActivitiesGUI extends JPanel {
 			
 			public void fillInstructorTable(){
 				hires = actCtr.getInstructorHires();
-				for(InstructorHire insHire: hires){
-					
+				bookings = actCtr.getAllBookings();
+				if(c1!=null){
+				for(ActivityBooking insHire: bookings){
 					//Initialise variables for filling table
-					int ID = insHire.getId();
-					String actType = insHire.getActivityBooking().getActivity().getActivityType().name();
-					String date = insHire.getActivityTime().getDate();
-					String time = insHire.getActivityTime().getTime();
-					
-					
-					
-					//add the values to the table
-					Object[] rowData = {ID,actType,date,time};
-					dtmInstructorHire.addRow(rowData);
-					
+					for(Customer c: insHire.getCustomers()){
+						if(c.equals(c1)){
+							int ID = insHire.getID();
+							String actType = insHire.getActivity().getActivityType().name();
+							String date = insHire.getActivityTime().getDate();
+							String time = insHire.getActivityTime().getTime();	
+							//add the values to the table
+							Object[] rowData = {ID,actType,date,time};
+							dtmInstructorHire.addRow(rowData);
+								}
+							}	
+						}	
 				}
-			}
+				else if(i1 != null){
+					for(InstructorHire insHire: hires){
+						//Initialise variables for filling table
+						
+							if(i1.equals(insHire.getInstructor())){
+								int ID = insHire.getId();
+								String actType = insHire.getActivityBooking().getActivity().getActivityType().name();
+								String date = insHire.getActivityTime().getDate();
+								String time = insHire.getActivityTime().getTime();	
+								//add the values to the table
+								Object[] rowData = {ID,actType,date,time};
+								dtmInstructorHire.addRow(rowData);
+									}
+									
+							}	
+				}
+					else{
+						for(InstructorHire insHire: hires){
+						int ID = insHire.getId();
+						String actType = insHire.getActivityBooking().getActivity().getActivityType().name();
+						String date = insHire.getActivityTime().getDate();
+						String time = insHire.getActivityTime().getTime();	
+						//add the values to the table
+						Object[] rowData = {ID,actType,date,time};
+						dtmInstructorHire.addRow(rowData);
+					}
+					}
+				}
 			
 			public void fillActivitiesTable(){
 				activities = actCtr.getAllactivitys();
