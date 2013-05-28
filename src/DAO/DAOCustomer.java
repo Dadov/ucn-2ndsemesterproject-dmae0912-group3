@@ -263,8 +263,7 @@ public class DAOCustomer implements IFDAOCustomer {
 				// in case the boolean condition returns true it will throw an
 				// exception;
 				if (retrieveAssociation) {
-					throw new IllegalArgumentException(
-							"There is no association to be retrieved");
+
 				}
 
 			} else {

@@ -247,7 +247,7 @@ public class DAOInstructorHire implements IFDAOInstructorHire {
 					IFDAOActivityBooking dbActiv = new DAOActivityBooking();
 					int actID = instructorHire.getActivityBooking().getID();
 					ActivityBooking activityBooking = dbActiv
-							.getActivityBooking(actID, false);
+							.getActivityBooking(actID, true);
 					instructorHire1.setActivityBooking(activityBooking);
 				}
 			}

@@ -3,6 +3,7 @@ package DAO;
 import java.util.ArrayList;
 
 import Models.Activity;
+import Models.ActivityType;
 
 public interface IFDAOActivity {
 
@@ -17,4 +18,7 @@ public interface IFDAOActivity {
 	public int delete(int ID);
 	
 	public int getLastInsertedID();
+
+	public ArrayList<Activity> findFreeActivities(String date,
+			String time, Enum<ActivityType> activityType);
 }

@@ -178,13 +178,13 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 			if (results.next()) { // check whether there are any activity bookings in the database
 				activityBooking = buildActivityBooking(results);
 				//inserts activity customers into ActivityBooking object
-				activityBooking.setCustomers(getActivityCustomers(wClause,false));
+				activityBooking.setCustomers(getActivityCustomers(wClause,true));
 				stmt.close();
 				if (retrieveAssociation) {
 					IFDAOActivity daoActivity = new DAOActivity();
 					int anID = activityBooking.getActivity().getID();
 					System.out.println("ID in singleWhere: " + anID);
-					Activity activity = daoActivity.getActivity(anID, false);
+					Activity activity = daoActivity.getActivity(anID, true);
 					activityBooking.setActivity(activity);
 				}
 			}
@@ -214,7 +214,7 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 				activityBooking = buildActivityBooking(results);
 				//inserts activity customers into ActivityBooking object
 				wClause = " activityBookingID = " + activityBooking.getID();
-				activityBooking.setCustomers(getActivityCustomers(wClause,false));
+				activityBooking.setCustomers(getActivityCustomers(wClause,true));
 				list.add(activityBooking);
 			}
 			stmt.close();
@@ -222,7 +222,7 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 				for (ActivityBooking activityBooking : list) {
 					IFDAOActivity daoActivity = new DAOActivity();
 					int anID = activityBooking.getActivity().getID();
-					Activity activity = daoActivity.getActivity(anID, false);
+					Activity activity = daoActivity.getActivity(anID, true);
 					activityBooking.setActivity(activity);
 				}
 			}
@@ -246,7 +246,7 @@ public class DAOActivityBooking implements IFDAOActivityBooking {
 			stmt.setQueryTimeout(5);
 			results = stmt.executeQuery(query);
 			while(results.next()) {
-				customer = daoCustomer.getCustomer(results.getInt("customerID"), false);
+				customer = daoCustomer.getCustomer(results.getInt("customerID"), true);
 				activityCustomers.add(customer);
 			}
 			stmt.close();
