@@ -13,6 +13,7 @@ import Models.RoomType;
 
 public class RoomsCtr {
 	private IFDAORoom daoRoom;
+	private IFDAORoomBooking daoRoomBooking;
 
 	// creates a new instance of RoomBookingCtr
 	public RoomsCtr() {
@@ -78,6 +79,11 @@ public class RoomsCtr {
 	public int deleteBooking(int id) {
 		IFDAORoomBooking daoBooking = new DAORoomBooking();
 		return daoBooking.delete(id);
+	}
+
+	public int deleteRoomsBooked(int id) {
+		daoRoomBooking = new DAORoomBooking();
+		return daoRoomBooking.deleteRoomsBooked(id);
 	}
 
 	// METHODS FOR ROOM BOOKING END

@@ -206,16 +206,28 @@ public class MainGUI {
 		// creating and showing this application's GUI.
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
+
+				try {
+					UIManager
+							.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+				} catch (ClassNotFoundException | InstantiationException
+						| IllegalAccessException
+						| UnsupportedLookAndFeelException e) {
+					e.printStackTrace();
+				}
+
 				MainGUI window = new MainGUI();
 				window.initialize();
 			}
 		});
-		try {
-			UIManager
-					.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-		} catch (ClassNotFoundException | InstantiationException
-				| IllegalAccessException | UnsupportedLookAndFeelException e) {
-			e.printStackTrace();
-		}
+
+		// TODO, wait till/if startup error shows up again
+		// try {
+		// UIManager
+		// .setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		// } catch (ClassNotFoundException | InstantiationException
+		// | IllegalAccessException | UnsupportedLookAndFeelException e) {
+		// e.printStackTrace();
+		// }
 	}
 }
