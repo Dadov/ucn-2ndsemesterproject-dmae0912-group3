@@ -6,6 +6,8 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.DefaultComboBoxModel;
@@ -43,7 +45,6 @@ public class RoomsGUI extends JPanel {
 	private JLabel chraEndDateLabel;
 	private JScrollPane chraTableScrollPane;
 	private JTable chraTable;
-	// TODO use:
 	private DefaultTableModel chraTableModel;
 	private JPanel bookRoomPanel;
 	private JPanel roomBookingsPanel;
@@ -56,7 +57,7 @@ public class RoomsGUI extends JPanel {
 	private JLabel brStartDateLabel;
 	private JLabel brEndDateLabel;
 	private JLabel brCustomerLabel;
-	private JButton btnNewButton;
+	private JButton chraButton;
 	private JScrollPane rbTableScrollPane;
 	private JTable rbTable;
 	// TODO use:
@@ -149,11 +150,16 @@ public class RoomsGUI extends JPanel {
 		chraInputPanel.add(chraDateEndField, gbc_chraDateEndField);
 		chraDateEndField.setColumns(10);
 
-		btnNewButton = new JButton("Check Availability");
-		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-		gbc_btnNewButton.gridx = 7;
-		gbc_btnNewButton.gridy = 1;
-		chraInputPanel.add(btnNewButton, gbc_btnNewButton);
+		chraButton = new JButton("Check Availability");
+		chraButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				fillChraTable();
+			}
+		});
+		GridBagConstraints gbc_chraButton = new GridBagConstraints();
+		gbc_chraButton.gridx = 7;
+		gbc_chraButton.gridy = 1;
+		chraInputPanel.add(chraButton, gbc_chraButton);
 
 		chraTablePanel = new JPanel();
 		chraTablePanel.setBorder(null);
@@ -164,15 +170,10 @@ public class RoomsGUI extends JPanel {
 
 		chraTable = new JTable();
 		chraTable.setPreferredScrollableViewportSize(new Dimension(750, 420));
-		// TODO finish table model and fill method
+
 		chraTableModel = new DefaultTableModel(new Object[][] {}, new String[] {
 				"Room Number", "Room Type", "Price", "Note" });
 		chraTable.setModel(chraTableModel);
-		fillChraTable();
-		// chraTable.setModel(new DefaultTableModel(new Object[][] { { null,
-		// null,
-		// null, null }, }, new String[] { "Room Number", "Room Type",
-		// "Price", "Note" }));
 		chraTable.getColumnModel().getColumn(0).setPreferredWidth(73);
 		chraTableScrollPane.setViewportView(chraTable);
 
@@ -320,6 +321,7 @@ public class RoomsGUI extends JPanel {
 	}
 
 	private void fillChraTable() {
+		chraTableModel.getDataVector().removeAllElements();
 		RoomsCtr roomsCtr = new RoomsCtr();
 		String startDate = chraDateStartField.getText();
 		String endDate = chraDateEndField.getText();
@@ -327,6 +329,15 @@ public class RoomsGUI extends JPanel {
 		ArrayList<Room> freeRooms = roomsCtr.findFreeRooms(startDate, endDate,
 				roomType);
 
+		for (Room room : freeRooms) {
+			int number = room.getNumber();
+			Enum<RoomType> type = room.getRoomType();
+			double price = room.getPrice();
+			String note = room.getNote();
+
+			Object[] rowData = { number, type, price, note };
+			chraTableModel.addRow(rowData);
+		}
 	}
 
 }
