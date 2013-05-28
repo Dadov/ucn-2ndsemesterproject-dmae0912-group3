@@ -12,12 +12,14 @@ import Models.RoomBooking;
 import Models.RoomType;
 
 public class RoomsCtr {
+	private IFDAORoom daoRoom;
 
 	// creates a new instance of RoomBookingCtr
 	public RoomsCtr() {
 
 	}
-	//METHODS FOR ROOM BOOKING
+
+	// METHODS FOR ROOM BOOKING
 	// starts a new booking
 	public void newBooking(Customer customer, ArrayList<Room> rooms,
 			String bookDate, String startDate, String endDate) {
@@ -77,9 +79,10 @@ public class RoomsCtr {
 		IFDAORoomBooking daoBooking = new DAORoomBooking();
 		return daoBooking.delete(id);
 	}
-	//METHODS FOR ROOM BOOKING END
-	
-	//METHODS FOR ROOM
+
+	// METHODS FOR ROOM BOOKING END
+
+	// METHODS FOR ROOM
 	// starts a new booking
 	public void newRoom(RoomType roomType, double price, String note) {
 		Room room = new Room();
@@ -107,6 +110,12 @@ public class RoomsCtr {
 		return daoRoom.getRoom(number, false);
 	}
 
+	public ArrayList<Room> findFreeRooms(String startDate, String endDate,
+			Enum<RoomType> roomType) {
+		daoRoom = new DAORoom();
+		return daoRoom.findFreeRooms(startDate, endDate, roomType);
+	}
+
 	// retrieves all rooms
 	public ArrayList<Room> getAllrooms() {
 		IFDAORoom daoRoom = new DAORoom();
@@ -116,7 +125,8 @@ public class RoomsCtr {
 	}
 
 	// updates a Room
-	public int updateRoom(int newId, RoomType roomType, double price, String note) {
+	public int updateRoom(int newId, RoomType roomType, double price,
+			String note) {
 		IFDAORoom daoRoom = new DAORoom();
 		Room room = new Room();
 		room.setNumber(newId);
@@ -131,6 +141,6 @@ public class RoomsCtr {
 		IFDAORoom daoRoom = new DAORoom();
 		return daoRoom.delete(id);
 	}
-	//METHODS FOR ROOM END
+	// METHODS FOR ROOM END
 
 }

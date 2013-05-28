@@ -2,9 +2,11 @@ package GUI;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.ArrayList;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -15,8 +17,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableModel;
 
+import Controllers.RoomsCtr;
+import Models.Room;
 import Models.RoomType;
 
 public class RoomsGUI extends JPanel {
@@ -38,6 +43,8 @@ public class RoomsGUI extends JPanel {
 	private JLabel chraEndDateLabel;
 	private JScrollPane chraTableScrollPane;
 	private JTable chraTable;
+	// TODO use:
+	private DefaultTableModel chraTableModel;
 	private JPanel bookRoomPanel;
 	private JPanel roomBookingsPanel;
 	private JComboBox<RoomType> comboBox;
@@ -52,6 +59,16 @@ public class RoomsGUI extends JPanel {
 	private JButton btnNewButton;
 	private JScrollPane rbTableScrollPane;
 	private JTable rbTable;
+	// TODO use:
+	private DefaultTableModel rbTableModel;
+	private JPanel cancelBookingPanel;
+	private JTextField textField_3;
+	private JButton btnNewButton_1;
+	private JLabel lblNewLabel;
+	private JTextField cbpTextField;
+	private JButton cbpButton;
+	private JLabel cbpLabel;
+	private JPanel rbTablePanel;
 
 	public RoomsGUI() {
 		setPreferredSize(new Dimension(780, 535));
@@ -72,8 +89,8 @@ public class RoomsGUI extends JPanel {
 		chraInputPanel.setBorder(null);
 		checkRoomAvailabilityPanel.add(chraInputPanel, BorderLayout.NORTH);
 		GridBagLayout gbl_chraInputPanel = new GridBagLayout();
-		gbl_chraInputPanel.columnWidths = new int[] { 0, 28, 0, 86, 0, 86, 0,
-				0, 0 };
+		gbl_chraInputPanel.columnWidths = new int[] { 30, 80, 36, 140, 35, 140,
+				35, 0, 0 };
 		gbl_chraInputPanel.rowHeights = new int[] { 0, 20, 0 };
 		gbl_chraInputPanel.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0,
 				0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
@@ -83,6 +100,7 @@ public class RoomsGUI extends JPanel {
 
 		chraRoomTypeLabel = new JLabel("Room Type:");
 		GridBagConstraints gbc_chraRoomTypeLabel = new GridBagConstraints();
+		gbc_chraRoomTypeLabel.anchor = GridBagConstraints.WEST;
 		gbc_chraRoomTypeLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_chraRoomTypeLabel.gridx = 1;
 		gbc_chraRoomTypeLabel.gridy = 0;
@@ -146,9 +164,15 @@ public class RoomsGUI extends JPanel {
 
 		chraTable = new JTable();
 		chraTable.setPreferredScrollableViewportSize(new Dimension(750, 420));
-		chraTable.setModel(new DefaultTableModel(new Object[][] { { null, null,
-				null, null }, }, new String[] { "Room Number", "Room Type",
-				"Price", "Note" }));
+		// TODO finish table model and fill method
+		chraTableModel = new DefaultTableModel(new Object[][] {}, new String[] {
+				"Room Number", "Room Type", "Price", "Note" });
+		chraTable.setModel(chraTableModel);
+		fillChraTable();
+		// chraTable.setModel(new DefaultTableModel(new Object[][] { { null,
+		// null,
+		// null, null }, }, new String[] { "Room Number", "Room Type",
+		// "Price", "Note" }));
 		chraTable.getColumnModel().getColumn(0).setPreferredWidth(73);
 		chraTableScrollPane.setViewportView(chraTable);
 
@@ -158,10 +182,12 @@ public class RoomsGUI extends JPanel {
 		roomBookingPanel.setLayout(new BorderLayout(0, 0));
 
 		bookRoomPanel = new JPanel();
+		bookRoomPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null,
+				null));
 		roomBookingPanel.add(bookRoomPanel, BorderLayout.NORTH);
 		GridBagLayout gbl_bookRoomPanel = new GridBagLayout();
-		gbl_bookRoomPanel.columnWidths = new int[] { 0, 28, 46, 86, 46, 86, 46,
-				86, 0, 85, 0 };
+		gbl_bookRoomPanel.columnWidths = new int[] { 30, 80, 35, 140, 35, 140,
+				35, 100, 35, 85, 0 };
 		gbl_bookRoomPanel.rowHeights = new int[] { 0, 23, 0 };
 		gbl_bookRoomPanel.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0,
 				0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
@@ -245,18 +271,61 @@ public class RoomsGUI extends JPanel {
 		bookRoomPanel.add(btnBookRoom, gbc_btnBookRoom);
 
 		roomBookingsPanel = new JPanel();
+		FlowLayout flowLayout_1 = (FlowLayout) roomBookingsPanel.getLayout();
+		flowLayout_1.setAlignment(FlowLayout.LEFT);
+		roomBookingsPanel.setBorder(null);
 		roomBookingPanel.add(roomBookingsPanel, BorderLayout.CENTER);
 
+		lblNewLabel = new JLabel("Customer ID:");
+		roomBookingsPanel.add(lblNewLabel);
+
+		textField_3 = new JTextField();
+		roomBookingsPanel.add(textField_3);
+		textField_3.setColumns(10);
+
+		btnNewButton_1 = new JButton("Filter");
+		roomBookingsPanel.add(btnNewButton_1);
+
+		rbTablePanel = new JPanel();
+		roomBookingsPanel.add(rbTablePanel);
+
 		rbTableScrollPane = new JScrollPane();
-		roomBookingsPanel.add(rbTableScrollPane);
+		rbTablePanel.add(rbTableScrollPane);
 
 		rbTable = new JTable();
-		rbTable.setPreferredScrollableViewportSize(new Dimension(750, 420));
+		rbTable.setPreferredScrollableViewportSize(new Dimension(750, 340));
 		rbTable.setModel(new DefaultTableModel(new Object[][] { { null, null,
 				null, null }, }, new String[] { "Booking ID", "Customer ID",
 				"Date Start", "Date End" }));
 		rbTable.getColumnModel().getColumn(0).setPreferredWidth(73);
 		rbTableScrollPane.setViewportView(rbTable);
+
+		cancelBookingPanel = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) cancelBookingPanel.getLayout();
+		flowLayout.setAlignment(FlowLayout.LEFT);
+		cancelBookingPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED,
+				null, null));
+		roomBookingPanel.add(cancelBookingPanel, BorderLayout.SOUTH);
+
+		cbpLabel = new JLabel("Booking ID:");
+		cancelBookingPanel.add(cbpLabel);
+
+		cbpTextField = new JTextField();
+		cancelBookingPanel.add(cbpTextField);
+		cbpTextField.setColumns(10);
+
+		cbpButton = new JButton("Cancel Booking");
+		cancelBookingPanel.add(cbpButton);
+
+	}
+
+	private void fillChraTable() {
+		RoomsCtr roomsCtr = new RoomsCtr();
+		String startDate = chraDateStartField.getText();
+		String endDate = chraDateEndField.getText();
+		RoomType roomType = (RoomType) chraRoomTypeComboBox.getSelectedItem();
+		ArrayList<Room> freeRooms = roomsCtr.findFreeRooms(startDate, endDate,
+				roomType);
 
 	}
 
