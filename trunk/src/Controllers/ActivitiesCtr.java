@@ -48,14 +48,14 @@ public class ActivitiesCtr {
 		// finds a instructorHire by id
 		public InstructorHire findInstructorHire(int id) {
 			IFDAOInstructorHire daoinstructorHire = new DAOInstructorHire();
-			return daoinstructorHire.getInstructorHire(id, false);
+			return daoinstructorHire.getInstructorHire(id, true);
 		}
 
 		// retrieves all instructorHires
 		public ArrayList<InstructorHire> getInstructorHires() {
 			IFDAOInstructorHire daoinstructorHire = new DAOInstructorHire();
 			ArrayList<InstructorHire> allinstructorHires = new ArrayList<InstructorHire>();
-			allinstructorHires = daoinstructorHire.getInstructorHires(false);
+			allinstructorHires = daoinstructorHire.getInstructorHires(true);
 			return allinstructorHires;
 		}
 
@@ -104,17 +104,23 @@ public class ActivitiesCtr {
 			}
 		}
 
+		public ArrayList<Activity> findFreeActivities(String date, String time,	String activityType){
+			IFDAOActivity daoa = new DAOActivity();
+			Enum<ActivityType> actType= ActivityType.valueOf(activityType);
+			return daoa.findFreeActivities(date, time, actType);
+		}
+		
 		// finds a booking by id
 		public ActivityBooking findBooking(int id) {
 			IFDAOActivityBooking daoBooking = new DAOActivityBooking();
-			return daoBooking.getActivityBooking(id, false);
+			return daoBooking.getActivityBooking(id, true);
 		}
 
 		// retrieves all bookings
 		public ArrayList<ActivityBooking> getAllBookings() {
 			IFDAOActivityBooking daoBooking = new DAOActivityBooking();
 			ArrayList<ActivityBooking> allBookings = new ArrayList<ActivityBooking>();
-			allBookings = daoBooking.getAllActivityBookings(false);
+			allBookings = daoBooking.getAllActivityBookings(true);
 			return allBookings;
 		}
 
@@ -165,14 +171,14 @@ public class ActivitiesCtr {
 				// finds a activity by id
 				public Activity findActivity(int id) {
 					IFDAOActivity daoActivity = new DAOActivity();
-					return daoActivity.getActivity(id, false);
+					return daoActivity.getActivity(id, true);
 				}
 
 				// retrieves all activities
 				public ArrayList<Activity> getAllactivitys() {
 					IFDAOActivity daoActivity = new DAOActivity();
 					ArrayList<Activity> allActivities = new ArrayList<Activity>();
-					allActivities = daoActivity.getAllActivities(false);
+					allActivities = daoActivity.getAllActivities(true);
 					return allActivities;
 				}
 

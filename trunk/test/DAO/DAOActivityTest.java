@@ -100,4 +100,21 @@ public class DAOActivityTest {
 			con.rollback();
 		}
 	}
+		@Test
+		public void testFindFreeActivities() throws SQLException {
+			con = DBConnection.getInstance().getDBCon();
+			con.setAutoCommit(false);
+			daoActivity = new DAOActivity();
+
+			try {
+				ArrayList<Activity> activities;
+				activities = daoActivity.findFreeActivities("13-08-2014", "19:00",
+						ActivityType.FitnessCenter);
+				System.out.println(activities.toString());
+
+			} finally {
+				con.rollback();
+				// con.close();
+			}
+	}
 }

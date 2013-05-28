@@ -27,13 +27,12 @@ public class DAOActivity implements IFDAOActivity {
 	}
 	public ArrayList<Activity> findFreeActivities(String date, String time,
 			Enum<ActivityType> activityType) {
-		// TODO not tested, yet
 
 		// constructing fancy query for retrieving only free activities
-		String query = " activityType = " + activityType.name() + " and activityID not in (" +
-				"	SELECT activityID FROM ActivityBooking WHERE activityDate = " + date + " and activityTime = " + time +")";
+		String query = " activityType = '" + activityType.name() + "' and activityID not in (" +
+				"	SELECT activityID FROM ActivityBooking WHERE activityDate = '" + date + "' and activityTime = '" + time +"')";
 
-		return miscWhere(query, false);
+		return miscWhere(query, true);
 
 	}
 
@@ -203,14 +202,12 @@ public class DAOActivity implements IFDAOActivity {
 				Activity activity = new Activity();
 				activity = buildActivity(results);
 				// inserts provided instructors into Activity object
-				activity.setActivityInstructors(getActivityInstructors(wClause,false));
+				activity.setActivityInstructors(getActivityInstructors(wClause,true));
 				list.add(activity);
 			}
 			stmt.close();
 			if (retrieveAssociation) {
 				// no association to be retrieved
-				throw new IllegalArgumentException(
-						"There is no association to be retrieved from Activity table");
 			}
 		}
 		catch (Exception e) {
@@ -303,5 +300,7 @@ public class DAOActivity implements IFDAOActivity {
 		}
 		return id;
 	}
+
+	
 
 }
