@@ -67,9 +67,12 @@ public class StaffGUI extends JPanel {
 	private DefaultTableModel tableModel;
 	private JTable allStaffTable;
 
-	public StaffGUI() { 
+	public StaffGUI() {
 		staffCtr = new StaffCtr();
-		
+		initialize();
+	}
+	
+	public void initialize() { 
 		setPreferredSize(new Dimension(780, 535));
 	
 		tableModel = new DefaultTableModel() {
@@ -133,6 +136,34 @@ public class StaffGUI extends JPanel {
 		lowerWrapper = new JPanel();
 		this.add(lowerWrapper);
 		lowerWrapper.setLayout(new CardLayout(0, 0));
+		
+				allStaff = new JPanel();
+				lowerWrapper.add(allStaff, "name_692382806144299");
+				allStaff.setLayout(new BorderLayout());
+				
+						JPanel allStaffPanel = new JPanel();
+						allStaffPanel.setBorder(BorderFactory.createTitledBorder("All staff"));
+						allStaff.add(allStaffPanel, BorderLayout.CENTER);
+						
+								allStaffTable = new JTable(tableModel);
+								allStaffTable.setAutoResizeMode(JTable.AUTO_RESIZE_NEXT_COLUMN);
+								allStaffTable.setAutoCreateRowSorter(true);
+								
+										allStaffTable.addMouseListener(new MouseAdapter() {
+											public void mouseClicked(MouseEvent e) {
+												int row = allStaffTable.rowAtPoint(e.getPoint());
+												if (e.getClickCount() == 2) {
+													findStaff(Integer.valueOf((Integer) tableModel.getValueAt(row, 0)));
+												}
+											}
+										});
+										
+										allStaffPanel.setLayout(new BoxLayout(allStaffPanel, BoxLayout.X_AXIS));
+										
+												JScrollPane scrollPane = new JScrollPane();
+												allStaffPanel.add(scrollPane);
+												
+														scrollPane.setViewportView(allStaffTable);
 
 		showStaff = new JPanel();
 		lowerWrapper.add(showStaff, "showStaff");
@@ -840,34 +871,6 @@ public class StaffGUI extends JPanel {
 			}
 		});
 		createBottomMenu.add(cancelButtonCreate);
-
-		allStaff = new JPanel();
-		lowerWrapper.add(allStaff, "All staff");
-		allStaff.setLayout(new BorderLayout());
-
-		JPanel allStaffPanel = new JPanel();
-		allStaffPanel.setBorder(BorderFactory.createTitledBorder("All staff"));
-		allStaff.add(allStaffPanel, BorderLayout.CENTER);
-
-		allStaffTable = new JTable(tableModel);
-		allStaffTable.setAutoResizeMode(JTable.AUTO_RESIZE_NEXT_COLUMN);
-		allStaffTable.setAutoCreateRowSorter(true);
-
-		allStaffTable.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				int row = allStaffTable.rowAtPoint(e.getPoint());
-				if (e.getClickCount() == 2) {
-					findStaff(Integer.valueOf((Integer) tableModel.getValueAt(row, 0)));
-				}
-			}
-		});
-		
-		allStaffPanel.setLayout(new BoxLayout(allStaffPanel, BoxLayout.X_AXIS));
-
-		JScrollPane scrollPane = new JScrollPane();
-		allStaffPanel.add(scrollPane);
-
-		scrollPane.setViewportView(allStaffTable);
 		createButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				boolean toCreate = true;
@@ -978,4 +981,5 @@ public class StaffGUI extends JPanel {
 				}
 		return type;
 	}
+	
 }
