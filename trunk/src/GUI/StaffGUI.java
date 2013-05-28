@@ -266,7 +266,7 @@ public class StaffGUI extends JPanel {
 		showStaffRight.add(showFNameFieldPanel);
 
 		showFNameField = new JTextField();
-		showFNameFieldPanel.add(showAddressField);
+		showFNameFieldPanel.add(showFNameField);
 		showFNameField.setHorizontalAlignment(SwingConstants.CENTER);
 		showFNameField.setEditable(false);
 		showFNameField.setColumns(20);
