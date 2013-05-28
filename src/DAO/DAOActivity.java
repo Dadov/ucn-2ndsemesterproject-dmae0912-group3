@@ -168,12 +168,9 @@ public class DAOActivity implements IFDAOActivity {
 			if (results.next()) { // checks whether there are any activities in the database
 				activity = buildActivity(results);
 				// inserts provided instructors into the Activity object
-				activity.setActivityInstructors(getActivityInstructors(wClause,false));
+				activity.setActivityInstructors(getActivityInstructors(wClause,true));
 				stmt.close();
 				if (retrieveAssociation) {
-					// no association to be retrieved
-					throw new IllegalArgumentException(
-							"There is no association to be retrieved from Activity table");
 				}
 			}
 			else { // no activity found
@@ -231,7 +228,7 @@ public class DAOActivity implements IFDAOActivity {
 			results = stmt.executeQuery(query);
 			while(results.next()) {
 				try{
-					instructor = (Instructor) daoStaff.getStaff(results.getInt("instructorID"), false);
+					instructor = (Instructor) daoStaff.getStaff(results.getInt("instructorID"), true);
 				}
 				catch(ClassCastException cce){
 				}

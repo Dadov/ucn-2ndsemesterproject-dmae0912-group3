@@ -200,6 +200,12 @@ public class ActivitiesCtr {
 					return daoActivity.delete(id);
 				}
 				//METHODS FOR ACTIVITY END
+
+				public boolean checkInstructorAvailability(Instructor instructor, String date, String time) {
+					IFDAOInstructorHire daoi = new DAOInstructorHire();
+					return daoi.checkInstructorAvailability(instructor,date,time);
+					
+				}
 		
 	}
 

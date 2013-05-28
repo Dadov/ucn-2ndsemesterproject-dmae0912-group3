@@ -174,7 +174,7 @@ public class DAOInstructorHire implements IFDAOInstructorHire {
 					IFDAOActivityBooking dbActiv = new DAOActivityBooking();
 					int actID = instructorHire.getActivityBooking().getID();
 					ActivityBooking activityBooking = dbActiv
-							.getActivityBooking(actID, false);
+							.getActivityBooking(actID, true);
 					instructorHire.setActivityBooking(activityBooking);
 				}
 			} else { // nothing was found
@@ -298,6 +298,14 @@ public class DAOInstructorHire implements IFDAOInstructorHire {
 		}
 
 		return query;
+	}
+
+
+	@Override
+	public boolean checkInstructorAvailability(Instructor instructor,
+			String date, String time) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
