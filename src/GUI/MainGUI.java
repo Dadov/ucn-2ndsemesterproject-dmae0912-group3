@@ -87,8 +87,59 @@ public class MainGUI {
 		roomsButton = new MenuButton("Rooms");
 		staffButtom = new MenuButton("Staff");
 
+		contentBorder = new JPanel();
+		contentBorder.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null,
+				null));
+		menuWrapper.add(contentBorder);
+
+		contentPanel = new JPanel();
+		contentBorder.add(contentPanel);
+		contentPanel.setPreferredSize(new Dimension(780, 535));
+		contentPanel.setLayout(new CardLayout(0, 0));
+
+		activitiesGUI = new ActivitiesGUI();
+		contentPanel.add(activitiesGUI, "ActivitiesGUI");
+
+		customersGUI = new CustomersGUI();
+		contentPanel.add(customersGUI, "CustomersGUI");
+
+		roomsGUI = new RoomsGUI();
+		contentPanel.add(roomsGUI, "RoomsGUI");
+
+		staffGUI = new StaffGUI();
+		contentPanel.add(staffGUI, "StaffGUI");
+
+		activitvitiesButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CardLayout cl = (CardLayout) contentPanel.getLayout();
+				cl.show(contentPanel, "ActivitiesGUI");
+			}
+		});
+
+		customersButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CardLayout cl = (CardLayout) contentPanel.getLayout();
+				cl.show(contentPanel, "CustomersGUI");
+			}
+		});
+
+		roomsButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CardLayout cl = (CardLayout) contentPanel.getLayout();
+				cl.show(contentPanel, "RoomsGUI");
+			}
+		});
+
+		staffButtom.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CardLayout cl = (CardLayout) contentPanel.getLayout();
+				cl.show(contentPanel, "StaffGUI");
+			}
+		});
+
 		loginGUI.loginButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				activitiesGUI.setUserID(loginGUI.getUserID());
 				// int rank = loginGUI.login();
 				int rank = 1;
 
@@ -147,56 +198,6 @@ public class MainGUI {
 					System.out
 							.println("Invalid login, from card switch this should throw exception or even popup warning later.");
 				}
-			}
-		});
-
-		contentBorder = new JPanel();
-		contentBorder.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null,
-				null));
-		menuWrapper.add(contentBorder);
-
-		contentPanel = new JPanel();
-		contentBorder.add(contentPanel);
-		contentPanel.setPreferredSize(new Dimension(780, 535));
-		contentPanel.setLayout(new CardLayout(0, 0));
-
-		activitiesGUI = new ActivitiesGUI();
-		contentPanel.add(activitiesGUI, "ActivitiesGUI");
-
-		customersGUI = new CustomersGUI();
-		contentPanel.add(customersGUI, "CustomersGUI");
-
-		roomsGUI = new RoomsGUI();
-		contentPanel.add(roomsGUI, "RoomsGUI");
-
-		staffGUI = new StaffGUI();
-		contentPanel.add(staffGUI, "StaffGUI");
-
-		activitvitiesButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				CardLayout cl = (CardLayout) contentPanel.getLayout();
-				cl.show(contentPanel, "ActivitiesGUI");
-			}
-		});
-
-		customersButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				CardLayout cl = (CardLayout) contentPanel.getLayout();
-				cl.show(contentPanel, "CustomersGUI");
-			}
-		});
-
-		roomsButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				CardLayout cl = (CardLayout) contentPanel.getLayout();
-				cl.show(contentPanel, "RoomsGUI");
-			}
-		});
-
-		staffButtom.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				CardLayout cl = (CardLayout) contentPanel.getLayout();
-				cl.show(contentPanel, "StaffGUI");
 			}
 		});
 	}
