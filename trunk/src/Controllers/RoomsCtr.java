@@ -27,7 +27,8 @@ public class RoomsCtr {
 			String bookDate, String startDate, String endDate) throws Exception {
 		RoomBooking newRoomBooking = new RoomBooking();
 		daoRoom = new DAORoom();
-		ArrayList<Room> bookedRooms = daoRoom.findFreeRooms(startDate, endDate);
+		ArrayList<Room> bookedRooms = daoRoom.findBookedRooms(startDate,
+				endDate);
 		System.out.println("Another crappy message.");
 
 		newRoomBooking.setCustomer(customer);
@@ -50,7 +51,11 @@ public class RoomsCtr {
 			// throw new Exception("tam mas");
 			// // System.out.println("nefunguje pica");
 			// }
+			System.out.println("All booked Rooms " + bookedRooms.toString());
 			for (Room bookedRoom : bookedRooms) {
+				System.out.println("Room number: " + room.getNumber());
+				System.out.println("Booked Room number: "
+						+ bookedRoom.getNumber());
 				if (room.getNumber() == bookedRoom.getNumber()) {
 					throw new Exception("tam mas");
 				}
