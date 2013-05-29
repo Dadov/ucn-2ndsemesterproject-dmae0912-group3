@@ -26,21 +26,35 @@ public class DAORoom implements IFDAORoom {
 		return miscWhere("", retrieveAssociation);
 	}
 
-	// takes roomType as argument but it's commented out
-	// might be a good idea to return all Rooms and filter it in GUI
 	@Override
-	public ArrayList<Room> findFreeRooms(String startDate, String endDate,
-			Enum<RoomType> roomType) {
-		// TODO not tested, yet
-
-		// constructing fancy query for retrieving only free rooms
-		String query = " roomType = '" + roomType + "' AND number NOT IN "
+	public ArrayList<Room> findFreeRooms(String startDate, String endDate) {
+		String query = /* " roomType = '" + roomType + "' AND */" number NOT IN "
 				+ "(SELECT roomNumber FROM RoomsBooked WHERE roomBookingID IN "
-				+ "(SELECT bookingID FROM RoomBooking WHERE dateStart >= '"
-				+ startDate + "' and dateEnd <=  '" + endDate + "'));";
+				+ "(SELECT bookingID FROM RoomBooking WHERE dateEnd >= '"
+				+ startDate + "' and dateStart <=  '" + endDate + "'));";
 
 		return miscWhere(query, false);
+	}
 
+	@Override
+	public ArrayList<Room> findFreeRoomsOfType(String startDate,
+			String endDate, Enum<RoomType> roomType) {
+		String query = " roomType = '" + roomType + "' AND number NOT IN "
+				+ "(SELECT roomNumber FROM RoomsBooked WHERE roomBookingID IN "
+				+ "(SELECT bookingID FROM RoomBooking WHERE dateEnd >= '"
+				+ startDate + "' and dateStart <=  '" + endDate + "'));";
+
+		return miscWhere(query, false);
+	}
+
+	@Override
+	public ArrayList<Room> findBookedRooms(String startDate, String endDate) {
+		String query = " number IN "
+				+ "(SELECT roomNumber FROM RoomsBooked WHERE roomBookingID IN "
+				+ "(SELECT bookingID FROM RoomBooking WHERE dateEnd >= '"
+				+ startDate + "' and dateStart <=  '" + endDate + "'));";
+
+		return miscWhere(query, false);
 	}
 
 	@Override

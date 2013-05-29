@@ -22,41 +22,56 @@ public class RoomsCtr {
 
 	// METHODS FOR ROOM BOOKING
 	// starts a new booking
-	public void newBooking(Customer customer, ArrayList<Room> rooms,
-			String bookDate, String startDate, String endDate) {
-		RoomBooking booking = new RoomBooking();
-		booking.getId();
-		booking.setCustomer(customer);
-		booking.setRoomsBooked(rooms);
-		booking.setDateBooked(bookDate);
-		booking.setDateStart(startDate);
-		booking.setDateEnd(endDate);
 
-		try {
-			// TODO DBConnection.startTransaction();
-			IFDAORoomBooking daoBooking = new DAORoomBooking();
-			daoBooking.insert(booking);
-			// TODO DBConnection.commitTransaction();
-		} catch (Exception e) {
-			System.out
-					.println("Error while creating booking in RoomBookingCtr");
-			// TODO DBConnection.rollbackTransaction();
-			e.getMessage();
-			e.printStackTrace();
+	public void newRoomBooking(Customer customer, ArrayList<Room> rooms,
+			String bookDate, String startDate, String endDate) throws Exception {
+		RoomBooking newRoomBooking = new RoomBooking();
+		daoRoom = new DAORoom();
+		ArrayList<Room> bookedRooms = daoRoom.findFreeRooms(startDate, endDate);
+		System.out.println("Another crappy message.");
+
+		newRoomBooking.setCustomer(customer);
+		newRoomBooking.setRoomsBooked(rooms);
+		newRoomBooking.setDateBooked(bookDate);
+		newRoomBooking.setDateStart(startDate);
+		newRoomBooking.setDateEnd(endDate);
+
+		for (Room room : rooms) {
+			// if freeRooms doesn't contain this room, it's bad already used for
+			// the date
+			String str = room.toString();
+			System.out.println(bookedRooms.toString());
+			System.out.println(bookedRooms.contains(room.toString()));
+			boolean test = bookedRooms.contains(room.toString());
+			// if (freeRooms.contains(room.toString())) {
+			// System.out.println("funguje pica");
+			// break;
+			// } else {
+			// throw new Exception("tam mas");
+			// // System.out.println("nefunguje pica");
+			// }
+			for (Room bookedRoom : bookedRooms) {
+				if (room.getNumber() == bookedRoom.getNumber()) {
+					throw new Exception("tam mas");
+				}
+			}
 		}
+
+		daoRoomBooking = new DAORoomBooking();
+		daoRoomBooking.insert(newRoomBooking);
 	}
 
 	// finds a booking by id
 	public RoomBooking findBooking(int id) {
-		IFDAORoomBooking daoBooking = new DAORoomBooking();
-		return daoBooking.getRoomBooking(id, false);
+		daoRoomBooking = new DAORoomBooking();
+		return daoRoomBooking.getRoomBooking(id, false);
 	}
 
 	// retrieves all bookings
 	public ArrayList<RoomBooking> getAllBookings() {
-		IFDAORoomBooking daoBooking = new DAORoomBooking();
-		ArrayList<RoomBooking> allBookings = new ArrayList<RoomBooking>();
-		allBookings = daoBooking.getAllRoomBookings(false);
+		daoRoomBooking = new DAORoomBooking();
+		ArrayList<RoomBooking> allBookings = daoRoomBooking
+				.getAllRoomBookings(true);
 		return allBookings;
 	}
 
@@ -64,7 +79,7 @@ public class RoomsCtr {
 	public int updateBooking(int newId, Customer newCustomer,
 			ArrayList<Room> newRooms, String newBookDate, String newStartDate,
 			String newEndDate) {
-		IFDAORoomBooking daoBooking = new DAORoomBooking();
+		daoRoomBooking = new DAORoomBooking();
 		RoomBooking booking = new RoomBooking();
 		booking.setId(newId);
 		booking.setCustomer(newCustomer);
@@ -72,13 +87,13 @@ public class RoomsCtr {
 		booking.setDateBooked(newBookDate);
 		booking.setDateStart(newStartDate);
 		booking.setDateEnd(newEndDate);
-		return daoBooking.update(booking);
+		return daoRoomBooking.update(booking);
 	}
 
 	// deletes a booking
 	public int deleteBooking(int id) {
-		IFDAORoomBooking daoBooking = new DAORoomBooking();
-		return daoBooking.delete(id);
+		daoRoomBooking = new DAORoomBooking();
+		return daoRoomBooking.delete(id);
 	}
 
 	public int deleteRoomsBooked(int id) {
@@ -96,18 +111,6 @@ public class RoomsCtr {
 		room.setRoomType(roomType);
 		room.setPrice(price);
 		room.setNote(note);
-
-		try {
-			// TODO DBConnection.startTransaction();
-			IFDAORoom daoRoom = new DAORoom();
-			daoRoom.insert(room);
-			// TODO DBConnection.commitTransaction();
-		} catch (Exception e) {
-			System.out.println("Error while creating room in RoomCtr");
-			// TODO DBConnection.rollbackTransaction();
-			e.getMessage();
-			e.printStackTrace();
-		}
 	}
 
 	// finds a room by id
@@ -116,10 +119,15 @@ public class RoomsCtr {
 		return daoRoom.getRoom(number, false);
 	}
 
-	public ArrayList<Room> findFreeRooms(String startDate, String endDate,
-			Enum<RoomType> roomType) {
+	public ArrayList<Room> findFreeRooms(String startDate, String endDate) {
 		daoRoom = new DAORoom();
-		return daoRoom.findFreeRooms(startDate, endDate, roomType);
+		return daoRoom.findFreeRooms(startDate, endDate);
+	}
+
+	public ArrayList<Room> findFreeRoomsOfType(String startDate,
+			String endDate, Enum<RoomType> roomType) {
+		daoRoom = new DAORoom();
+		return daoRoom.findFreeRoomsOfType(startDate, endDate, roomType);
 	}
 
 	// retrieves all rooms

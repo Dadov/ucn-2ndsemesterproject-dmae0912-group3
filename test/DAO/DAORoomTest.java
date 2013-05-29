@@ -25,7 +25,7 @@ public class DAORoomTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		//con.commit();
+		// con.commit();
 	}
 
 	@AfterClass
@@ -34,7 +34,7 @@ public class DAORoomTest {
 		// tests
 		Connection con = DBConnection.getInstance().getDBCon();
 		con.setAutoCommit(false);
-		//con.close();
+		// con.close();
 	}
 
 	@Before
@@ -130,7 +130,7 @@ public class DAORoomTest {
 
 		try {
 			ArrayList<Room> rooms;
-			rooms = daoRoom.findFreeRooms("13-08-2014", "24-08-2014",
+			rooms = daoRoom.findFreeRoomsOfType("13-08-2014", "24-08-2014",
 					RoomType.Single);
 			System.out.println(rooms.toString());
 
