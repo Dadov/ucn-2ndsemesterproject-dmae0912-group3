@@ -99,6 +99,10 @@ public class LoginGUI extends JPanel {
 		newsPanel.add(textPane);
 	}
 
+	public int getUserID() {
+		return Integer.parseInt(loginID.getText());
+	}
+
 	public int login() {
 		PersonCtr personCtr = new PersonCtr();
 		int rank = personCtr.personLogin(Integer.parseInt(loginID.getText()),
