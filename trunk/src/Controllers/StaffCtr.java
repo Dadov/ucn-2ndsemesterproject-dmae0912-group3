@@ -70,7 +70,10 @@ public class StaffCtr {
 	// finds a booking by id
 	public Staff getEmployee(int id) {
 		IFDAOStaff daoStaff = new DAOStaff();
-		return daoStaff.getStaff(id, false);
+		Staff staff = daoStaff.getStaff(id, false);
+		if (staff == null) throw new IllegalArgumentException(
+				"This ID does not exist in the database.");
+		return staff;
 	}
 
 	// retrieves all bookings

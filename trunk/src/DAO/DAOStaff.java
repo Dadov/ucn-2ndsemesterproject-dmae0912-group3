@@ -41,7 +41,7 @@ public class DAOStaff implements IFDAOStaff {
 				"(SELECT IDENT_CURRENT('Person')), " +
 				staff.getSalary() + ", '" +
 				staffType + "');"; 
-		System.out.println("Insert query : " + query);
+		//System.out.println("Insert query : " + query);
 		// creates statement and executes query
 		try {
 			Statement stmt = con.createStatement();
@@ -72,7 +72,7 @@ public class DAOStaff implements IFDAOStaff {
 				"salary = " + staff.getSalary() + ", " +
 				"staffType + '" + staffType + "', " +
 				"WHERE staffID = " + staff.getPersonID() + ";";
-		System.out.println("Update query : " + query);
+		//System.out.println("Update query : " + query);
 		// creates statement and executes query
 		try {
 			Statement stmt = con.createStatement();
@@ -80,7 +80,7 @@ public class DAOStaff implements IFDAOStaff {
 			rc = stmt.executeUpdate(query);
 			stmt.close();
 		}
-		catch (SQLException e) {
+		catch (Exception e) {
 			System.out.println("Staff update failed.");
 			e.getMessage();
 		}
@@ -98,7 +98,7 @@ public class DAOStaff implements IFDAOStaff {
 		
 		// creates query for deleting data from Staff table
 		String query = "DELETE FROM Staff WHERE staffID = " + ID + ";";
-		System.out.println("Delete query : " + query);
+		//System.out.println("Delete query : " + query);
 		// creates statement and executes query
 		try {
 			Statement stmt = con.createStatement();
@@ -106,7 +106,7 @@ public class DAOStaff implements IFDAOStaff {
 			rc = stmt.executeUpdate(query);
 			stmt.close();
 		}
-		catch (SQLException e) {
+		catch (Exception e) {
 			System.out.println("Staff member was not deleted from the database");
 			e.getMessage();
 		}
@@ -118,7 +118,6 @@ public class DAOStaff implements IFDAOStaff {
 		ResultSet results;
 		Staff staff = new Staff();
 		String query = buildQuery(wClause);
-		System.out.println(query);
 		IFDAOPerson daoPerson = new DAOPerson();
 		// reads the staff member from the database
 		try {
@@ -162,7 +161,6 @@ public class DAOStaff implements IFDAOStaff {
 				int ID = results.getInt("staffID");
 				staff = (Staff) dbp.getPerson(ID, false);
 				staff = buildStaff(results, staff);
-				System.out.println("what's in staff during DAOStaff.miscWhere(): " + staff.toString());
 				if (retrieveAssociation) {
 					// no associations
 					throw new IllegalArgumentException("There is no association to be retrieved from Staff table");
@@ -183,7 +181,6 @@ public class DAOStaff implements IFDAOStaff {
 		String position = null;
 		
 		try{
-			System.out.println("staffType string from DB: " + results.getString("staffType"));
 			position = results.getString("staffType");
 		}
 		catch (Exception e){
@@ -201,9 +198,8 @@ public class DAOStaff implements IFDAOStaff {
 		}
 
 		
-		@SuppressWarnings("rawtypes")
-		Class cls = staff.getClass();
-		System.out.println("Object type test from buildStaff:" + cls.getName());
+		//@SuppressWarnings("rawtypes")
+		//Class cls = staff.getClass();
 		// fills the Agency object with results from the database
 		try {
 			staff.setPersonID(results.getInt("staffID"));

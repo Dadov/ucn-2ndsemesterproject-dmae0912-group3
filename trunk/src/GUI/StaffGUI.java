@@ -138,7 +138,7 @@ public class StaffGUI extends JPanel {
 		lowerWrapper.setLayout(new CardLayout(0, 0));
 		
 				allStaff = new JPanel();
-				lowerWrapper.add(allStaff, "name_692382806144299");
+				lowerWrapper.add(allStaff, "All staff");
 				allStaff.setLayout(new BorderLayout());
 				
 						JPanel allStaffPanel = new JPanel();
@@ -166,7 +166,7 @@ public class StaffGUI extends JPanel {
 														scrollPane.setViewportView(allStaffTable);
 
 		showStaff = new JPanel();
-		lowerWrapper.add(showStaff, "showStaff");
+		lowerWrapper.add(showStaff, "Show staff");
 		showStaff.setLayout(new BorderLayout());
 
 		JPanel staffContainer = new JPanel();
@@ -545,7 +545,7 @@ public class StaffGUI extends JPanel {
 		editIDField = new JTextField();
 		editIDFieldPanel.add(editIDField);
 		editIDField.setHorizontalAlignment(SwingConstants.CENTER);
-		editIDField.setColumns(5);
+		editIDField.setColumns(20);
 
 		JPanel editCPRFieldPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		editStaffRight.add(editCPRFieldPanel);
@@ -903,12 +903,13 @@ public class StaffGUI extends JPanel {
 		Staff staff = null;
 		try {
 			staff = staffCtr.getEmployee(ID);
-		} catch (Exception e) {
+		} catch (IllegalArgumentException e) {
 			found = false;
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error",
 					JOptionPane.ERROR_MESSAGE);
 		}
 		if (found) {
+			showIDField.setText(Integer.toString(staff.getPersonID()));
 			showCPRField.setText(staff.getCPR());
 			showFNameField.setText(staff.getFname());
 			showLNameField.setText(staff.getLname());
@@ -936,6 +937,7 @@ public class StaffGUI extends JPanel {
 					JOptionPane.ERROR_MESSAGE);
 		}
 		if (edit) {
+			editIDField.setText(Integer.toString(staff.getPersonID()));
 			editCPRField.setText(staff.getCPR());
 			editFNameField.setText(staff.getFname());
 			editLNameField.setText(staff.getLname());
@@ -948,7 +950,7 @@ public class StaffGUI extends JPanel {
 			editTypeField.setText(getType(staff));
 			
 			CardLayout card = (CardLayout) (lowerWrapper.getLayout());
-			card.show(lowerWrapper, "Edit staff member");
+			card.show(lowerWrapper, "Edit staff");
 		}
 	}
 
@@ -962,7 +964,7 @@ public class StaffGUI extends JPanel {
 					employee.getPassword(), employee.getSalary(), getType(employee)});
 		}
 		CardLayout card = (CardLayout) (lowerWrapper.getLayout());
-		card.show(lowerWrapper, "All staff members");
+		card.show(lowerWrapper, "All staff");
 	}
 	
 	private String getType(Staff staff) {
