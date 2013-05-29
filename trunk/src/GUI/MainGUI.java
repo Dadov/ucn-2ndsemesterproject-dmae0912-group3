@@ -139,7 +139,9 @@ public class MainGUI {
 
 		loginGUI.loginButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				activitiesGUI.setUserID(loginGUI.getUserID());
+				// activitiesGUI.setUserID(loginGUI.getUserID());
+				// System.out.println("Logged user ID: " +
+				// loginGUI.getUserID());
 				// int rank = loginGUI.login();
 				int rank = 1;
 
