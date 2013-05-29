@@ -10,6 +10,9 @@ public class RoomBooking {
 	private String dateBooked;
 	private String dateStart;
 	private String dateEnd;
+	// setting default initial values
+	private boolean paid = false;
+	private boolean cancelled = false;
 
 	public RoomBooking() {
 
@@ -24,6 +27,7 @@ public class RoomBooking {
 		this.dateStart = dateStart;
 		this.dateEnd = dateEnd;
 	}
+
 	public RoomBooking(Customer customer, ArrayList<Room> roomsBooked,
 			String dateBooked, String dateStart, String dateEnd) {
 		this.customer = customer;
@@ -32,6 +36,7 @@ public class RoomBooking {
 		this.dateStart = dateStart;
 		this.dateEnd = dateEnd;
 	}
+
 	public int getId() {
 		return id;
 	}
@@ -80,11 +85,28 @@ public class RoomBooking {
 		this.dateEnd = dateEnd;
 	}
 
+	public boolean isPaid() {
+		return paid;
+	}
+
+	public void setPaid(boolean paid) {
+		this.paid = paid;
+	}
+
+	public boolean isCancelled() {
+		return cancelled;
+	}
+
+	public void setCancelled(boolean cancelled) {
+		this.cancelled = cancelled;
+	}
+
 	@Override
 	public String toString() {
 		return "RoomBooking [id=" + id + ", customer=" + customer
 				+ ", roomsBooked=" + roomsBooked + ", dateBooked=" + dateBooked
-				+ ", dateStart=" + dateStart + ", dateEnd=" + dateEnd + "]";
+				+ ", dateStart=" + dateStart + ", dateEnd=" + dateEnd
+				+ ", paid=" + paid + ", cancelled=" + cancelled + "]";
 	}
 
 }

@@ -307,7 +307,7 @@ public class RoomsGUI extends JPanel {
 		roomBookingsPanel.add(rbFilterPanel, BorderLayout.EAST);
 
 		rbCustIDLabel = new JLabel(
-				"Customer ID (Leave '0', to show all bookings):");
+				"Customer ID (Leave 0, to show all bookings):");
 		rbFilterPanel.add(rbCustIDLabel);
 
 		rbCustIDField = new JTextField();
@@ -376,8 +376,8 @@ public class RoomsGUI extends JPanel {
 		String startDate = chraDateStartField.getText();
 		String endDate = chraDateEndField.getText();
 		RoomType roomType = (RoomType) chraRoomTypeComboBox.getSelectedItem();
-		ArrayList<Room> freeRooms = roomsCtr.findFreeRooms(startDate, endDate,
-				roomType);
+		ArrayList<Room> freeRooms = roomsCtr.findFreeRoomsOfType(startDate,
+				endDate, roomType);
 
 		for (Room room : freeRooms) {
 			int number = room.getNumber();
@@ -409,18 +409,25 @@ public class RoomsGUI extends JPanel {
 			// if custId = 0 , then get all roomBookings
 			roomBookings = roomsCtr.getAllBookings();
 		} else {
+			roomBookings = roomsCtr.getAllBookings();
+			ArrayList<RoomBooking> custRoomBookings = new ArrayList<RoomBooking>();
+			for (RoomBooking booking : roomBookings) {
+				if (booking.getCustomer().getPersonID() == custID) {
+					custRoomBookings.add(booking);
+				}
+			}
+
 			// else custID > 0, then use filter method,
 			// e.g. roomBookings.filterBookingsByCustomer(int custID);
 			// TODO need to add this method to DAORoomBooking and RoomsCtr
 			System.out.println("Reached 'else' in fillRbTable.");
-			roomBookings = null;
+			roomBookings = custRoomBookings;
 		}
 
 		for (RoomBooking roombooking : roomBookings) {
 			int bookingID = roombooking.getId();
 			int customerID = roombooking.getCustomer().getPersonID();
-			// TODO DAORoomBooking doesn't fill anything in inner Customer
-			// object
+
 			System.out.println("roomBooking object: " + roombooking.toString());
 			String fname = roombooking.getCustomer().getFname();
 			String lname = roombooking.getCustomer().getLname();
@@ -442,8 +449,6 @@ public class RoomsGUI extends JPanel {
 
 	// Creates entries for booking a room for given customer
 	private void bookRooms() {
-		// TODO DAORoomBooking seems to have problems, not adding into
-		// RoomsBooked table
 		roomsCtr = new RoomsCtr();
 		customersCtr = new CustomersCtr();
 
@@ -457,7 +462,7 @@ public class RoomsGUI extends JPanel {
 		// split by ","
 		String[] roomNumbers = roomNumbersInput.split(",");
 		for (int i = 0; i < roomNumbers.length; i++) {
-			roomsCtr.findRoom(Integer.parseInt(roomNumbers[i]));
+			rooms.add(roomsCtr.findRoom(Integer.parseInt(roomNumbers[i])));
 		}
 
 		String bookDate = new SimpleDateFormat("dd-MM-yyyy").format(Calendar
@@ -465,7 +470,13 @@ public class RoomsGUI extends JPanel {
 		String startDate = brStartDateTextField.getText();
 		String endDate = brEndDateTextField.getText();
 
-		roomsCtr.newBooking(customer, rooms, bookDate, startDate, endDate);
+		try {
+			roomsCtr.newRoomBooking(customer, rooms, bookDate, startDate,
+					endDate);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		// 'refreshing' the table, maybe should add some popup
 		fillRbTable();
@@ -485,15 +496,14 @@ public class RoomsGUI extends JPanel {
 	}
 
 	@SuppressWarnings("unused")
-	// unused because of return 'rc' values
+	// unused because of return 'rc' value
 	// Deletes RoomBooking and associated RoomsBooked
 	private void cancelRoomBooking() {
 		// TODO not usage of return values 'rc' yet
 		roomsCtr = new RoomsCtr();
 
 		int id = Integer.parseInt(cbpTextField.getText());
-		int rc01 = roomsCtr.deleteBooking(id);
-		int rc02 = roomsCtr.deleteRoomsBooked(id);
+		int rc = roomsCtr.deleteBooking(id);
 		// 'refreshing' the table, maybe should add some popup
 		fillRbTable();
 	}
