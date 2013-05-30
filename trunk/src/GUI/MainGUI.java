@@ -175,7 +175,7 @@ public class MainGUI {
 					optionsPanel.add(customersButton);
 					optionsPanel.add(roomsButton);
 					optionsPanel.add(staffButtom);
-					activitiesGUI.setManager((Manager) dbs.getStaff(loginGUI.getUserID(), true));
+					//activitiesGUI.setManager((Manager) dbs.getStaff(loginGUI.getUserID(), true));
 					break;
 				// receptionist / secretary
 				case (2):
@@ -187,7 +187,7 @@ public class MainGUI {
 					optionsPanel.add(activitvitiesButton);
 					optionsPanel.add(customersButton);
 					optionsPanel.add(roomsButton);
-					activitiesGUI.setOtherStaff(dbs.getStaff(loginGUI.getUserID(), true));
+					//activitiesGUI.setOtherStaff(dbs.getStaff(loginGUI.getUserID(), true));
 					break;
 				// instructor
 				case (3):
@@ -197,7 +197,7 @@ public class MainGUI {
 					// customersButton = new MenuButton("Customers");
 					optionsPanel.add(activitvitiesButton);
 					optionsPanel.add(customersButton);
-					activitiesGUI.setInstructor((Instructor) dbs.getStaff(loginGUI.getUserID(), true));
+					//activitiesGUI.setInstructor((Instructor) dbs.getStaff(loginGUI.getUserID(), true));
 					break;
 				// customer
 				case (4):
@@ -205,7 +205,7 @@ public class MainGUI {
 							.println("Customer logged in, message from MainGUI");
 					// activitvitiesButton = new MenuButton("Activities");
 					optionsPanel.add(activitvitiesButton);
-					activitiesGUI.setCustomer(dbc.getCustomer(loginGUI.getUserID(),true));
+					//activitiesGUI.setCustomer(dbc.getCustomer(loginGUI.getUserID(),true));
 				}
 				// TODO
 				if (rank > 0 && rank < 5) {

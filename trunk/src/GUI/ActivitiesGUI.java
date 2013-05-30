@@ -90,7 +90,9 @@ public class ActivitiesGUI extends JPanel {
 	private JTextField createHireTimeField;
 
 	private int userID;
+	@SuppressWarnings("unused")
 	private Manager m1;
+	@SuppressWarnings("unused")
 	private Staff s1;
 
 	public int getUserID() {
@@ -120,7 +122,6 @@ public class ActivitiesGUI extends JPanel {
 		hires = new ArrayList<InstructorHire>();
 		activities = new ArrayList<Activity>();
 		custCtr = new CustomersCtr();
-		i1 = null; // TODO
 
 		activitiesWrapper = new JPanel();
 		activitiesWrapper.setPreferredSize(new Dimension(780, 535));
@@ -159,6 +160,7 @@ public class ActivitiesGUI extends JPanel {
 				RowSpec.decode("23px"),}));
 
 		JButton buttonJoin = new JButton("Join Activity");
+		if(i1!=null)buttonJoin.setEnabled(false);
 		buttonJoin.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -930,7 +932,7 @@ public class ActivitiesGUI extends JPanel {
 				FlowLayout.LEFT));
 		createHireRight.add(createHireTimeFieldPanel);
 
-		createHireTimeField = new JFormattedTextField("hh:mm");
+		createHireTimeField = new JFormattedTextField("hh");
 		createHireTimeFieldPanel.add(createHireTimeField);
 		createHireTimeField.setHorizontalAlignment(SwingConstants.CENTER);
 		createHireTimeField.setColumns(20);
@@ -965,7 +967,7 @@ public class ActivitiesGUI extends JPanel {
 							"You have hired a new Instructor: "
 									+ instructor.getPersonID(),
 							"Message", 1);
-					activBook.setInstructorHired(true);
+					if(!activBook.getActivity().getActivityType().name().equals("Golf")||!activBook.getActivity().getActivityType().name().equals("Swimming"))activBook.setInstructorHired(true);
 					}
 					else JOptionPane.showMessageDialog(activitiesWrapper,
 							"No instructor available. ", "Message", 1);
@@ -1068,10 +1070,14 @@ public class ActivitiesGUI extends JPanel {
 			ActivityBooking actBook = actCtr.findBooking(bookID);
 			String date = actBook.getActivityTime().getDate();
 			String time = actBook.getActivityTime().getTime();
+			if(actBook.getActivity().getActivityType().name().equals("Golf")||actBook.getActivity().getActivityType().name().equals("Swimming")){}
+			else{
 			createHireDateField.setText(date);
 			createHireDateField.setEnabled(false);
 			createHireTimeField.setEnabled(false);
 			createHireTimeField.setText(time);
+			}
+
 			if (c1 == null){
 				id = Integer.parseInt(JOptionPane.showInputDialog(
 						activitiesWrapper, "Enter Customer's ID:", "Request", 1));
