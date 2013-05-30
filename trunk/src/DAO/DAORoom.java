@@ -31,7 +31,7 @@ public class DAORoom implements IFDAORoom {
 		String query = /* " roomType = '" + roomType + "' AND */" number NOT IN "
 				+ "(SELECT roomNumber FROM RoomsBooked WHERE roomBookingID IN "
 				+ "(SELECT bookingID FROM RoomBooking WHERE dateEnd >= '"
-				+ startDate + "' and dateStart <=  '" + endDate + "'));";
+				+ startDate + "' and dateStart <=  '" + endDate + "' and cancelled = 0));";
 
 		return miscWhere(query, false);
 	}
@@ -42,7 +42,7 @@ public class DAORoom implements IFDAORoom {
 		String query = " roomType = '" + roomType + "' AND number NOT IN "
 				+ "(SELECT roomNumber FROM RoomsBooked WHERE roomBookingID IN "
 				+ "(SELECT bookingID FROM RoomBooking WHERE dateEnd >= '"
-				+ startDate + "' and dateStart <=  '" + endDate + "'));";
+				+ startDate + "' and dateStart <=  '" + endDate + "' and cancelled = 0));";
 
 		return miscWhere(query, false);
 	}
@@ -52,7 +52,8 @@ public class DAORoom implements IFDAORoom {
 		String query = " number IN "
 				+ "(SELECT roomNumber FROM RoomsBooked WHERE roomBookingID IN "
 				+ "(SELECT bookingID FROM RoomBooking WHERE dateEnd >= '"
-				+ startDate + "' and dateStart <=  '" + endDate + "'));";
+				+ startDate + "' and dateStart <=  '" + endDate
+				+ "' and cancelled = 0));";
 
 		return miscWhere(query, false);
 	}
