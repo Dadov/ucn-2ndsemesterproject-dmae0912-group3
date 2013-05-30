@@ -1,12 +1,16 @@
 package GUI;
 
 import java.awt.Dimension;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.CardLayout;
 import javax.swing.JScrollPane;
@@ -14,7 +18,14 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.UIManager;
+
+import Controllers.RoomsCtr;
+import Models.Room;
+import Models.RoomBooking;
+
 import java.awt.FlowLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class CustomersGUI extends JPanel {
 
@@ -48,21 +59,23 @@ public class CustomersGUI extends JPanel {
 	private JButton billGetBookingsButton;
 	private JLabel billCustIDLabel;
 	private JTextField billCustIDField;
-	private JButton billGetActivitiesButton;
 	private JButton billGetInstructorButton;
 	private JPanel billRooms;
-	private JPanel billActivities;
 	private JPanel billInstructors;
 	private JPanel upperBillRoomWrap;
 	private JPanel lowerBillRoomWrap;
-	private JPanel upperBillActivitiesWrap;
-	private JPanel lowerBillActivitiesWrap;
 	private JPanel upperBillInstructorsWrap;
 	private JPanel lowerBillInstructorsWrap;
 	private JPanel lowerBillRoomWrapLeft;
 	private JLabel markPaidLabel;
 	private JTextField markPaidField;
 	private JButton markPaidButton;
+	private JScrollPane custBillRoomScrollPane;
+	private JTable custBillRoomTable;
+	private DefaultTableModel custBillRoomTableModel;
+	private JScrollPane custBillinstHireScrollPane;
+	private JTable custBillinstHireTable;
+	private DefaultTableModel custBillinstHireTableModel;
 
 	public CustomersGUI() {
 
@@ -120,7 +133,7 @@ public class CustomersGUI extends JPanel {
 
 		allCustTable = new JTable();
 		allCustTable
-				.setPreferredScrollableViewportSize(new Dimension(450, 400));
+				.setPreferredScrollableViewportSize(new Dimension(750, 340));
 
 		allCustTableModel = new DefaultTableModel(new Object[][] {},
 				new String[] { "column", "column", "column", "column" });
@@ -164,13 +177,19 @@ public class CustomersGUI extends JPanel {
 		billCustIDField.setColumns(10);
 
 		billGetBookingsButton = new JButton("Get Room Bookings");
+		billGetBookingsButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				fillCustRoomBillTable();
+			}
+		});
 		upperBillWrapLeft.add(billGetBookingsButton);
 
-		billGetActivitiesButton = new JButton("Get Reserved Activities");
-		billGetActivitiesButton.setActionCommand("Get Reserved Activities");
-		upperBillWrapLeft.add(billGetActivitiesButton);
-
 		billGetInstructorButton = new JButton("Get Hired Instructors");
+		billGetInstructorButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				fillInstHireBillTable();
+			}
+		});
 		upperBillWrapLeft.add(billGetInstructorButton);
 
 		upperBillWrapRight = new JPanel();
@@ -184,13 +203,28 @@ public class CustomersGUI extends JPanel {
 		lowerBillingPanelWrapper.setLayout(new CardLayout(0, 0));
 
 		billRooms = new JPanel();
-		billRooms.setBorder(new TitledBorder(null, "Customers Room Bookings",
-				TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		lowerBillingPanelWrapper.add(billRooms, "name_1371790270790");
+		billRooms.setBorder(new TitledBorder(UIManager
+				.getBorder("TitledBorder.border"), "Customers Room Bookings",
+				TitledBorder.CENTER, TitledBorder.TOP, null, null));
+		lowerBillingPanelWrapper.add(billRooms, "Bill Rooms");
 		billRooms.setLayout(new BorderLayout(0, 0));
 
 		upperBillRoomWrap = new JPanel();
 		billRooms.add(upperBillRoomWrap);
+
+		custBillRoomScrollPane = new JScrollPane();
+		upperBillRoomWrap.add(custBillRoomScrollPane);
+
+		custBillRoomTable = new JTable();
+		custBillRoomTable
+				.setPreferredScrollableViewportSize(new Dimension(750, 340));
+		custBillRoomTableModel = new DefaultTableModel(new Object[][] {},
+				new String[] { "Booking ID", "Customer ID", "First Name",
+						"Last Name", "Address", "Total Price", "Status" });
+		custBillRoomTable.setModel(custBillRoomTableModel);
+
+		custBillRoomTable.getColumnModel().getColumn(0).setPreferredWidth(73);
+		custBillRoomScrollPane.setViewportView(custBillRoomTable);
 
 		lowerBillRoomWrap = new JPanel();
 		billRooms.add(lowerBillRoomWrap, BorderLayout.SOUTH);
@@ -199,7 +233,7 @@ public class CustomersGUI extends JPanel {
 		lowerBillRoomWrapLeft = new JPanel();
 		lowerBillRoomWrap.add(lowerBillRoomWrapLeft, BorderLayout.WEST);
 
-		markPaidLabel = new JLabel("Booking ID: ");
+		markPaidLabel = new JLabel("Room Booking ID: ");
 		lowerBillRoomWrapLeft.add(markPaidLabel);
 
 		markPaidField = new JTextField();
@@ -207,35 +241,152 @@ public class CustomersGUI extends JPanel {
 		markPaidField.setColumns(10);
 
 		markPaidButton = new JButton("Mark Paid");
+		markPaidButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				markPaidRoomBooking();
+			}
+		});
 		lowerBillRoomWrapLeft.add(markPaidButton);
 
-		billActivities = new JPanel();
-		billActivities.setBorder(new TitledBorder(null,
-				"Customers Reserved Activities", TitledBorder.LEADING,
-				TitledBorder.TOP, null, null));
-		lowerBillingPanelWrapper.add(billActivities, "name_1374775856083");
-		billActivities.setLayout(new BorderLayout(0, 0));
-
-		upperBillActivitiesWrap = new JPanel();
-		billActivities.add(upperBillActivitiesWrap, BorderLayout.CENTER);
-		upperBillActivitiesWrap.setLayout(new FlowLayout(FlowLayout.CENTER, 5,
-				5));
-
-		lowerBillActivitiesWrap = new JPanel();
-		billActivities.add(lowerBillActivitiesWrap, BorderLayout.SOUTH);
-
 		billInstructors = new JPanel();
-		billInstructors.setBorder(new TitledBorder(null,
-				"Customers Hired Instructors", TitledBorder.LEADING,
+		billInstructors.setBorder(new TitledBorder(UIManager
+				.getBorder("TitledBorder.border"),
+				"Customers Hired Instructors", TitledBorder.CENTER,
 				TitledBorder.TOP, null, null));
-		lowerBillingPanelWrapper.add(billInstructors, "name_1376202770651");
+		lowerBillingPanelWrapper.add(billInstructors, "Bill Instructors");
 		billInstructors.setLayout(new BorderLayout(0, 0));
 
 		upperBillInstructorsWrap = new JPanel();
 		billInstructors.add(upperBillInstructorsWrap, BorderLayout.CENTER);
 
+		custBillinstHireScrollPane = new JScrollPane();
+		upperBillInstructorsWrap.add(custBillinstHireScrollPane);
+
+		custBillinstHireTable = new JTable();
+		custBillinstHireTable.setPreferredScrollableViewportSize(new Dimension(
+				750, 340));
+		custBillinstHireTableModel = new DefaultTableModel(new Object[][] {},
+				new String[] { "Activity Reservation ID", "Customer ID",
+						"First Name",
+						"Last Name", "Address", "Total Price", "Status" });
+		custBillinstHireTable.setModel(custBillinstHireTableModel);
+
+		custBillinstHireTable.getColumnModel().getColumn(0)
+				.setPreferredWidth(73);
+		custBillinstHireScrollPane.setViewportView(custBillinstHireTable);
+
 		lowerBillInstructorsWrap = new JPanel();
 		billInstructors.add(lowerBillInstructorsWrap, BorderLayout.SOUTH);
 	}
+	
+	/*
+	 * Manually added methods
+	 */
+
+	@SuppressWarnings("unused")
+	private void fillCustRoomBillTable() {
+		CardLayout card = (CardLayout) (lowerBillingPanelWrapper.getLayout());
+		card.show(lowerBillingPanelWrapper, "Bill Rooms");
+
+		custBillRoomTableModel.getDataVector().removeAllElements();
+
+		RoomsCtr roomsCtr = new RoomsCtr();
+		ArrayList<RoomBooking> roomBookings;
+
+		// Filtering customers room booking, first get a custID
+		int custID;
+		try {
+			custID = Integer.parseInt(billCustIDField.getText());
+		} catch (NumberFormatException e) {
+			custID = 0; // default value used if one in field is invalid
+		}
+
+		// if custId = 0 , then get all roomBookings
+		if (custID == 0) {
+			roomBookings = roomsCtr.getAllBookings();
+			// otherwise return only ones that have given custID
+		} else {
+			roomBookings = roomsCtr.getAllBookings();
+			ArrayList<RoomBooking> custRoomBookings = new ArrayList<RoomBooking>();
+			for (RoomBooking booking : roomBookings) {
+				if (booking.getCustomer().getPersonID() == custID) {
+					custRoomBookings.add(booking);
+				}
+			}
+			roomBookings = custRoomBookings;
+		}
+
+		// Filling the table using filtered room bookings
+		for (RoomBooking roombooking : roomBookings) {
+			int bookingID = roombooking.getId();
+			int customerID = roombooking.getCustomer().getPersonID();
+			String fname = roombooking.getCustomer().getFname();
+			String lname = roombooking.getCustomer().getLname();
+			String address = roombooking.getCustomer().getAddress() + ", "
+					+ roombooking.getCustomer().getCity() + ", "
+					+ roombooking.getCustomer().getZIP() + ", "
+					+ roombooking.getCustomer().getCountry();
+			// getting total price
+			double totalPrice = 0;
+			ArrayList<Room> rooms = roombooking.getRoomsBooked();
+			String roomsBooked = "";
+			for (Room room : rooms) {
+				totalPrice = totalPrice + room.getPrice();
+			}
+			// Determining status of booking either paid or cancelled and date
+			String status;
+			if (roombooking.isCancelled()) {
+				status = "Cancelled at: " + roombooking.getDateAccounted();
+			} else if (roombooking.isPaid()) {
+				status = "Paid at: " + roombooking.getDateAccounted();
+			} else {
+				status = "Not accounted";
+			}
+
+			Object[] rowData = { bookingID, customerID, fname, lname,
+					address, totalPrice, status };
+			custBillRoomTableModel.addRow(rowData);
+		}
+	}
+
+	private void markPaidRoomBooking() {
+		RoomsCtr roomsCtr = new RoomsCtr();
+
+		int id = Integer.parseInt(markPaidField.getText());
+		RoomBooking roomBooking = roomsCtr.findBooking(id);
+
+		String payDate = new SimpleDateFormat("dd-MM-yyyy").format(Calendar
+				.getInstance().getTime());
+		roomBooking.setDateAccounted(payDate);
+		roomBooking.setPaid(true);
+
+		int rc = roomsCtr.updateRoomBooking(roomBooking);
+
+		if (rc > 0) {
+			JOptionPane.showMessageDialog(null, "Booking number " + id
+					+ " was paid", "Booking payment",
+					JOptionPane.INFORMATION_MESSAGE);
+		} else {
+			JOptionPane.showMessageDialog(null, "Booking number " + id
+					+ " did not exist", "Booking payment",
+					JOptionPane.ERROR_MESSAGE);
+		}
+
+		// refresh
+		fillCustRoomBillTable();
+
+	}
+
+	private void fillInstHireBillTable() {
+		CardLayout card = (CardLayout) (lowerBillingPanelWrapper.getLayout());
+		card.show(lowerBillingPanelWrapper, "Bill Instructors");
+
+	}
+	
+	@SuppressWarnings("unused")
+	private void markPaidInstHire() {
+
+	}
+
 
 }
