@@ -37,6 +37,8 @@ import Models.ActivityTime;
 import Models.Customer;
 import Models.Instructor;
 import Models.InstructorHire;
+import Models.Manager;
+import Models.Staff;
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -88,6 +90,8 @@ public class ActivitiesGUI extends JPanel {
 	private JTextField createHireTimeField;
 
 	private int userID;
+	private Manager m1;
+	private Staff s1;
 
 	public int getUserID() {
 		return userID;
@@ -97,13 +101,25 @@ public class ActivitiesGUI extends JPanel {
 		this.userID = userID;
 	}
 
-	public ActivitiesGUI() {
+	public void setCustomer(Customer customer) {
+		c1 = customer;
+	}
+	public void setInstructor(Instructor instructor){
+		i1 = instructor;
+	}
+	public void setManager(Manager manager){
+		m1 = manager;
+	}
+	public void setOtherStaff(Staff staff){
+		s1 = staff;
+	}
+	public void initialize(){
+
 		actCtr = new ActivitiesCtr();
 		bookings = new ArrayList<ActivityBooking>();
 		hires = new ArrayList<InstructorHire>();
 		activities = new ArrayList<Activity>();
 		custCtr = new CustomersCtr();
-		c1 = null; // TODO
 		i1 = null; // TODO
 
 		activitiesWrapper = new JPanel();
@@ -130,12 +146,17 @@ public class ActivitiesGUI extends JPanel {
 				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
 				ColumnSpec.decode("127px"),
 				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("91px"), ColumnSpec.decode("65px"),
-				ColumnSpec.decode("203dlu"), ColumnSpec.decode("59px"),
+				ColumnSpec.decode("91px"),
+				ColumnSpec.decode("65px"),
+				ColumnSpec.decode("207dlu"),
+				ColumnSpec.decode("59px"),
 				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("86px"), FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC, }, new RowSpec[] {
-				FormFactory.LINE_GAP_ROWSPEC, RowSpec.decode("23px"), }));
+				ColumnSpec.decode("86px"),
+				FormFactory.RELATED_GAP_COLSPEC,
+				FormFactory.DEFAULT_COLSPEC,},
+			new RowSpec[] {
+				FormFactory.LINE_GAP_ROWSPEC,
+				RowSpec.decode("23px"),}));
 
 		JButton buttonJoin = new JButton("Join Activity");
 		buttonJoin.addActionListener(new ActionListener() {
@@ -148,11 +169,13 @@ public class ActivitiesGUI extends JPanel {
 				try {
 					actId = (int) table.getModel().getValueAt(
 							table.getSelectedRow(), 0);
-					id = Integer.parseInt(JOptionPane.showInputDialog(
-							activitiesWrapper, "Customer's ID", "Request", 1));
-					customer = custCtr.getCustomer(id);
-					customer.getPersonID();
 					actBook = actCtr.findBooking(actId);
+					if(actBook.isOpenActivity()){
+					if(c1==null){id = Integer.parseInt(JOptionPane.showInputDialog(
+							activitiesWrapper, "Customer's ID", "Request", 1));
+					customer = custCtr.getCustomer(id);}
+					else customer = c1;
+					customer.getPersonID();
 					if (actBook.getCustomers().size() < actBook.getActivity()
 							.getCapacity()) {
 						actBook.getCustomers().add(customer);
@@ -167,6 +190,9 @@ public class ActivitiesGUI extends JPanel {
 												.getActivityType().name(),
 								"Message", 1);
 					}
+					}
+					else JOptionPane.showMessageDialog(activitiesWrapper,
+							"This activity is not public!", "Message", 1);
 				} catch (ArrayIndexOutOfBoundsException aie) {
 					JOptionPane.showMessageDialog(activitiesWrapper,
 							"Select a row in the table!", "Warning", 2);
@@ -176,7 +202,9 @@ public class ActivitiesGUI extends JPanel {
 				} catch (NullPointerException npe) {
 					JOptionPane.showMessageDialog(activitiesWrapper,
 							"Enter valid ID!", "Warning", 2);
+				
 				}
+				
 			}
 		});
 		BookingInput.add(buttonJoin, "4, 2, left, top");
@@ -454,8 +482,8 @@ public class ActivitiesGUI extends JPanel {
 		flowLayout_4.setAlignment(FlowLayout.LEFT);
 		createBookingRight.add(createActivityFieldPanel);
 
-		String[] items = { "TennisCourt", "BadmintonCourt", "VolleyBallCourt",
-				"HandBallCourt", "FitnessCenter" };
+		String[] items = { "TennisCourt", "BadmintonCourt", "VolleyballCourt",
+				"HandballCourt", "FitnessCenter" };
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		final JComboBox createActivityCombo = new JComboBox(
 				new DefaultComboBoxModel(items));
@@ -476,7 +504,7 @@ public class ActivitiesGUI extends JPanel {
 		createBookingRight.add(createTimeFieldPanel);
 
 		final JFormattedTextField createTimeField = new JFormattedTextField(
-				"hh:mm");
+				"hh");
 		createTimeFieldPanel.add(createTimeField);
 		createTimeField.setHorizontalAlignment(SwingConstants.CENTER);
 		createTimeField.setColumns(25);
@@ -500,7 +528,7 @@ public class ActivitiesGUI extends JPanel {
 				String activityType = (String) createActivityCombo
 						.getSelectedItem();
 				String date = createDateField.getText();
-				String time = createTimeField.getText();
+				String time = createTimeField.getText()+":00";
 				ActivityTime actTime = new ActivityTime(date, time);
 				ArrayList<Activity> activities = actCtr.findFreeActivities(
 						date, time, activityType);
@@ -520,7 +548,7 @@ public class ActivitiesGUI extends JPanel {
 							"You have created new activity: "
 									+ activity.getActivityType().name(),
 							"Message", 1);
-				} catch (ArrayIndexOutOfBoundsException ae) {
+				} catch (IndexOutOfBoundsException ae) {
 					JOptionPane.showMessageDialog(activitiesWrapper,
 							"No facility available, try another hour.",
 							"Message", 3);
@@ -547,8 +575,8 @@ public class ActivitiesGUI extends JPanel {
 
 		JPanel hireInstructorTab = new JPanel();
 		hireInstructorTab.setPreferredSize(new Dimension(780, 500));
-		tabbedPane.addTab("My Activities", null, hireInstructorTab, null);
-
+		if(c1!=null || i1!=null)tabbedPane.addTab("My Activities", null, hireInstructorTab, null);
+		else tabbedPane.addTab("Instructor Hires", null, hireInstructorTab, null);
 		dtmInstructorHire = new DefaultTableModel(new Object[][] {},
 				new String[] { "ID", "Activity", "Time", "Date" });
 
@@ -556,22 +584,23 @@ public class ActivitiesGUI extends JPanel {
 		hireInstructorTab.add(hireInputPanel);
 		hireInputPanel
 				.setLayout(new FormLayout(new ColumnSpec[] {
-						FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-						ColumnSpec.decode("105px"),
-						FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-						ColumnSpec.decode("right:90px"),
-						FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-						ColumnSpec.decode("51px"), ColumnSpec.decode("227dlu"),
-						ColumnSpec.decode("61px"),
-						FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-						ColumnSpec.decode("left:86px"),
-						FormFactory.RELATED_GAP_COLSPEC,
-						FormFactory.DEFAULT_COLSPEC, }, new RowSpec[] {
-						FormFactory.LINE_GAP_ROWSPEC, RowSpec.decode("23px"), }));
+				ColumnSpec.decode("22dlu"),
+				ColumnSpec.decode("105px"),
+				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("right:135px"),
+				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("61px"),
+				ColumnSpec.decode("186dlu"),
+				ColumnSpec.decode("61px"),
+				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("123px"),
+				FormFactory.RELATED_GAP_COLSPEC,
+				FormFactory.DEFAULT_COLSPEC,},
+			new RowSpec[] {
+				FormFactory.LINE_GAP_ROWSPEC,
+				RowSpec.decode("23px"),}));
 
 		JButton btnHireInstructor = new JButton("Hire Instructor");
-		if (c1 == null)
-			btnHireInstructor.setEnabled(false);
 		btnHireInstructor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				showInstructorCreate();
@@ -581,12 +610,20 @@ public class ActivitiesGUI extends JPanel {
 			btnHireInstructor.setEnabled(false);
 		hireInputPanel.add(btnHireInstructor, "2, 2, left, top");
 
-		JButton btnEditHire = new JButton("Select");
+		JButton btnEditHire = new JButton("Select Instructor Hire");
 		btnEditHire.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int row = table_1.getSelectedRow();
-				int ID = (int) table_1.getModel().getValueAt(row, 0);
-				showInstructorHire(ID);
+				int ID = 0;
+				if(c1==null)ID = (int) table_1.getModel().getValueAt(row, 0);
+				else ID = (int) table_1.getModel().getValueAt(row, 1);
+				try{
+					showInstructorHire(ID);
+				}
+				catch(Exception e){
+					JOptionPane.showMessageDialog(activitiesWrapper,
+							"No instructor hired for this activity!", "Warning!", 2);
+				}
 			}
 		});
 		hireInputPanel.add(btnEditHire, "4, 2, left, top");
@@ -608,8 +645,8 @@ public class ActivitiesGUI extends JPanel {
 
 		textFieldInstructor = new JTextField();
 		hireInputPanel.add(textFieldInstructor, "10, 2, left, center");
-		textFieldInstructor.setText("ID");
-		textFieldInstructor.setColumns(10);
+		textFieldInstructor.setText("Instructor Hire ID");
+		textFieldInstructor.setColumns(11);
 
 		hireTablePanel = new JPanel();
 		hireInstructorTab.add(hireTablePanel);
@@ -906,8 +943,8 @@ public class ActivitiesGUI extends JPanel {
 		createHireBtnCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					int row = table.getSelectedRow();
-					int ID = (int) table.getModel().getValueAt(row, 0);
+					Customer customer = c1;
+					int ID = Integer.parseInt(createHireBookingField.getText());
 					ActivityBooking activBook = actCtr.findBooking(ID);
 					Activity activity = activBook.getActivity();
 					String date = createHireDateField.getText();
@@ -919,21 +956,20 @@ public class ActivitiesGUI extends JPanel {
 							instructor = instr;
 					}
 					int custID = 0;
-					if (c1 == null)
-						custID = Integer.parseInt(JOptionPane.showInputDialog(
-								activitiesWrapper, "Customer's ID", "Request",
-								1));
-					c1 = custCtr.getCustomer(custID);
+					if (customer == null){
+						custID = Integer.parseInt(createHireCustomerField.getText());
+					customer = custCtr.getCustomer(custID);}
 					ActivityTime actTime = new ActivityTime(date, time);
-					actCtr.newInstructorHire(c1, instructor, activBook, actTime);
+					if(instructor!=null){actCtr.newInstructorHire(c1, instructor, activBook, actTime);
 					JOptionPane.showMessageDialog(activitiesWrapper,
-							"You have created new activity: "
-									+ activity.getActivityType().name(),
+							"You have hired a new Instructor: "
+									+ instructor.getPersonID(),
 							"Message", 1);
-				} catch (ArrayIndexOutOfBoundsException ae) {
-					JOptionPane.showMessageDialog(activitiesWrapper,
-							"No facility available, try another hour.",
-							"Message", 3);
+					activBook.setInstructorHired(true);
+					}
+					else JOptionPane.showMessageDialog(activitiesWrapper,
+							"No instructor available. ", "Message", 1);
+				
 				} catch (NumberFormatException nfe) {
 					JOptionPane.showMessageDialog(activitiesWrapper,
 							"Enter valid number!", "Warning", 2);
@@ -948,17 +984,18 @@ public class ActivitiesGUI extends JPanel {
 		JButton createHireBtnCancel = new JButton("Back");
 		createHireBtnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				showAllBookings();
+				showAllHires();
 			}
 		});
 		createHireBottomMenu.add(createHireBtnCancel);
 
 		// TODO HERE'S STARTING ACTIVITY
-
+		if(c1==null){
 		JPanel activityTab = new JPanel();
 		activityTab.setPreferredSize(new Dimension(780, 500));
 		tabbedPane.addTab("Activity", null, activityTab, null);
-
+		
+		
 		JPanel ActivityInputPanel = new JPanel();
 		activityTab.add(ActivityInputPanel);
 		ActivityInputPanel
@@ -1002,7 +1039,7 @@ public class ActivitiesGUI extends JPanel {
 		activityTable.setModel(dtmActivity);
 		scrollPane_Activity.setViewportView(activityTable);
 		fillActivitiesTable();
-
+	}
 		JButton buttonCreate = new JButton("Create new Activity");
 		buttonCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1014,26 +1051,54 @@ public class ActivitiesGUI extends JPanel {
 
 		showAllBookings();
 	}
+	public ActivitiesGUI() {
 
+
+	}
 	protected void showInstructorCreate() {
 		try {
-			int row = table_1.getSelectedRow();
-			int bookID = (int) table_1.getModel().getValueAt(row, 0);
+			int bookID;
+			Customer customer = c1;
+			if(c1==null)bookID = Integer.parseInt(JOptionPane.showInputDialog(
+					activitiesWrapper, "Enter activity booking's ID:", "Request", 1));
+			else{int row = table_1.getSelectedRow();
+			bookID = (int) table_1.getModel().getValueAt(row, 0);}
 			createHireBookingField.setText(String.valueOf(bookID));
-			int id = Integer.parseInt(JOptionPane.showInputDialog(
-					activitiesWrapper, "Enter Customer's ID:", "Request", 1));
+			int id = 0;
 			ActivityBooking actBook = actCtr.findBooking(bookID);
 			String date = actBook.getActivityTime().getDate();
 			String time = actBook.getActivityTime().getTime();
 			createHireDateField.setText(date);
+			createHireDateField.setEnabled(false);
+			createHireTimeField.setEnabled(false);
 			createHireTimeField.setText(time);
-			if (c1 != null)
+			if (c1 == null){
+				id = Integer.parseInt(JOptionPane.showInputDialog(
+						activitiesWrapper, "Enter Customer's ID:", "Request", 1));
+				createHireCustomerField.setText(Integer.toString(id));
+				customer = custCtr.getCustomer(id);
+			}
+			else
 				createHireCustomerField.setText(Integer.toString(c1
 						.getPersonID()));
-			else
-				createHireCustomerField.setText(String.valueOf(id));
-			CardLayout c1 = (CardLayout) (hireTablePanel.getLayout());
-			c1.show(hireTablePanel, "createHire");
+			if(!actBook.isInstructorHired()&&!actBook.getActivity().getActivityType().name().equals("HandballCourt")
+					&&!actBook.getActivity().getActivityType().name().equals("VolleyballCourt")
+					&&!actBook.getActivity().getActivityType().name().equals("FitnessCenter"))
+			{
+				boolean found = false;
+				for(Customer cust: actBook.getCustomers()){
+				if(cust.getPersonID()==customer.getPersonID()){
+				CardLayout cl = (CardLayout) (hireTablePanel.getLayout());
+				cl.show(hireTablePanel, "createHire");
+				found = true;
+				}
+				}
+				if(!found) JOptionPane.showMessageDialog(activitiesWrapper,
+						"Join the activity first!", "Warning!", 2);
+				
+			}
+			else JOptionPane.showMessageDialog(activitiesWrapper,
+					"It is not possible to hire an instructor for this activity!", "Warning!", 2);
 		} catch (NumberFormatException nfe) {
 			JOptionPane.showMessageDialog(activitiesWrapper,
 					"Please, enter valid number!", "Warning!", 2);
@@ -1132,7 +1197,7 @@ public class ActivitiesGUI extends JPanel {
 			for (ActivityBooking insHire : bookings) {
 				// Initialise variables for filling table
 				for (Customer c : insHire.getCustomers()) {
-					if (c.equals(c1)) {
+					if (c.getPersonID()==c1.getPersonID()) {
 						int ID = insHire.getID();
 						String actType = insHire.getActivity()
 								.getActivityType().name();
@@ -1148,7 +1213,9 @@ public class ActivitiesGUI extends JPanel {
 						Object[] rowData = { ID, IHID, actType, date, time,
 								hired };
 						dtmInstructorHire.addRow(rowData);
+						
 					}
+					table_1.setModel(dtmInstructorHire);
 				}
 			}
 		} else if (i1 != null) {

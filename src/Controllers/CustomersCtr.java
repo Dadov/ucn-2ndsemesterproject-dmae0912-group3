@@ -7,6 +7,7 @@ import DAO.DAOCustomer;
 import DAO.DBConnection;
 import DAO.IFDAOAgency;
 import DAO.IFDAOCustomer;
+import Models.ActivityBooking;
 import Models.Agency;
 import Models.Customer;
 
@@ -86,11 +87,21 @@ public class CustomersCtr {
 		customer.setPassword(password);
 		customer.setRegistrationDate(registrationDate);
 		customer.setNoOfStays(noOfStays);
+		ActivitiesCtr actCtr = new ActivitiesCtr();
 		try {
 			DBConnection.startTransaction();
 			IFDAOCustomer daoCustomer = new DAOCustomer();
 			daoCustomer.insert(customer);
 			DBConnection.commitTransaction();
+			ArrayList<ActivityBooking> bookings = actCtr.getAllBookings();
+			for(ActivityBooking booking: bookings){
+				if(booking.getActivity().getActivityType().equals("Golf")||booking.getActivity().getActivityType().equals("Swimming")){
+					ArrayList<Customer> customers = booking.getCustomers();
+							customers.add(customer);
+							booking.setCustomers(customers);
+				}
+					
+			}
 		} catch (Exception e) {
 			System.out.println("Error while creating customer in CustomersCtr");
 			DBConnection.rollbackTransaction();

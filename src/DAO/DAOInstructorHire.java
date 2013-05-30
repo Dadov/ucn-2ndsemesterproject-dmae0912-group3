@@ -245,7 +245,7 @@ public class DAOInstructorHire implements IFDAOInstructorHire {
 					instructorHire1.setInstructor(instructor);
 
 					IFDAOActivityBooking dbActiv = new DAOActivityBooking();
-					int actID = instructorHire.getActivityBooking().getID();
+					int actID = instructorHire1.getActivityBooking().getID();
 					ActivityBooking activityBooking = dbActiv
 							.getActivityBooking(actID, true);
 					instructorHire1.setActivityBooking(activityBooking);
@@ -301,11 +301,6 @@ public class DAOInstructorHire implements IFDAOInstructorHire {
 	}
 
 
-	@Override
-	public boolean checkInstructorAvailability(Instructor instructor,
-			String date, String time) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	
 
 }

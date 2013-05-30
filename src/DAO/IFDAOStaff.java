@@ -2,6 +2,7 @@ package DAO;
 
 import java.util.ArrayList;
 
+import Models.Instructor;
 import Models.Staff;
 
 public interface IFDAOStaff {
@@ -15,4 +16,7 @@ public interface IFDAOStaff {
 	public int update(Staff Staff, String staffType);
 
 	public int delete(int ID);
+
+	boolean checkInstructorAvailability(Instructor instructor, String date,
+			String time);
 }
