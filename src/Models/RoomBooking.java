@@ -10,9 +10,10 @@ public class RoomBooking {
 	private String dateBooked;
 	private String dateStart;
 	private String dateEnd;
+	private String dateAccounted;
 	// setting default initial values
-	private boolean paid = false;
-	private boolean cancelled = false;
+	private boolean paid;
+	private boolean cancelled;
 
 	public RoomBooking() {
 
@@ -83,6 +84,14 @@ public class RoomBooking {
 
 	public void setDateEnd(String dateEnd) {
 		this.dateEnd = dateEnd;
+	}
+
+	public String getDateAccounted() {
+		return dateAccounted;
+	}
+
+	public void setDateAccounted(String dateAccounted) {
+		this.dateAccounted = dateAccounted;
 	}
 
 	public boolean isPaid() {

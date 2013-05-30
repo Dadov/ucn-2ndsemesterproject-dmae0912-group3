@@ -21,48 +21,34 @@ public class RoomsCtr {
 	}
 
 	// METHODS FOR ROOM BOOKING
-	// starts a new booking
 
+	// new booking, making check if there room is already booked
 	public void newRoomBooking(Customer customer, ArrayList<Room> rooms,
 			String bookDate, String startDate, String endDate) throws Exception {
-		RoomBooking newRoomBooking = new RoomBooking();
+
+		daoRoomBooking = new DAORoomBooking();
 		daoRoom = new DAORoom();
 		ArrayList<Room> bookedRooms = daoRoom.findBookedRooms(startDate,
 				endDate);
-		System.out.println("Another crappy message.");
 
+		RoomBooking newRoomBooking = new RoomBooking();
 		newRoomBooking.setCustomer(customer);
 		newRoomBooking.setRoomsBooked(rooms);
 		newRoomBooking.setDateBooked(bookDate);
 		newRoomBooking.setDateStart(startDate);
 		newRoomBooking.setDateEnd(endDate);
 
+		// compare each room number in requested rooms with room numbers which
+		// are currently booked for given dates
 		for (Room room : rooms) {
-			// if freeRooms doesn't contain this room, it's bad already used for
-			// the date
-			String str = room.toString();
-			System.out.println(bookedRooms.toString());
-			System.out.println(bookedRooms.contains(room.toString()));
-			boolean test = bookedRooms.contains(room.toString());
-			// if (freeRooms.contains(room.toString())) {
-			// System.out.println("funguje pica");
-			// break;
-			// } else {
-			// throw new Exception("tam mas");
-			// // System.out.println("nefunguje pica");
-			// }
-			System.out.println("All booked Rooms " + bookedRooms.toString());
 			for (Room bookedRoom : bookedRooms) {
-				System.out.println("Room number: " + room.getNumber());
-				System.out.println("Booked Room number: "
-						+ bookedRoom.getNumber());
 				if (room.getNumber() == bookedRoom.getNumber()) {
-					throw new Exception("tam mas");
+					throw new Exception(
+							"Room is already booked for given dates.");
 				}
 			}
 		}
 
-		daoRoomBooking = new DAORoomBooking();
 		daoRoomBooking.insert(newRoomBooking);
 	}
 
@@ -83,7 +69,8 @@ public class RoomsCtr {
 	// updates a booking
 	public int updateBooking(int newId, Customer newCustomer,
 			ArrayList<Room> newRooms, String newBookDate, String newStartDate,
-			String newEndDate) {
+			String newEndDate, String dateAccounted, boolean paid,
+			boolean cancelled) {
 		daoRoomBooking = new DAORoomBooking();
 		RoomBooking booking = new RoomBooking();
 		booking.setId(newId);
@@ -92,7 +79,16 @@ public class RoomsCtr {
 		booking.setDateBooked(newBookDate);
 		booking.setDateStart(newStartDate);
 		booking.setDateEnd(newEndDate);
+		booking.setDateAccounted(dateAccounted);
+		booking.setPaid(paid);
+		booking.setCancelled(cancelled);
 		return daoRoomBooking.update(booking);
+	}
+
+	// updates a booking
+	public int updateRoomBooking(RoomBooking roomBooking) {
+		daoRoomBooking = new DAORoomBooking();
+		return daoRoomBooking.update(roomBooking);
 	}
 
 	// deletes a booking
@@ -111,16 +107,18 @@ public class RoomsCtr {
 	// METHODS FOR ROOM
 	// starts a new booking
 	public void newRoom(RoomType roomType, double price, String note) {
+		daoRoom = new DAORoom();
 		Room room = new Room();
 		room.getNumber();
 		room.setRoomType(roomType);
 		room.setPrice(price);
 		room.setNote(note);
+		daoRoom.insert(room);
 	}
 
 	// finds a room by id
 	public Room findRoom(int number) {
-		IFDAORoom daoRoom = new DAORoom();
+		daoRoom = new DAORoom();
 		return daoRoom.getRoom(number, false);
 	}
 
@@ -137,16 +135,15 @@ public class RoomsCtr {
 
 	// retrieves all rooms
 	public ArrayList<Room> getAllrooms() {
-		IFDAORoom daoRoom = new DAORoom();
-		ArrayList<Room> allRooms = new ArrayList<Room>();
-		allRooms = daoRoom.getAllRooms(false);
+		daoRoom = new DAORoom();
+		ArrayList<Room> allRooms = daoRoom.getAllRooms(false);
 		return allRooms;
 	}
 
 	// updates a Room
 	public int updateRoom(int newId, RoomType roomType, double price,
 			String note) {
-		IFDAORoom daoRoom = new DAORoom();
+		daoRoom = new DAORoom();
 		Room room = new Room();
 		room.setNumber(newId);
 		room.setRoomType(roomType);
@@ -157,7 +154,7 @@ public class RoomsCtr {
 
 	// deletes a Room
 	public int deleteRoom(int id) {
-		IFDAORoom daoRoom = new DAORoom();
+		daoRoom = new DAORoom();
 		return daoRoom.delete(id);
 	}
 	// METHODS FOR ROOM END

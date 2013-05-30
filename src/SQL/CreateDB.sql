@@ -76,7 +76,11 @@ CREATE TABLE RoomBooking (
     customerID int not null,
     dateStart date not null,
     dateEnd date not null,
-    dateBooked date not null
+    dateBooked date not null,
+	-- date paid or cancelled
+	dateAccounted date,
+	paid bit default(0),
+	cancelled bit default(0),
     UNIQUE ( bookingID ),
     PRIMARY KEY ( bookingID ),
     FOREIGN KEY ( customerID ) REFERENCES Customer ( customerID )
