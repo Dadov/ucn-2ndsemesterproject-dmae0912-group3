@@ -11,6 +11,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -31,6 +32,7 @@ import javax.swing.table.DefaultTableModel;
 
 import Controllers.ActivitiesCtr;
 import Controllers.CustomersCtr;
+import Controllers.StaffCtr;
 import Models.Activity;
 import Models.ActivityBooking;
 import Models.ActivityTime;
@@ -64,7 +66,6 @@ public class ActivitiesGUI extends JPanel {
 	private JTextField textFieldBooking;
 	private JTextField textFieldInstructor;
 	private JTable activityTable;
-	private JTextField showActivity;
 	private ArrayList<Activity> activities;
 	private JTextField showIDField;
 	private JTextField showActivityField;
@@ -116,7 +117,6 @@ public class ActivitiesGUI extends JPanel {
 		s1 = staff;
 	}
 	public void initialize(){
-
 		actCtr = new ActivitiesCtr();
 		bookings = new ArrayList<ActivityBooking>();
 		hires = new ArrayList<InstructorHire>();
@@ -1002,31 +1002,82 @@ public class ActivitiesGUI extends JPanel {
 		activityTab.add(ActivityInputPanel);
 		ActivityInputPanel
 				.setLayout(new FormLayout(new ColumnSpec[] {
-						FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-						ColumnSpec.decode("105px"),
-						FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-						ColumnSpec.decode("right:90px"),
-						FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-						ColumnSpec.decode("51px"), ColumnSpec.decode("204dlu"),
-						ColumnSpec.decode("103px"),
-						ColumnSpec.decode("left:86px"),
-						FormFactory.RELATED_GAP_COLSPEC,
-						FormFactory.DEFAULT_COLSPEC, }, new RowSpec[] {
-						FormFactory.LINE_GAP_ROWSPEC, RowSpec.decode("23px"), }));
+				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("105px"),
+				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("right:136px"),
+				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("64px"),
+				ColumnSpec.decode("163dlu"),
+				ColumnSpec.decode("103px"),
+				ColumnSpec.decode("left:86px"),
+				FormFactory.RELATED_GAP_COLSPEC,
+				FormFactory.DEFAULT_COLSPEC,},
+			new RowSpec[] {
+				FormFactory.LINE_GAP_ROWSPEC,
+				RowSpec.decode("23px"),}));
 
-		JButton btnCreateActivity = new JButton("Create Activity");
-		ActivityInputPanel.add(btnCreateActivity, "2, 2, left, top");
+		JButton btnAddInstructor = new JButton("Add Instructor");
+		ActivityInputPanel.add(btnAddInstructor, "2, 2, left, top");
+		btnAddInstructor.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try{
+					int id = Integer.parseInt(JOptionPane.showInputDialog(activitiesWrapper, "Insert Instructor's ID!", 0));
+					int actID = (int) activityTable.getModel().getValueAt(activityTable.getSelectedRow(), 0);
+					StaffCtr staffCtr = new StaffCtr();
+					Instructor instructor = (Instructor) staffCtr.getEmployee(id);
+					Activity activity = actCtr.findActivity(actID);
+					ArrayList<Instructor> instructors = activity.getActivityInstructors();
+					instructors.add(instructor);
+					activity.setActivityInstructors(instructors); 
+					actCtr.updateActivity(actID, instructors, activity.getActivityType(), activity.getCapacity(), activity.getInstructorPrice());
+					fillActivitiesTable();
+				}
+				catch(NumberFormatException nfe){
+					JOptionPane.showMessageDialog(activitiesWrapper, "Enter valid number!", "Warning", 0);
+				}
+				catch(ArrayIndexOutOfBoundsException ae){
+					JOptionPane.showMessageDialog(activitiesWrapper, "Select a row in the table!", "Warning", 0);
+				}
+				catch(ClassCastException cce){
+					JOptionPane.showMessageDialog(activitiesWrapper, "This employee is not an instructor!", "Warning", 0);
+				}
+				
+			}
+		});
 
-		JButton btnEditActivity = new JButton("Edit Activity");
-		ActivityInputPanel.add(btnEditActivity, "4, 2, left, top");
+		JButton btnRemoveInstructor = new JButton("Remove Instructor");
+		ActivityInputPanel.add(btnRemoveInstructor, "4, 2, left, top");
+		btnRemoveInstructor.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+			try{
+				int instrID = (int) activityTable.getModel().getValueAt(activityTable.getSelectedRow(),1);
+				int actID = (int) activityTable.getModel().getValueAt(activityTable.getSelectedRow(),0);
+				StaffCtr staffCtr = new StaffCtr();
+				Instructor instructor = (Instructor) staffCtr.getEmployee(instrID);
+				Activity activity = actCtr.findActivity(actID);
+				ArrayList<Instructor> instructors = activity.getActivityInstructors();
+				Iterator<Instructor> it = instructors.iterator();
+				while(it.hasNext()){
+					if (it.next().getPersonID()==instructor.getPersonID()) {
+				        it.remove();
+				        break;
+				    }
+				}
+				activity.setActivityInstructors(instructors); 
+				actCtr.updateActivity(actID, instructors, activity.getActivityType(), activity.getCapacity(), activity.getInstructorPrice());
+				fillActivitiesTable();
+			}
+			catch(ArrayIndexOutOfBoundsException ae){
+				JOptionPane.showMessageDialog(activitiesWrapper, "Select a row in the table!", "Warning", 0);
+			}
+			}
+		});
 
-		JButton btnShowActivity = new JButton("Show Activity");
-		ActivityInputPanel.add(btnShowActivity, "8, 2, left, top");
-
-		showActivity = new JTextField();
-		showActivity.setText("ID");
-		ActivityInputPanel.add(showActivity, "9, 2, left, center");
-		showActivity.setColumns(10);
 
 		JPanel activityTablePanel = new JPanel();
 		activityTab.add(activityTablePanel);
@@ -1046,6 +1097,7 @@ public class ActivitiesGUI extends JPanel {
 		buttonCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				createBooking();
+				fillActivityTable();
 			}
 		});
 
@@ -1054,8 +1106,7 @@ public class ActivitiesGUI extends JPanel {
 		showAllBookings();
 	}
 	public ActivitiesGUI() {
-
-
+		
 	}
 	protected void showInstructorCreate() {
 		try {
@@ -1156,6 +1207,11 @@ public class ActivitiesGUI extends JPanel {
 	}
 
 	private void fillActivityTable() {
+		clearTable(table);
+		dtmActivityBooking = new DefaultTableModel(new Object[][] {},
+				new String[] { "ID", "Activity", "Date", "Time",
+						"Open Activity" });
+		table.setModel(dtmActivityBooking);
 		bookings = actCtr.getAllBookings();
 		for (ActivityBooking actBook : bookings) {
 
@@ -1190,6 +1246,7 @@ public class ActivitiesGUI extends JPanel {
 	}
 
 	private void fillInstructorTable() {
+		clearTable(table_1);
 		dtmInstructorHire = new DefaultTableModel(new Object[][] {},
 				new String[] { "ID", "Activity", "Time", "Date" });
 		table_1.setModel(dtmInstructorHire);
@@ -1255,20 +1312,39 @@ public class ActivitiesGUI extends JPanel {
 	}
 
 	private void fillActivitiesTable() {
+		clearTable(activityTable);
+		dtmActivity = new DefaultTableModel(new Object[][] {}, new String[] {
+				"ID", "InstructorID", "Type", "Capacity" });
+		activityTable.setModel(dtmActivity);
 		activities = actCtr.getAllactivitys();
 		for (Activity act : activities) {
+			if(!act.getActivityInstructors().isEmpty()){
+				for(Instructor instr: act.getActivityInstructors()){
+				// Initialise variables for filling table
+				int ID = act.getID();
+				String actType = act.getActivityType().name();
+				int capacity = act.getCapacity();
+				int instrID = instr.getPersonID(); 
 
-			// Initialise variables for filling table
-			int ID = act.getID();
-			String actType = act.getActivityType().name();
-			int capacity = act.getCapacity();
+				// add the values to the table
+				Object[] rowData = { ID, instrID, actType, capacity };
+				dtmActivity.addRow(rowData);
+				}
+			}
+				else {
+					int ID = act.getID();
+				String actType = act.getActivityType().name();
+				int capacity = act.getCapacity();
 
-			// add the values to the table
-			Object[] rowData = { ID, actType, capacity };
-			dtmActivity.addRow(rowData);
+				// add the values to the table
+				Object[] rowData = { ID, 0, actType, capacity };
+				dtmActivity.addRow(rowData);
+				}
 
+			}
+
+			
 		}
-	}
 
 	protected void showBooking(int id) {
 		ActivityBooking booking = null;
@@ -1288,6 +1364,9 @@ public class ActivitiesGUI extends JPanel {
 		cl.show(BookingTable, "showBooking");
 		if (booking.isOpenActivity())
 			btnDelete.setVisible(false);
+	}
+	protected void clearTable(JTable table){
+		table.setModel(new DefaultTableModel());
 	}
 
 }

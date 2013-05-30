@@ -185,7 +185,7 @@ public class ActivitiesCtr {
 				}
 
 				// updates a activity
-				public int updateactivity(int newId, ArrayList<Instructor> instructors, ActivityType activityType, int capacity, int instructorPrice) {
+				public int updateActivity(int newId, ArrayList<Instructor> instructors, Enum<ActivityType> activityType, int capacity, int instructorPrice) {
 					IFDAOActivity daoActivity = new DAOActivity();
 					Activity activity = new Activity();
 					activity.setID(newId);
