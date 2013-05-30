@@ -83,6 +83,7 @@ public class RoomsGUI extends JPanel {
 	private JPanel rbFilterPanel;
 	private JPanel rbLabelPanel;
 	private JLabel rbLabel;
+	private JTabbedPane roomsTabbedPane;
 
 	public RoomsGUI() {
 		setPreferredSize(new Dimension(780, 535));
@@ -91,11 +92,11 @@ public class RoomsGUI extends JPanel {
 		roomsWrapper.setPreferredSize(new Dimension(780, 535));
 		add(roomsWrapper);
 
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		roomsWrapper.add(tabbedPane);
+		roomsTabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		roomsWrapper.add(roomsTabbedPane);
 
 		checkRoomAvailabilityPanel = new JPanel();
-		tabbedPane.addTab("Check Room Availability", null,
+		roomsTabbedPane.addTab("Check Room Availability", null,
 				checkRoomAvailabilityPanel, null);
 		checkRoomAvailabilityPanel.setLayout(new BorderLayout(0, 0));
 
@@ -192,7 +193,7 @@ public class RoomsGUI extends JPanel {
 
 		roomBookingPanel = new JPanel();
 		roomBookingPanel.setPreferredSize(new Dimension(780, 500));
-		tabbedPane.addTab("Room Bookings", null, roomBookingPanel, null);
+		roomsTabbedPane.addTab("Room Bookings", null, roomBookingPanel, null);
 		roomBookingPanel.setLayout(new BorderLayout(0, 0));
 
 		bookRoomPanel = new JPanel();
@@ -334,7 +335,8 @@ public class RoomsGUI extends JPanel {
 		rbTable.setPreferredScrollableViewportSize(new Dimension(750, 340));
 		rbTableModel = new DefaultTableModel(new Object[][] {}, new String[] {
 				"Booking ID", "Customer ID", "First Name", "Last Name",
-				"Rooms Booked", "Date Start", "Date End", "Date Booked" });
+				"Rooms Booked", "Date Start", "Date End",
+				"Status" });
 		rbTable.setModel(rbTableModel);
 
 		rbTable.getColumnModel().getColumn(0).setPreferredWidth(73);
@@ -435,10 +437,18 @@ public class RoomsGUI extends JPanel {
 			}
 			String dateStart = roombooking.getDateStart();
 			String dateEnd = roombooking.getDateEnd();
-			String dateBooked = roombooking.getDateBooked();
+			// Determining status of booking either paid or cancelled and date
+			String status = "";
+			if (roombooking.isCancelled()) {
+				status = "Cancelled at: " + roombooking.getDateAccounted();
+			} else if (roombooking.isPaid()) {
+				status = "Paid at: " + roombooking.getDateAccounted();
+			} else {
+				status = "Not accounted";
+			}
 
 			Object[] rowData = { bookingID, customerID, fname, lname,
-					roomsBooked, dateStart, dateEnd, dateBooked };
+					roomsBooked, dateStart, dateEnd, status };
 			rbTableModel.addRow(rowData);
 		}
 
