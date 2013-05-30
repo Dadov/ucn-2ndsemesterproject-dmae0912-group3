@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import DAO.DAOActivity;
 import DAO.DAOInstructorHire;
 import DAO.DAOActivityBooking;
+import DAO.DAOStaff;
 import DAO.IFDAOActivity;
 import DAO.IFDAOInstructorHire;
 import DAO.IFDAOActivityBooking;
+import DAO.IFDAOStaff;
 import Models.Activity;
 import Models.ActivityBooking;
 import Models.ActivityTime;
@@ -202,7 +204,7 @@ public class ActivitiesCtr {
 				//METHODS FOR ACTIVITY END
 
 				public boolean checkInstructorAvailability(Instructor instructor, String date, String time) {
-					IFDAOInstructorHire daoi = new DAOInstructorHire();
+					IFDAOStaff daoi = new DAOStaff();
 					return daoi.checkInstructorAvailability(instructor,date,time);
 					
 				}

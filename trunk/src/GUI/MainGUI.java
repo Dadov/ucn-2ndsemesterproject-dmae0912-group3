@@ -16,6 +16,13 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
+import DAO.DAOCustomer;
+import DAO.DAOStaff;
+import DAO.IFDAOCustomer;
+import DAO.IFDAOStaff;
+import Models.Instructor;
+import Models.Manager;
+
 public class MainGUI {
 	private JFrame frame;
 	private JPanel menuWrapper;
@@ -139,10 +146,15 @@ public class MainGUI {
 
 		loginGUI.loginButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// activitiesGUI.setUserID(loginGUI.getUserID());
+				//int rank = loginGUI.login();
+				IFDAOCustomer dbc = new DAOCustomer();
+				IFDAOStaff dbs = new DAOStaff();
+				
+				 
+				 
 				// System.out.println("Logged user ID: " +
 				// loginGUI.getUserID());
-				// int rank = loginGUI.login();
+				
 				int rank = 1;
 
 				switch (rank) {
@@ -163,6 +175,7 @@ public class MainGUI {
 					optionsPanel.add(customersButton);
 					optionsPanel.add(roomsButton);
 					optionsPanel.add(staffButtom);
+					activitiesGUI.setManager((Manager) dbs.getStaff(loginGUI.getUserID(), true));
 					break;
 				// receptionist / secretary
 				case (2):
@@ -174,6 +187,7 @@ public class MainGUI {
 					optionsPanel.add(activitvitiesButton);
 					optionsPanel.add(customersButton);
 					optionsPanel.add(roomsButton);
+					activitiesGUI.setOtherStaff(dbs.getStaff(loginGUI.getUserID(), true));
 					break;
 				// instructor
 				case (3):
@@ -183,6 +197,7 @@ public class MainGUI {
 					// customersButton = new MenuButton("Customers");
 					optionsPanel.add(activitvitiesButton);
 					optionsPanel.add(customersButton);
+					activitiesGUI.setInstructor((Instructor) dbs.getStaff(loginGUI.getUserID(), true));
 					break;
 				// customer
 				case (4):
@@ -190,6 +205,7 @@ public class MainGUI {
 							.println("Customer logged in, message from MainGUI");
 					// activitvitiesButton = new MenuButton("Activities");
 					optionsPanel.add(activitvitiesButton);
+					activitiesGUI.setCustomer(dbc.getCustomer(loginGUI.getUserID(),true));
 				}
 				// TODO
 				if (rank > 0 && rank < 5) {
@@ -200,6 +216,7 @@ public class MainGUI {
 					System.out
 							.println("Invalid login, from card switch this should throw exception or even popup warning later.");
 				}
+				activitiesGUI.initialize();
 			}
 		});
 	}

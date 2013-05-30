@@ -129,9 +129,6 @@ public class DAOStaff implements IFDAOStaff {
 				staff = buildStaff(results,staff);
 				stmt.close();
 				if (retrieveAssociation) {
-					// no associations
-					throw new IllegalArgumentException(
-							"No association to be retrieved from Staff table");
 				}
 			
 			}
@@ -217,6 +214,16 @@ public class DAOStaff implements IFDAOStaff {
 		if (wClause.length() > 0)
 			query = query + " WHERE " + wClause;
 		return query;
+	}
+	@Override
+	public boolean checkInstructorAvailability(Instructor instructor,
+			String date, String time) {
+		// constructing fancy query for retrieving only free activities
+		String query = " staffID = " + instructor.getPersonID() + " and staffID not in (" +
+				"	SELECT instructorID FROM InstructorHire WHERE hireDate = '" + date + "' and hireTime = '" + time +"');";
+		instructor = (Instructor) singleWhere(query, true, instructor.getPersonID());
+		if(instructor == null)return false;
+		else return true;
 	}
 
 }
