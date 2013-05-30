@@ -199,7 +199,7 @@ public class DAOActivity implements IFDAOActivity {
 				Activity activity = new Activity();
 				activity = buildActivity(results);
 				// inserts provided instructors into Activity object
-				activity.setActivityInstructors(getActivityInstructors(wClause,true));
+				activity.setActivityInstructors(getActivityInstructors(" activityID = "+ activity.getID(),true));
 				list.add(activity);
 			}
 			stmt.close();
