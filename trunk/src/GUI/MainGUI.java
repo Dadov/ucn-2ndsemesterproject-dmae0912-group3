@@ -240,6 +240,7 @@ public class MainGUI {
 				window.initialize();
 			}
 		});
+	}
 
 		// TODO, wait till/if startup error shows up again
 		// try {
@@ -249,5 +250,5 @@ public class MainGUI {
 		// | IllegalAccessException | UnsupportedLookAndFeelException e) {
 		// e.printStackTrace();
 		// }
-	}
+
 }
