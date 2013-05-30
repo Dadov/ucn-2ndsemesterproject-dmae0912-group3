@@ -438,7 +438,7 @@ public class RoomsGUI extends JPanel {
 			String dateStart = roombooking.getDateStart();
 			String dateEnd = roombooking.getDateEnd();
 			// Determining status of booking either paid or cancelled and date
-			String status = "";
+			String status;
 			if (roombooking.isCancelled()) {
 				status = "Cancelled at: " + roombooking.getDateAccounted();
 			} else if (roombooking.isPaid()) {
