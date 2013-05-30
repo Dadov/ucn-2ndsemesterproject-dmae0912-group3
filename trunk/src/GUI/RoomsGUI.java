@@ -17,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -360,12 +361,11 @@ public class RoomsGUI extends JPanel {
 			}
 		});
 		cancelBookingPanel.add(cbpButton);
-
-		/*
-		 * Manually added methods:
-		 */
-
 	}
+
+	/*
+	 * Manually added methods:
+	 */
 
 	// Fill check room availability table, triggered by using
 	// "Check Availability" button
@@ -391,23 +391,25 @@ public class RoomsGUI extends JPanel {
 
 	}
 
+	// Fill room booking table, triggered by using "Filter" button
 	private void fillRbTable() {
 		rbTableModel.getDataVector().removeAllElements();
 
 		roomsCtr = new RoomsCtr();
 		ArrayList<RoomBooking> roomBookings;
 
+		// Filtering customers room booking, first get a custID
 		int custID;
 		try {
 			custID = Integer.parseInt(rbCustIDField.getText());
 		} catch (NumberFormatException e) {
-			custID = 0;
-			System.out.println("Invalid input in CustomerID field.");
+			custID = 0; // default value used if one in field is invalid
 		}
 
+		// if custId = 0 , then get all roomBookings
 		if (custID == 0) {
-			// if custId = 0 , then get all roomBookings
 			roomBookings = roomsCtr.getAllBookings();
+			// otherwise return only ones that have given custID
 		} else {
 			roomBookings = roomsCtr.getAllBookings();
 			ArrayList<RoomBooking> custRoomBookings = new ArrayList<RoomBooking>();
@@ -416,22 +418,17 @@ public class RoomsGUI extends JPanel {
 					custRoomBookings.add(booking);
 				}
 			}
-
-			// else custID > 0, then use filter method,
-			// e.g. roomBookings.filterBookingsByCustomer(int custID);
-			// TODO need to add this method to DAORoomBooking and RoomsCtr
-			System.out.println("Reached 'else' in fillRbTable.");
 			roomBookings = custRoomBookings;
 		}
 
+		// Filling the table using filtered room bookings
 		for (RoomBooking roombooking : roomBookings) {
 			int bookingID = roombooking.getId();
 			int customerID = roombooking.getCustomer().getPersonID();
-
-			System.out.println("roomBooking object: " + roombooking.toString());
 			String fname = roombooking.getCustomer().getFname();
 			String lname = roombooking.getCustomer().getLname();
 			ArrayList<Room> rooms = roombooking.getRoomsBooked();
+			// constructing String out of all rooms booked numbers
 			String roomsBooked = "";
 			for (Room room : rooms) {
 				roomsBooked = roomsBooked + room.getNumber() + ", ";
@@ -447,7 +444,7 @@ public class RoomsGUI extends JPanel {
 
 	}
 
-	// Creates entries for booking a room for given customer
+	// Creates entries for booking a room for given customer, room and dates
 	private void bookRooms() {
 		roomsCtr = new RoomsCtr();
 		customersCtr = new CustomersCtr();
@@ -456,6 +453,7 @@ public class RoomsGUI extends JPanel {
 				.parseInt(brCustomerIdTextField.getText()));
 
 		ArrayList<Room> rooms = new ArrayList<Room>();
+		// String out of Room numbers, whitespace and commas
 		String roomNumbersInput = brRoomNumField.getText();
 		// remove whitespace
 		roomNumbersInput.replaceAll("\\s", "");
@@ -464,7 +462,7 @@ public class RoomsGUI extends JPanel {
 		for (int i = 0; i < roomNumbers.length; i++) {
 			rooms.add(roomsCtr.findRoom(Integer.parseInt(roomNumbers[i])));
 		}
-
+		// Formatting date for input
 		String bookDate = new SimpleDateFormat("dd-MM-yyyy").format(Calendar
 				.getInstance().getTime());
 		String startDate = brStartDateTextField.getText();
@@ -474,8 +472,9 @@ public class RoomsGUI extends JPanel {
 			roomsCtr.newRoomBooking(customer, rooms, bookDate, startDate,
 					endDate);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, e.getMessage(),
+					"Invalid dates", JOptionPane.ERROR_MESSAGE);
+			// e.printStackTrace();
 		}
 
 		// 'refreshing' the table, maybe should add some popup
@@ -485,25 +484,34 @@ public class RoomsGUI extends JPanel {
 	// functionality moved to fillRbTable
 	@SuppressWarnings("unused")
 	private void filterRbByCustomer() {
-		// TODO delete
-		// String custStr = rbCustIDField.getText();
-		// System.out.println("Customer string: " + custStr);
-		// if (custStr.equals(null)) {
-		// fillRbTable();
-		// } else {
-		// int custID = Integer.parseInt(custStr);
-		// }
+
 	}
 
-	@SuppressWarnings("unused")
-	// unused because of return 'rc' value
-	// Deletes RoomBooking and associated RoomsBooked
 	private void cancelRoomBooking() {
-		// TODO not usage of return values 'rc' yet
 		roomsCtr = new RoomsCtr();
 
+		// get Room Booking to be updated
 		int id = Integer.parseInt(cbpTextField.getText());
-		int rc = roomsCtr.deleteBooking(id);
+		RoomBooking roomBooking = roomsCtr.findBooking(id);
+		// get current date
+		String cancellDate = new SimpleDateFormat("dd-MM-yyyy").format(Calendar
+				.getInstance().getTime());
+		// update booking record, marking it cancelled with current date
+		roomBooking.setDateAccounted(cancellDate);
+		roomBooking.setCancelled(true);
+
+		int rc = roomsCtr.updateRoomBooking(roomBooking);
+
+		if (rc > 0) {
+			JOptionPane.showMessageDialog(null, "Booking number " + id
+					+ " was cancelled", "Booking cancellation",
+					JOptionPane.INFORMATION_MESSAGE);
+		} else {
+			JOptionPane.showMessageDialog(null, "Booking number " + id
+					+ " did not exist", "Booking cancellation",
+					JOptionPane.ERROR_MESSAGE);
+		}
+
 		// 'refreshing' the table, maybe should add some popup
 		fillRbTable();
 	}

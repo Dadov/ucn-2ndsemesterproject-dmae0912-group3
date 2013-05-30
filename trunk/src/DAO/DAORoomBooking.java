@@ -94,18 +94,24 @@ public class DAORoomBooking implements IFDAORoomBooking {
 
        return rc; //returns the row count to controller;
 	}
-
+	
 	@Override
 	public int update(RoomBooking roomBooking) {
 		int rc = -1; //row count, it is set to -1, to guarantee nothing will happen, in case the method fails to fulfill the task;
 		
+		int paid = (roomBooking.isPaid() == true) ? 1 : 0;
+		int cancelled = (roomBooking.isCancelled() == true) ? 1 : 0;
+		
 		//creates update data query;
 		String query = "SET DATEFORMAT dmy;"+ 
 				"UPDATE RoomBooking SET " +
-				"customerID = " + roomBooking.getCustomer().getPersonID() + "," +
-				"dateStart = '" + roomBooking.getDateStart() + "'," +
-				"dateEnd = '" + roomBooking.getDateEnd() + "'," +
-				"dateBooked = '" + roomBooking.getDateBooked() + "'" +
+				"customerID = " + roomBooking.getCustomer().getPersonID() + ", " +
+				"dateStart = '" + roomBooking.getDateStart() + "', " +
+				"dateEnd = '" + roomBooking.getDateEnd() + "', " +
+				"dateBooked = '" + roomBooking.getDateBooked() + "', " +
+				"dateAccounted = '" + roomBooking.getDateAccounted() + "', " +
+				"paid = " + paid + ", " +
+				"cancelled = " + cancelled +
 				" WHERE bookingID = " + roomBooking.getId() + ";";
 		
 		System.out.println("Update query : " + query);
@@ -284,6 +290,9 @@ public class DAORoomBooking implements IFDAORoomBooking {
 			roomBooking.setDateStart(results.getString("dateStart"));
 			roomBooking.setDateEnd(results.getString("dateEnd"));
 			roomBooking.setDateBooked(results.getString("dateBooked"));
+			roomBooking.setDateAccounted(results.getString("dateAccounted"));
+			roomBooking.setPaid(results.getBoolean("paid"));
+			roomBooking.setCancelled(results.getBoolean("cancelled"));
 			cust.setPersonID(results.getInt("customerID"));
 						
 		}
@@ -295,7 +304,9 @@ public class DAORoomBooking implements IFDAORoomBooking {
 	
 
 	private String buildBookingQuery(String wClause) {
-			String query = "SET DATEFORMAT dmy;" + " SELECT bookingID, customerID, dateStart, dateEnd, dateBooked FROM RoomBooking"; //query statement that will be executed;
+		// query statement that will be executed;
+		String query = "SET DATEFORMAT dmy;"
+				+ " SELECT bookingID, customerID, dateStart, dateEnd, dateBooked, dateAccounted, paid, cancelled FROM RoomBooking";
 		    if (wClause.length()>0) {
 				query = query+" WHERE "+ wClause; //this query will retrieve that RoomBooking's instance data, which fulfils a specified condition;
 			}
