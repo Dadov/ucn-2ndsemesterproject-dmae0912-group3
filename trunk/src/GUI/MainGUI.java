@@ -101,22 +101,25 @@ public class MainGUI {
 		contentPanel.setLayout(new CardLayout(0, 0));
 
 		// TODO
-		activitiesGUI = new ActivitiesGUI();
-		contentPanel.add(activitiesGUI, "ActivitiesGUI");
-
-		customersGUI = new CustomersGUI();
-		contentPanel.add(customersGUI, "CustomersGUI");
-
-		roomsGUI = new RoomsGUI();
-		contentPanel.add(roomsGUI, "RoomsGUI");
-
-		staffGUI = new StaffGUI();
-		contentPanel.add(staffGUI, "StaffGUI");
+		// activitiesGUI = new ActivitiesGUI();
+		// contentPanel.add(activitiesGUI, "ActivitiesGUI");
+		//
+		// customersGUI = new CustomersGUI();
+		// contentPanel.add(customersGUI, "CustomersGUI");
+		//
+		// roomsGUI = new RoomsGUI();
+		// contentPanel.add(roomsGUI, "RoomsGUI");
+		//
+		// staffGUI = new StaffGUI();
+		// contentPanel.add(staffGUI, "StaffGUI");
 
 		activitvitiesButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// activitiesGUI = new ActivitiesGUI();
-				// contentPanel.add(activitiesGUI, "ActivitiesGUI");
+				activitiesGUI = new ActivitiesGUI();
+				// setting userID
+				activitiesGUI.setUserID(loginGUI.getUserID());
+				contentPanel.add(activitiesGUI, "ActivitiesGUI");
+				System.out.println("Logged user ID: " + loginGUI.getUserID());
 				CardLayout cl = (CardLayout) contentPanel.getLayout();
 				cl.show(contentPanel, "ActivitiesGUI");
 				// activitiesGUI.initialize();
@@ -125,8 +128,8 @@ public class MainGUI {
 
 		customersButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// customersGUI = new CustomersGUI();
-				// contentPanel.add(customersGUI, "CustomersGUI");
+				customersGUI = new CustomersGUI();
+				contentPanel.add(customersGUI, "CustomersGUI");
 				CardLayout cl = (CardLayout) contentPanel.getLayout();
 				cl.show(contentPanel, "CustomersGUI");
 				// customersGUI.initialize();
@@ -135,8 +138,8 @@ public class MainGUI {
 
 		roomsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// roomsGUI = new RoomsGUI();
-				// contentPanel.add(roomsGUI, "RoomsGUI");
+				roomsGUI = new RoomsGUI();
+				contentPanel.add(roomsGUI, "RoomsGUI");
 				CardLayout cl = (CardLayout) contentPanel.getLayout();
 				cl.show(contentPanel, "RoomsGUI");
 				// roomsGUI.initialize();
@@ -145,8 +148,8 @@ public class MainGUI {
 
 		staffButtom.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// staffGUI = new StaffGUI();
-				// contentPanel.add(staffGUI, "StaffGUI");
+				staffGUI = new StaffGUI();
+				contentPanel.add(staffGUI, "StaffGUI");
 				CardLayout cl = (CardLayout) contentPanel.getLayout();
 				cl.show(contentPanel, "StaffGUI");
 				// staffGUI.initialize();
@@ -155,14 +158,15 @@ public class MainGUI {
 
 		logoutButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				CardLayout cl = (CardLayout) (frame.getContentPane()
-						.getLayout());
-				cl.show(frame.getContentPane(), "Login Wrapper");
 				optionsPanel.removeAll();
+				contentPanel.removeAll();
 				activitiesGUI = null;
 				customersGUI = null;
 				roomsGUI = null;
 				staffGUI = null;
+				CardLayout cl = (CardLayout) (frame.getContentPane()
+						.getLayout());
+				cl.show(frame.getContentPane(), "Login Wrapper");
 			}
 		});
 
@@ -197,21 +201,21 @@ public class MainGUI {
 	private void login() {
 		
 		// TODO
-		activitiesGUI = new ActivitiesGUI();
-		contentPanel.add(activitiesGUI, "ActivitiesGUI");
+		// activitiesGUI = new ActivitiesGUI();
+		// contentPanel.add(activitiesGUI, "ActivitiesGUI");
 
-		customersGUI = new CustomersGUI();
-		contentPanel.add(customersGUI, "CustomersGUI");
-
-		roomsGUI = new RoomsGUI();
-		contentPanel.add(roomsGUI, "RoomsGUI");
-
-		staffGUI = new StaffGUI();
-		contentPanel.add(staffGUI, "StaffGUI");
+		// customersGUI = new CustomersGUI();
+		// contentPanel.add(customersGUI, "CustomersGUI");
+		//
+		// roomsGUI = new RoomsGUI();
+		// contentPanel.add(roomsGUI, "RoomsGUI");
+		//
+		// staffGUI = new StaffGUI();
+		// contentPanel.add(staffGUI, "StaffGUI");
 
 		// set user ID for activities GUI
-		activitiesGUI.setUserID(loginGUI.getUserID());
-		System.out.println("Logged user ID: " + loginGUI.getUserID());
+		// activitiesGUI.setUserID(loginGUI.getUserID());
+
 		// perform login and set 'rank' of logged in user to restrict amount of
 		// functionality available
 		int rank = loginGUI.login();
