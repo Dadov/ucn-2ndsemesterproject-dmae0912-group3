@@ -10,6 +10,7 @@ import java.util.Arrays;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -112,8 +113,17 @@ public class LoginGUI extends JPanel {
 	}
 
 	public int login() {
-		int ID = Integer.parseInt(loginID.getText());
-		char[] password = loginPassword.getPassword();
+		int ID = 0;
+		char[] password = null;
+
+		try {
+			ID = Integer.parseInt(loginID.getText());
+			password = loginPassword.getPassword();
+		} catch (NumberFormatException e1) {
+			JOptionPane.showMessageDialog(null,
+					"Invlaid username and password.", "Login Failed",
+					JOptionPane.INFORMATION_MESSAGE);
+		}
 		int rank = 0;
 
 		try {
