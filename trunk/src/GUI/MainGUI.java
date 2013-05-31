@@ -83,7 +83,6 @@ public class MainGUI {
 		optionsBorder.add(optionsPanel);
 		optionsPanel.setPreferredSize(new Dimension(150, 515));
 
-		// TODO moving buttons up so can work with them generally
 		activitvitiesButton = new MenuButton("Activities");
 		customersButton = new MenuButton("Customers");
 		roomsButton = new MenuButton("Rooms");
@@ -100,59 +99,50 @@ public class MainGUI {
 		contentPanel.setPreferredSize(new Dimension(780, 535));
 		contentPanel.setLayout(new CardLayout(0, 0));
 
-		// TODO
-		// activitiesGUI = new ActivitiesGUI();
-		// contentPanel.add(activitiesGUI, "ActivitiesGUI");
-		//
-		// customersGUI = new CustomersGUI();
-		// contentPanel.add(customersGUI, "CustomersGUI");
-		//
-		// roomsGUI = new RoomsGUI();
-		// contentPanel.add(roomsGUI, "RoomsGUI");
-		//
-		// staffGUI = new StaffGUI();
-		// contentPanel.add(staffGUI, "StaffGUI");
-
 		activitvitiesButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				activitiesGUI = new ActivitiesGUI();
-				// setting userID
-				activitiesGUI.setUserID(loginGUI.getUserID());
-				contentPanel.add(activitiesGUI, "ActivitiesGUI");
 				System.out.println("Logged user ID: " + loginGUI.getUserID());
 				CardLayout cl = (CardLayout) contentPanel.getLayout();
 				cl.show(contentPanel, "ActivitiesGUI");
-				// activitiesGUI.initialize();
 			}
 		});
 
 		customersButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				customersGUI = new CustomersGUI();
-				contentPanel.add(customersGUI, "CustomersGUI");
+				;
 				CardLayout cl = (CardLayout) contentPanel.getLayout();
 				cl.show(contentPanel, "CustomersGUI");
-				// customersGUI.initialize();
 			}
 		});
 
 		roomsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				roomsGUI = new RoomsGUI();
-				contentPanel.add(roomsGUI, "RoomsGUI");
 				CardLayout cl = (CardLayout) contentPanel.getLayout();
 				cl.show(contentPanel, "RoomsGUI");
-				// roomsGUI.initialize();
 			}
 		});
 
 		staffButtom.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				staffGUI = new StaffGUI();
-				contentPanel.add(staffGUI, "StaffGUI");
 				CardLayout cl = (CardLayout) contentPanel.getLayout();
 				cl.show(contentPanel, "StaffGUI");
-				// staffGUI.initialize();
+			}
+		});
+
+		loginGUI.loginButton().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				activitiesGUI = new ActivitiesGUI();
+				contentPanel.add(activitiesGUI, "ActivitiesGUI");
+
+				customersGUI = new CustomersGUI();
+				contentPanel.add(customersGUI, "CustomersGUI");
+
+				roomsGUI = new RoomsGUI();
+				contentPanel.add(roomsGUI, "RoomsGUI");
+
+				staffGUI = new StaffGUI();
+				contentPanel.add(staffGUI, "StaffGUI");
+				login();
 			}
 		});
 
@@ -170,11 +160,6 @@ public class MainGUI {
 			}
 		});
 
-		loginGUI.loginButton().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				login();
-				}
-		});
 	}
 
 	public static void main(String[] args) {
@@ -199,30 +184,10 @@ public class MainGUI {
 	}
 
 	private void login() {
-		
-		// TODO
-		// activitiesGUI = new ActivitiesGUI();
-		// contentPanel.add(activitiesGUI, "ActivitiesGUI");
-
-		// customersGUI = new CustomersGUI();
-		// contentPanel.add(customersGUI, "CustomersGUI");
-		//
-		// roomsGUI = new RoomsGUI();
-		// contentPanel.add(roomsGUI, "RoomsGUI");
-		//
-		// staffGUI = new StaffGUI();
-		// contentPanel.add(staffGUI, "StaffGUI");
-
-		// set user ID for activities GUI
-		// activitiesGUI.setUserID(loginGUI.getUserID());
-
 		// perform login and set 'rank' of logged in user to restrict amount of
 		// functionality available
+		activitiesGUI.setUserID(loginGUI.getUserID());
 		int rank = loginGUI.login();
-		// IFDAOCustomer dbc = new DAOCustomer();
-		// IFDAOStaff dbs = new DAOStaff();
-
-
 
 		// int rank = 1;
 
@@ -236,46 +201,29 @@ public class MainGUI {
 		// manager
 		case (1):
 			System.out.println("Manager logged in, message from MainGUI");
-			// activitvitiesButton = new MenuButton("Activities");
-			// customersButton = new MenuButton("Customers");
-			// roomsButton = new MenuButton("Rooms");
-			// staffButtom = new MenuButton("Staff");
 			optionsPanel.add(activitvitiesButton);
 			optionsPanel.add(customersButton);
 			optionsPanel.add(roomsButton);
 			optionsPanel.add(staffButtom);
-			// activitiesGUI.setManager((Manager)
-			// dbs.getStaff(loginGUI.getUserID(), true));
 			break;
 		// receptionist / secretary
 		case (2):
 			System.out
 					.println("Receptionist/Secretary logged in, message from MainGUI");
-			// activitvitiesButton = new MenuButton("Activities");
-			// customersButton = new MenuButton("Customers");
-			// roomsButton = new MenuButton("Rooms");
 			optionsPanel.add(activitvitiesButton);
 			optionsPanel.add(customersButton);
 			optionsPanel.add(roomsButton);
-			// activitiesGUI.setOtherStaff(dbs.getStaff(loginGUI.getUserID(),
-			// true));
 			break;
 		// instructor
 		case (3):
 			System.out.println("Instructor logged in, message from MainGUI");
-			// activitvitiesButton = new MenuButton("Activities");
-			// customersButton = new MenuButton("Customers");
 			optionsPanel.add(activitvitiesButton);
 			optionsPanel.add(customersButton);
-			// activitiesGUI.setInstructor((Instructor)
-			// dbs.getStaff(loginGUI.getUserID(), true));
 			break;
 		// customer
 		case (4):
 			System.out.println("Customer logged in, message from MainGUI");
-			// activitvitiesButton = new MenuButton("Activities");
 			optionsPanel.add(activitvitiesButton);
-			// activitiesGUI.setCustomer(dbc.getCustomer(loginGUI.getUserID(),true));
 		}
 		optionsPanel.add(logoutButton);
 		// if rank is in range 1 - 4 show contentPane
