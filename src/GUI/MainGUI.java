@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -32,6 +33,7 @@ public class MainGUI {
 	private JButton customersButton;
 	private JButton roomsButton;
 	private JButton staffButtom;
+	private JButton logoutButton;
 	private ActivitiesGUI activitiesGUI;
 	private CustomersGUI customersGUI;
 	private RoomsGUI roomsGUI;
@@ -63,7 +65,7 @@ public class MainGUI {
 		frame.setVisible(true);
 
 		loginWrapper = new JPanel();
-		frame.getContentPane().add(loginWrapper, "name_8641309153887");
+		frame.getContentPane().add(loginWrapper, "Login Wrapper");
 		loginWrapper.setLayout(new BorderLayout(0, 0));
 
 		loginGUI = new LoginGUI();
@@ -76,7 +78,7 @@ public class MainGUI {
 		// case/switch depending on who's logged in add specific GUI parts, eg.
 		// customer sees on Activities
 		// and managers sees everything
-		frame.getContentPane().add(menuWrapper, "name_10074865581856");
+		frame.getContentPane().add(menuWrapper, "Menu Wrapper");
 
 		optionsBorder = new JPanel();
 		optionsBorder.setBorder(new TitledBorder(UIManager
@@ -93,6 +95,7 @@ public class MainGUI {
 		customersButton = new MenuButton("Customers");
 		roomsButton = new MenuButton("Rooms");
 		staffButtom = new MenuButton("Staff");
+		logoutButton = new MenuButton("Logout");
 
 		contentBorder = new JPanel();
 		contentBorder.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null,
@@ -120,6 +123,7 @@ public class MainGUI {
 			public void actionPerformed(ActionEvent e) {
 				CardLayout cl = (CardLayout) contentPanel.getLayout();
 				cl.show(contentPanel, "ActivitiesGUI");
+				activitiesGUI.initialize();
 			}
 		});
 
@@ -127,6 +131,7 @@ public class MainGUI {
 			public void actionPerformed(ActionEvent e) {
 				CardLayout cl = (CardLayout) contentPanel.getLayout();
 				cl.show(contentPanel, "CustomersGUI");
+				customersGUI.initialize();
 			}
 		});
 
@@ -134,6 +139,7 @@ public class MainGUI {
 			public void actionPerformed(ActionEvent e) {
 				CardLayout cl = (CardLayout) contentPanel.getLayout();
 				cl.show(contentPanel, "RoomsGUI");
+				roomsGUI.initialize();
 			}
 		});
 
@@ -141,83 +147,23 @@ public class MainGUI {
 			public void actionPerformed(ActionEvent e) {
 				CardLayout cl = (CardLayout) contentPanel.getLayout();
 				cl.show(contentPanel, "StaffGUI");
+				staffGUI.initialize();
+			}
+		});
+
+		logoutButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CardLayout cl = (CardLayout) (frame.getContentPane()
+						.getLayout());
+				cl.show(frame.getContentPane(), "Login Wrapper");
+				optionsPanel.removeAll();
 			}
 		});
 
 		loginGUI.loginButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//int rank = loginGUI.login();
-				IFDAOCustomer dbc = new DAOCustomer();
-				IFDAOStaff dbs = new DAOStaff();
-				
-				 
-				 
-				// System.out.println("Logged user ID: " +
-				// loginGUI.getUserID());
-				
-				int rank = 1;
-
-				switch (rank) {
-				// TODO invalid login, avoid doing anything
-				case (0):
-					System.out
-							.println("Invalid login, Error message from MainGUI");
-					break;
-				// manager
-				case (1):
-					System.out
-							.println("Manager logged in, message from MainGUI");
-					// activitvitiesButton = new MenuButton("Activities");
-					// customersButton = new MenuButton("Customers");
-					// roomsButton = new MenuButton("Rooms");
-					// staffButtom = new MenuButton("Staff");
-					optionsPanel.add(activitvitiesButton);
-					optionsPanel.add(customersButton);
-					optionsPanel.add(roomsButton);
-					optionsPanel.add(staffButtom);
-					//activitiesGUI.setManager((Manager) dbs.getStaff(loginGUI.getUserID(), true));
-					break;
-				// receptionist / secretary
-				case (2):
-					System.out
-							.println("Receptionist/Secretary logged in, message from MainGUI");
-					// activitvitiesButton = new MenuButton("Activities");
-					// customersButton = new MenuButton("Customers");
-					// roomsButton = new MenuButton("Rooms");
-					optionsPanel.add(activitvitiesButton);
-					optionsPanel.add(customersButton);
-					optionsPanel.add(roomsButton);
-					//activitiesGUI.setOtherStaff(dbs.getStaff(loginGUI.getUserID(), true));
-					break;
-				// instructor
-				case (3):
-					System.out
-							.println("Instructor logged in, message from MainGUI");
-					// activitvitiesButton = new MenuButton("Activities");
-					// customersButton = new MenuButton("Customers");
-					optionsPanel.add(activitvitiesButton);
-					optionsPanel.add(customersButton);
-					//activitiesGUI.setInstructor((Instructor) dbs.getStaff(loginGUI.getUserID(), true));
-					break;
-				// customer
-				case (4):
-					System.out
-							.println("Customer logged in, message from MainGUI");
-					// activitvitiesButton = new MenuButton("Activities");
-					optionsPanel.add(activitvitiesButton);
-					//activitiesGUI.setCustomer(dbc.getCustomer(loginGUI.getUserID(),true));
+				login();
 				}
-				// TODO
-				if (rank > 0 && rank < 5) {
-					CardLayout cl = (CardLayout) (frame.getContentPane()
-							.getLayout());
-					cl.show(frame.getContentPane(), "name_10074865581856");
-				} else {
-					System.out
-							.println("Invalid login, from card switch this should throw exception or even popup warning later.");
-				}
-				activitiesGUI.initialize();
-			}
 		});
 	}
 
@@ -242,13 +188,77 @@ public class MainGUI {
 		});
 	}
 
-		// TODO, wait till/if startup error shows up again
-		// try {
-		// UIManager
-		// .setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-		// } catch (ClassNotFoundException | InstantiationException
-		// | IllegalAccessException | UnsupportedLookAndFeelException e) {
-		// e.printStackTrace();
-		// }
+	private void login() {
+		// set user ID for activities GUI
+		activitiesGUI.setUserID(loginGUI.getUserID());
+		System.out.println("Logged user ID: " + loginGUI.getUserID());
+		// perform login and set 'rank' of logged in user to restrict amount of
+		// functionality available
+		int rank = loginGUI.login();
+		// IFDAOCustomer dbc = new DAOCustomer();
+		// IFDAOStaff dbs = new DAOStaff();
+
+
+
+		// int rank = 1;
+
+		switch (rank) {
+		// 0 = invalid login, avoid doing anything
+		case (0):
+			JOptionPane.showMessageDialog(null,
+					"Invlaid username and password.", "Login Failed",
+					JOptionPane.INFORMATION_MESSAGE);
+			break;
+		// manager
+		case (1):
+			System.out.println("Manager logged in, message from MainGUI");
+			// activitvitiesButton = new MenuButton("Activities");
+			// customersButton = new MenuButton("Customers");
+			// roomsButton = new MenuButton("Rooms");
+			// staffButtom = new MenuButton("Staff");
+			optionsPanel.add(activitvitiesButton);
+			optionsPanel.add(customersButton);
+			optionsPanel.add(roomsButton);
+			optionsPanel.add(staffButtom);
+			// activitiesGUI.setManager((Manager)
+			// dbs.getStaff(loginGUI.getUserID(), true));
+			break;
+		// receptionist / secretary
+		case (2):
+			System.out
+					.println("Receptionist/Secretary logged in, message from MainGUI");
+			// activitvitiesButton = new MenuButton("Activities");
+			// customersButton = new MenuButton("Customers");
+			// roomsButton = new MenuButton("Rooms");
+			optionsPanel.add(activitvitiesButton);
+			optionsPanel.add(customersButton);
+			optionsPanel.add(roomsButton);
+			// activitiesGUI.setOtherStaff(dbs.getStaff(loginGUI.getUserID(),
+			// true));
+			break;
+		// instructor
+		case (3):
+			System.out.println("Instructor logged in, message from MainGUI");
+			// activitvitiesButton = new MenuButton("Activities");
+			// customersButton = new MenuButton("Customers");
+			optionsPanel.add(activitvitiesButton);
+			optionsPanel.add(customersButton);
+			// activitiesGUI.setInstructor((Instructor)
+			// dbs.getStaff(loginGUI.getUserID(), true));
+			break;
+		// customer
+		case (4):
+			System.out.println("Customer logged in, message from MainGUI");
+			// activitvitiesButton = new MenuButton("Activities");
+			optionsPanel.add(activitvitiesButton);
+			// activitiesGUI.setCustomer(dbc.getCustomer(loginGUI.getUserID(),true));
+		}
+		optionsPanel.add(logoutButton);
+		// if rank is in range 1 - 4 show contentPane
+		if (rank > 0 && rank < 5) {
+			CardLayout cl = (CardLayout) (frame.getContentPane().getLayout());
+			cl.show(frame.getContentPane(), "Menu Wrapper");
+		}
+	}
 
 }
