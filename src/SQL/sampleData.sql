@@ -21,3 +21,9 @@ INSERT INTO RoomBooking(customerID, dateStart, dateEnd, dateBooked)
 
 INSERT INTO RoomsBooked(roomBookingID, roomNumber)
 	VALUES (1, 1);
+
+INSERT INTO Person(CPR, fname, lname, address, locationZIP, country, email, password, personType)
+	VALUES('987654-3210','Alah','Agbar','Boulevarden 55','9000','Denmark','noone@nomail.dk', 'pass', 'Manager');
+INSERT INTO Staff(staffID, salary, staffType)
+	VALUES((SELECT IDENT_CURRENT('Person')), 15000, 'Manager');
+
