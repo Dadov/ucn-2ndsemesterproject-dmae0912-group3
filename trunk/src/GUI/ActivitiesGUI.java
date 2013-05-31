@@ -96,6 +96,10 @@ public class ActivitiesGUI extends JPanel {
 	@SuppressWarnings("unused")
 	private Staff s1;
 
+	public ActivitiesGUI() {
+		initialize();
+	}
+
 	public int getUserID() {
 		return userID;
 	}
@@ -1105,9 +1109,7 @@ public class ActivitiesGUI extends JPanel {
 
 		showAllBookings();
 	}
-	public ActivitiesGUI() {
-		
-	}
+
 	protected void showInstructorCreate() {
 		try {
 			int bookID;

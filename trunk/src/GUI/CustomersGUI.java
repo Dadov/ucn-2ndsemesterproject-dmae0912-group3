@@ -78,7 +78,7 @@ public class CustomersGUI extends JPanel {
 	private DefaultTableModel custBillinstHireTableModel;
 
 	public CustomersGUI() {
-
+		initialize();
 	}
 
 	public void initialize() {

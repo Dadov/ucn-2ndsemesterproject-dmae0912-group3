@@ -86,7 +86,7 @@ public class RoomsGUI extends JPanel {
 	private JTabbedPane roomsTabbedPane;
 
 	public RoomsGUI() {
-
+		initialize();
 	}
 
 	public void initialize() {

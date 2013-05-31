@@ -18,7 +18,6 @@ import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
 import Controllers.CustomersCtr;
-import Controllers.PersonCtr;
 import Controllers.StaffCtr;
 import Models.Customer;
 import Models.Instructor;

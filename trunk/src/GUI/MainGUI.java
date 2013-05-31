@@ -17,13 +17,6 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import DAO.DAOCustomer;
-import DAO.DAOStaff;
-import DAO.IFDAOCustomer;
-import DAO.IFDAOStaff;
-import Models.Instructor;
-import Models.Manager;
-
 public class MainGUI {
 	private JFrame frame;
 	private JPanel menuWrapper;
@@ -107,6 +100,7 @@ public class MainGUI {
 		contentPanel.setPreferredSize(new Dimension(780, 535));
 		contentPanel.setLayout(new CardLayout(0, 0));
 
+		// TODO
 		activitiesGUI = new ActivitiesGUI();
 		contentPanel.add(activitiesGUI, "ActivitiesGUI");
 
@@ -121,33 +115,41 @@ public class MainGUI {
 
 		activitvitiesButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// activitiesGUI = new ActivitiesGUI();
+				// contentPanel.add(activitiesGUI, "ActivitiesGUI");
 				CardLayout cl = (CardLayout) contentPanel.getLayout();
 				cl.show(contentPanel, "ActivitiesGUI");
-				activitiesGUI.initialize();
+				// activitiesGUI.initialize();
 			}
 		});
 
 		customersButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// customersGUI = new CustomersGUI();
+				// contentPanel.add(customersGUI, "CustomersGUI");
 				CardLayout cl = (CardLayout) contentPanel.getLayout();
 				cl.show(contentPanel, "CustomersGUI");
-				customersGUI.initialize();
+				// customersGUI.initialize();
 			}
 		});
 
 		roomsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// roomsGUI = new RoomsGUI();
+				// contentPanel.add(roomsGUI, "RoomsGUI");
 				CardLayout cl = (CardLayout) contentPanel.getLayout();
 				cl.show(contentPanel, "RoomsGUI");
-				roomsGUI.initialize();
+				// roomsGUI.initialize();
 			}
 		});
 
 		staffButtom.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// staffGUI = new StaffGUI();
+				// contentPanel.add(staffGUI, "StaffGUI");
 				CardLayout cl = (CardLayout) contentPanel.getLayout();
 				cl.show(contentPanel, "StaffGUI");
-				staffGUI.initialize();
+				// staffGUI.initialize();
 			}
 		});
 
@@ -157,6 +159,10 @@ public class MainGUI {
 						.getLayout());
 				cl.show(frame.getContentPane(), "Login Wrapper");
 				optionsPanel.removeAll();
+				activitiesGUI = null;
+				customersGUI = null;
+				roomsGUI = null;
+				staffGUI = null;
 			}
 		});
 
@@ -189,6 +195,20 @@ public class MainGUI {
 	}
 
 	private void login() {
+		
+		// TODO
+		activitiesGUI = new ActivitiesGUI();
+		contentPanel.add(activitiesGUI, "ActivitiesGUI");
+
+		customersGUI = new CustomersGUI();
+		contentPanel.add(customersGUI, "CustomersGUI");
+
+		roomsGUI = new RoomsGUI();
+		contentPanel.add(roomsGUI, "RoomsGUI");
+
+		staffGUI = new StaffGUI();
+		contentPanel.add(staffGUI, "StaffGUI");
+
 		// set user ID for activities GUI
 		activitiesGUI.setUserID(loginGUI.getUserID());
 		System.out.println("Logged user ID: " + loginGUI.getUserID());
