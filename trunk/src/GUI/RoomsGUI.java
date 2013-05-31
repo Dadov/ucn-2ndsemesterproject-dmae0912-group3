@@ -86,6 +86,10 @@ public class RoomsGUI extends JPanel {
 	private JTabbedPane roomsTabbedPane;
 
 	public RoomsGUI() {
+
+	}
+
+	public void initialize() {
 		setPreferredSize(new Dimension(780, 535));
 
 		roomsWrapper = new JPanel();

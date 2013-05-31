@@ -79,6 +79,9 @@ public class CustomersGUI extends JPanel {
 
 	public CustomersGUI() {
 
+	}
+
+	public void initialize() {
 		customersWrapper = new JPanel();
 		customersWrapper.setPreferredSize(new Dimension(780, 535));
 		add(customersWrapper);
@@ -266,7 +269,7 @@ public class CustomersGUI extends JPanel {
 		custBillinstHireTable.setPreferredScrollableViewportSize(new Dimension(
 				750, 340));
 		custBillinstHireTableModel = new DefaultTableModel(new Object[][] {},
-				new String[] { "Activity Reservation ID", "Customer ID",
+				new String[] { "Instructor Hire ID", "Customer ID",
 						"First Name",
 						"Last Name", "Address", "Total Price", "Status" });
 		custBillinstHireTable.setModel(custBillinstHireTableModel);
@@ -278,7 +281,7 @@ public class CustomersGUI extends JPanel {
 		lowerBillInstructorsWrap = new JPanel();
 		billInstructors.add(lowerBillInstructorsWrap, BorderLayout.SOUTH);
 	}
-	
+
 	/*
 	 * Manually added methods
 	 */
