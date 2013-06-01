@@ -98,7 +98,6 @@ public class ActivitiesGUI extends JPanel {
 	private Staff s1;
 
 	public ActivitiesGUI() {
-		initialize();
 	}
 
 	public int getUserID() {
@@ -128,10 +127,20 @@ public class ActivitiesGUI extends JPanel {
 		activities = new ArrayList<Activity>();
 		custCtr = new CustomersCtr();
 		staffCtr = new StaffCtr();
-			c1 = custCtr.getCustomer(userID);
+			try{
+				c1 = custCtr.getCustomer(userID);
+			}catch(Exception e){}
+			try{
 			i1 = (Instructor) staffCtr.getEmployee(userID);
+			}
+			catch(Exception e){}
+			try{
 			m1 = (Manager) staffCtr.getEmployee(userID);
-			if(m1==null&&i1==null)s1 = staffCtr.getEmployee(userID);
+			}catch(Exception e){}
+			try{
+				if(m1==null&&i1==null)s1 = staffCtr.getEmployee(userID);
+			}
+			catch(Exception e){}
 
 		activitiesWrapper = new JPanel();
 		activitiesWrapper.setPreferredSize(new Dimension(780, 535));
