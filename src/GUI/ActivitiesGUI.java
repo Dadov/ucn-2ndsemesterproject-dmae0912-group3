@@ -5,6 +5,7 @@ import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
@@ -57,6 +58,7 @@ public class ActivitiesGUI extends JPanel {
 	private JTable table;
 	private ActivitiesCtr actCtr;
 	private CustomersCtr custCtr;
+	private StaffCtr staffCtr;
 	private ArrayList<ActivityBooking> bookings;
 	private ArrayList<InstructorHire> hires;
 	private DefaultTableModel dtmActivityBooking;
@@ -91,7 +93,6 @@ public class ActivitiesGUI extends JPanel {
 	private JTextField createHireTimeField;
 
 	private int userID;
-	@SuppressWarnings("unused")
 	private Manager m1;
 	@SuppressWarnings("unused")
 	private Staff s1;
@@ -126,6 +127,11 @@ public class ActivitiesGUI extends JPanel {
 		hires = new ArrayList<InstructorHire>();
 		activities = new ArrayList<Activity>();
 		custCtr = new CustomersCtr();
+		staffCtr = new StaffCtr();
+			c1 = custCtr.getCustomer(userID);
+			i1 = (Instructor) staffCtr.getEmployee(userID);
+			m1 = (Manager) staffCtr.getEmployee(userID);
+			if(m1==null&&i1==null)s1 = staffCtr.getEmployee(userID);
 
 		activitiesWrapper = new JPanel();
 		activitiesWrapper.setPreferredSize(new Dimension(780, 535));
@@ -171,6 +177,7 @@ public class ActivitiesGUI extends JPanel {
 				Customer customer = null;
 				int id = 0;
 				int actId = 0;
+				int number = 0;
 				ActivityBooking actBook = null;
 				try {
 					actId = (int) table.getModel().getValueAt(
@@ -182,6 +189,12 @@ public class ActivitiesGUI extends JPanel {
 					customer = custCtr.getCustomer(id);}
 					else customer = c1;
 					customer.getPersonID();
+					for(ActivityBooking ab: bookings){
+						for(Customer c: ab.getCustomers()){
+						if(customer.getPersonID()==c.getPersonID()&&actBook.getActivityTime().getDate().equals(ab.getActivityTime().getDate()))number  = number +1;
+						}
+					}
+						if(number<4){
 					if (actBook.getCustomers().size() < actBook.getActivity()
 							.getCapacity()) {
 						actBook.getCustomers().add(customer);
@@ -196,9 +209,15 @@ public class ActivitiesGUI extends JPanel {
 												.getActivityType().name(),
 								"Message", 1);
 					}
+					else JOptionPane.showMessageDialog(activitiesWrapper,
+							"This activity is full!", "Message", 1);
+					}
+					else JOptionPane.showMessageDialog(activitiesWrapper,
+							"You have already 4 activities today!", "Message", 1);
 					}
 					else JOptionPane.showMessageDialog(activitiesWrapper,
 							"This activity is not public!", "Message", 1);
+					
 				} catch (ArrayIndexOutOfBoundsException aie) {
 					JOptionPane.showMessageDialog(activitiesWrapper,
 							"Select a row in the table!", "Warning", 2);
@@ -209,8 +228,8 @@ public class ActivitiesGUI extends JPanel {
 					JOptionPane.showMessageDialog(activitiesWrapper,
 							"Enter valid ID!", "Warning", 2);
 				
-				}
 				
+				}	
 			}
 		});
 		BookingInput.add(buttonJoin, "4, 2, left, top");
@@ -500,7 +519,7 @@ public class ActivitiesGUI extends JPanel {
 		createBookingRight.add(createDateFieldPanel);
 
 		final JFormattedTextField createDateField = new JFormattedTextField(
-				"dd-mm-yyyy");
+				"yyyy-mm-dd");
 		createDateFieldPanel.add(createDateField);
 		createDateField.setHorizontalAlignment(SwingConstants.CENTER);
 		createDateField.setColumns(20);
@@ -527,46 +546,80 @@ public class ActivitiesGUI extends JPanel {
 
 		JButton createBtnCreate = new JButton("Create");
 		createBtnCreate.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 				Customer customer = null;
+				ArrayList<ActivityBooking> allBookings = actCtr.getAllBookings();
+				int number =0;
 				int id = 0;
 				ArrayList<Customer> customers = new ArrayList<Customer>();
-				String activityType = (String) createActivityCombo
-						.getSelectedItem();
+				String activityType = (String) createActivityCombo.getSelectedItem();
 				String date = createDateField.getText();
-				String time = createTimeField.getText()+":00";
-				ActivityTime actTime = new ActivityTime(date, time);
-				ArrayList<Activity> activities = actCtr.findFreeActivities(
-						date, time, activityType);
-				boolean openActivity = createOpenBox.isSelected();
+				String time = createTimeField.getText();
+				Date currentDate = new Date();
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				String curDate = sdf.format(currentDate);
+				Date currDate = null,bookDate = null;
 				try {
-					if (customer == null) {
-						id = Integer.parseInt(JOptionPane.showInputDialog(
+					currDate = sdf.parse(curDate);
+					bookDate = sdf.parse(date);
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				currDate.setDate(currDate.getDate()+7);
+				if(currDate.after(bookDate)||currDate.compareTo(bookDate)==0)
+				{
+					if(Integer.parseInt(time)>=8&&Integer.parseInt(time)<=20){
+						time = time + ":00";
+						ActivityTime actTime = new ActivityTime(date, time);
+						ArrayList<Activity> activities = actCtr.findFreeActivities(date, time, activityType);
+						boolean openActivity = createOpenBox.isSelected();
+						try {
+							if (customer == null) {
+								id = Integer.parseInt(JOptionPane.showInputDialog(
 								activitiesWrapper, "Customer's ID", "Request",
 								1));
-						customer = custCtr.getCustomer(id);
-						customers.add(customer);
-					}
-					Activity activity = activities.get(0);
-					actCtr.newActivityBooking(customers, activity, actTime,
-							openActivity, false);
-					JOptionPane.showMessageDialog(activitiesWrapper,
-							"You have created new activity: "
-									+ activity.getActivityType().name(),
-							"Message", 1);
-				} catch (IndexOutOfBoundsException ae) {
-					JOptionPane.showMessageDialog(activitiesWrapper,
-							"No facility available, try another hour.",
-							"Message", 3);
-				} catch (NumberFormatException nfe) {
-					JOptionPane.showMessageDialog(activitiesWrapper,
+								customer = custCtr.getCustomer(id);
+									for(ActivityBooking ab: allBookings){
+										for(Customer c: ab.getCustomers()){
+											if(customer.getPersonID()==c.getPersonID()&&date.equals(ab.getActivityTime().getDate()))number = number +1;
+										}
+									}
+									customers.add(customer);
+							}
+							if(number<4){
+								Activity activity = activities.get(0);
+								actCtr.newActivityBooking(customers, activity, actTime, openActivity, false);
+								JOptionPane.showMessageDialog(activitiesWrapper,"You have created new activity: "
+								+ activity.getActivityType().name(),"Message", 1);
+							}
+							else JOptionPane.showMessageDialog(activitiesWrapper,
+							"You already have booked 4 activities today.","Message", 3);
+						}
+						catch (IndexOutOfBoundsException ae) {
+							JOptionPane.showMessageDialog(activitiesWrapper,
+							"No facility available, try another hour.",	"Message", 3);
+						}
+						catch (NumberFormatException nfe) {
+							JOptionPane.showMessageDialog(activitiesWrapper,
 							"Enter valid number!", "Warning", 2);
-				} catch (NullPointerException npe) {
-					JOptionPane.showMessageDialog(activitiesWrapper,
+						}
+						catch (NullPointerException npe) {
+							JOptionPane.showMessageDialog(activitiesWrapper,
 							"Enter valid ID!", "Warning", 2);
+						}
+					}
+			
+			else JOptionPane.showMessageDialog(activitiesWrapper,
+					"Booking of an activity is available only between 8:00 and 20:00!", "Warning", 2);
 				}
-			}
-		});
+					else JOptionPane.showMessageDialog(activitiesWrapper,
+							"Activity can be booked only one week in advance!", "Warning", 2);
+					
+				
+	
+		}});
 		createBottomMenu.add(createBtnCreate);
 
 		JButton createBtnCancel = new JButton("Back");
@@ -955,6 +1008,17 @@ public class ActivitiesGUI extends JPanel {
 					Activity activity = activBook.getActivity();
 					String date = createHireDateField.getText();
 					String time = createHireTimeField.getText();
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					Date currentDate = new Date();
+					String curDate = sdf.format(currentDate);
+					int year = Integer.parseInt(date.substring(0,4));
+					int cYear = Integer.parseInt(curDate.substring(0,4));
+					int month = Integer.parseInt(date.substring(5,7));
+					int cMonth = Integer.parseInt(curDate.substring(5,7));
+					int day = Integer.parseInt(date.substring(8,10));
+					int cDay = Integer.parseInt(curDate.substring(8,10));
+					if((year>=cYear)||(year==cYear&&month>=cMonth)||(year==cYear&&month==cMonth&&day>cDay))
+					{
 					Instructor instructor = null;
 					for (Instructor instr : activity.getActivityInstructors()) {
 						if (actCtr.checkInstructorAvailability(instr, date,
@@ -964,25 +1028,32 @@ public class ActivitiesGUI extends JPanel {
 					int custID = 0;
 					if (customer == null){
 						custID = Integer.parseInt(createHireCustomerField.getText());
-					customer = custCtr.getCustomer(custID);}
-					ActivityTime actTime = new ActivityTime(date, time);
-					if(instructor!=null){actCtr.newInstructorHire(c1, instructor, activBook, actTime);
-					JOptionPane.showMessageDialog(activitiesWrapper,
-							"You have hired a new Instructor: "
-									+ instructor.getPersonID(),
-							"Message", 1);
-					if(!activBook.getActivity().getActivityType().name().equals("Golf")||!activBook.getActivity().getActivityType().name().equals("Swimming"))activBook.setInstructorHired(true);
-					}
-					else JOptionPane.showMessageDialog(activitiesWrapper,
-							"No instructor available. ", "Message", 1);
+						customer = custCtr.getCustomer(custID);}
+						ActivityTime actTime = new ActivityTime(date, time);
+							if(instructor!=null){actCtr.newInstructorHire(c1, instructor, activBook, actTime);
+								JOptionPane.showMessageDialog(activitiesWrapper,"You have hired a new Instructor: "
+									+ instructor.getPersonID(),	"Message", 1);
+								if(!activBook.getActivity().getActivityType().name().equals("Golf")||!activBook.getActivity().getActivityType().name().equals("Swimming"))activBook.setInstructorHired(true);
+							}
+							else JOptionPane.showMessageDialog(activitiesWrapper,"No instructor available. ", "Message", 1);
+				}
 				
-				} catch (NumberFormatException nfe) {
+				
+				else JOptionPane.showMessageDialog(activitiesWrapper,
+						"You can hire an instructor within 1 hour before activity start. ", "Message", 1);
+				}
+			 catch (NumberFormatException nfe) {
 					JOptionPane.showMessageDialog(activitiesWrapper,
 							"Enter valid number!", "Warning", 2);
-				} catch (NullPointerException npe) {
+				}
+				 catch (NullPointerException npe) {
 					JOptionPane.showMessageDialog(activitiesWrapper,
 							"Enter valid ID!", "Warning", 2);
 				}
+				 catch (HeadlessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} 
 			}
 		});
 		createHireBottomMenu.add(createHireBtnCreate);
