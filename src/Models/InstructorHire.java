@@ -7,9 +7,10 @@ public class InstructorHire {
 	private Instructor instructor;
 	private ActivityBooking activityBooking;
 	private ActivityTime activityTime;
+	private String status;
 
 	public InstructorHire() {
-
+		setStatus("unpaid");
 	}
 
 	public InstructorHire(int id, Customer customer, Instructor instructor,
@@ -19,6 +20,7 @@ public class InstructorHire {
 		this.instructor = instructor;
 		this.activityBooking = activityBooking;
 		this.activityTime = activityTime;
+		setStatus("unpaid");
 	}
 
 	public InstructorHire(Customer customer, Instructor instructor,
@@ -27,6 +29,7 @@ public class InstructorHire {
 		this.instructor = instructor;
 		this.activityBooking = activityBooking;
 		this.activityTime = activityTime;
+		setStatus("unpaid");
 	}
 
 	public int getId() {
@@ -69,12 +72,21 @@ public class InstructorHire {
 		this.activityTime = activityTime;
 	}
 
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	@Override
 	public String toString() {
-		return "InstructorHire [id=" + id + ", customer=" + customer.toString()
-				+ ", instructor=" + instructor.toString()
-				+ ", activityBooking=" + activityBooking.toString()
-				+ ", activityTime=" + activityTime.toString() + "]";
+		return "InstructorHire [id=" + id + ", customer=" + customer
+				+ ", instructor=" + instructor + ", activityBooking="
+				+ activityBooking + ", activityTime=" + activityTime
+				+ ", status=" + status + "]";
 	}
 
 }

@@ -141,6 +141,7 @@ CREATE TABLE InstructorHire (
     activityBookingID int not null,
     hireDate date not null,
     hireTime time not null,
+    status varchar(255) not null,
     UNIQUE ( instructorHireID ),
     PRIMARY KEY ( instructorHireID ),
     FOREIGN KEY ( customerID ) REFERENCES Customer ( customerID ),

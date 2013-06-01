@@ -62,7 +62,7 @@ public class ActivitiesCtr {
 		}
 
 		// updates a instructorHire
-		public int updateInstructorHire(int newId, Customer newCustomer,Instructor newInstructor, ActivityBooking activityBooking, ActivityTime activityTime) {
+		public int updateInstructorHire(int newId, Customer newCustomer,Instructor newInstructor, ActivityBooking activityBooking, ActivityTime activityTime, String status) {
 			IFDAOInstructorHire daoInstructorHire = new DAOInstructorHire();
 			InstructorHire instructorHire = new InstructorHire();
 			instructorHire.setId(newId);
@@ -70,6 +70,7 @@ public class ActivitiesCtr {
 			instructorHire.setInstructor(newInstructor);
 			instructorHire.setActivityBooking(activityBooking);
 			instructorHire.setActivityTime(activityTime);
+			instructorHire.setStatus(status);
 			return daoInstructorHire.update(instructorHire);
 		}
 

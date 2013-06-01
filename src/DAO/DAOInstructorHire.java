@@ -50,12 +50,13 @@ public class DAOInstructorHire implements IFDAOInstructorHire {
 
 		// creates a query for data insertion;
 		String query = "SET DATEFORMAT dmy;"
-				+ " INSERT INTO InstructorHire(customerID, instructorID, activityBookingID, hireDate, hireTime) VALUES("
+				+ " INSERT INTO InstructorHire(customerID, instructorID, activityBookingID, hireDate, hireTime, status) VALUES("
 				+ instructorHire.getCustomer().getPersonID() + ","
 				+ instructorHire.getInstructor().getPersonID() + ","
 				+ instructorHire.getActivityBooking().getID() + ",'"
 				+ instructorHire.getActivityTime().getDate() + "','"
-				+ instructorHire.getActivityTime().getTime() + "');";
+				+ instructorHire.getActivityTime().getTime() + "','"
+				+ instructorHire.getStatus() + "');";
 
 		System.out.println("Insert query : " + query);
 
@@ -88,7 +89,9 @@ public class DAOInstructorHire implements IFDAOInstructorHire {
 				+ instructorHire.getActivityBooking().getID() + ","
 				+ "hireDate = '" + instructorHire.getActivityTime().getDate()
 				+ "'," + "hireTime = '"
-				+ instructorHire.getActivityTime().getTime() + "'"
+				+ instructorHire.getActivityTime().getTime() + "',"
+				+ "status = '"
+				+ instructorHire.getStatus() + "'"
 				+ " WHERE instructorHireID = " + instructorHire.getId() + ";";
 
 		System.out.println("Update query : " + query);
@@ -280,6 +283,7 @@ public class DAOInstructorHire implements IFDAOInstructorHire {
 			activTime.setDate(results.getString("hireDate"));
 			String time = results.getString("hireTime");
 			activTime.setTime(time.substring(0,5));
+			instructorHire.setStatus(results.getString("status"));
 
 		} catch (Exception e) {
 			System.out.println("error in building the instructorHire object");
@@ -289,7 +293,7 @@ public class DAOInstructorHire implements IFDAOInstructorHire {
 
 	private String buildQuery(String wClause) {
 		String query = "SET DATEFORMAT dmy;"
-				+ " SELECT instructorHireID, customerID, activityBookingID, instructorID, hireDate, hireTime FROM InstructorHire";
+				+ " SELECT instructorHireID, customerID, activityBookingID, instructorID, hireDate, hireTime, status FROM InstructorHire";
 		if (wClause.length() > 0) {
 			query = query + " WHERE " + wClause; // this query will retrieve
 													// that RoomsBooked instance
