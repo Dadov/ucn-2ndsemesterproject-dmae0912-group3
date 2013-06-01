@@ -878,8 +878,17 @@ public class ActivitiesGUI extends JPanel {
 		JButton btnHireDelete = new JButton("Cancel");
 		btnHireDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int id = Integer.parseInt(showHireIDField.getText());
-				actCtr.deleteInstructorHire(id);
+				int id = 0;
+				try{
+					 id = Integer.parseInt(showHireIDField.getText());
+				}
+				catch(Exception ex){
+					int row = table_1.getSelectedRow();
+					id = (int) table_1.getModel().getValueAt(row, 0);
+				}
+				InstructorHire ih = actCtr.findInstructorHire(id);
+				ih.setStatus("cancelled");
+				actCtr.updateInstructorHire(id, ih.getCustomer(), ih.getInstructor(), ih.getActivityBooking(), ih.getActivityTime(),ih.getStatus());
 				JOptionPane.showMessageDialog(activitiesWrapper,
 						"Instructor hiring has been cancelled.", "Message", 1);
 				showAllHires();
@@ -1330,7 +1339,7 @@ public class ActivitiesGUI extends JPanel {
 	private void fillInstructorTable() {
 		clearTable(table_1);
 		dtmInstructorHire = new DefaultTableModel(new Object[][] {},
-				new String[] { "ID", "Activity", "Time", "Date" });
+				new String[] { "ID", "Activity", "Time", "Date", "Status" });
 		table_1.setModel(dtmInstructorHire);
 		hires = actCtr.getInstructorHires();
 		bookings = actCtr.getAllBookings();
@@ -1338,7 +1347,7 @@ public class ActivitiesGUI extends JPanel {
 		if (c1 != null) {
 			dtmInstructorHire = new DefaultTableModel(new Object[][] {},
 					new String[] { "Booking ID", "Instructor Hire ID",
-							"Activity", "Time", "Date", "Instructor" });
+							"Activity", "Time", "Date", "Instructor", "Status" });
 			for (ActivityBooking insHire : bookings) {
 				// Initialise variables for filling table
 				for (Customer c : insHire.getCustomers()) {
@@ -1350,13 +1359,18 @@ public class ActivitiesGUI extends JPanel {
 						String time = insHire.getActivityTime().getTime();
 						boolean hired = insHire.isInstructorHired();
 						int IHID = 0;
-						if (hired)
-							for (InstructorHire ih : hires)
-								if (ih.getActivityBooking().getID() == ID)
+						String status = "no instructor hired";
+						if (hired){
+							for (InstructorHire ih : hires){
+								if (ih.getActivityBooking().getID() == ID){
 									IHID = ih.getId();
+									status = ih.getStatus();
+								}
+							}
+						}
 						// add the values to the table
 						Object[] rowData = { ID, IHID, actType, date, time,
-								hired };
+								hired, status };
 						dtmInstructorHire.addRow(rowData);
 						
 					}
@@ -1373,8 +1387,9 @@ public class ActivitiesGUI extends JPanel {
 							.getActivityType().name();
 					String date = insHire.getActivityTime().getDate();
 					String time = insHire.getActivityTime().getTime();
+					String status = insHire.getStatus();
 					// add the values to the table
-					Object[] rowData = { ID, actType, date, time };
+					Object[] rowData = { ID, actType, date, time, status };
 					dtmInstructorHire.addRow(rowData);
 				}
 
@@ -1386,8 +1401,9 @@ public class ActivitiesGUI extends JPanel {
 						.getActivityType().name();
 				String date = insHire.getActivityTime().getDate();
 				String time = insHire.getActivityTime().getTime();
+				String status = insHire.getStatus();
 				// add the values to the table
-				Object[] rowData = { ID, actType, date, time };
+				Object[] rowData = { ID, actType, date, time , status};
 				dtmInstructorHire.addRow(rowData);
 			}
 		}

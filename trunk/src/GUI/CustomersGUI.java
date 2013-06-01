@@ -5,6 +5,7 @@ import java.awt.GridLayout;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -25,9 +26,11 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.UIManager;
 
+import Controllers.ActivitiesCtr;
 import Controllers.CustomersCtr;
 import Controllers.RoomsCtr;
 import Models.Customer;
+import Models.InstructorHire;
 import Models.Room;
 import Models.RoomBooking;
 
@@ -114,6 +117,8 @@ public class CustomersGUI extends JPanel {
 	private JTextField createRegDateField;
 	private JTextField createStaysField;
 	private JTextField editStaysField;
+	private JLabel totalInstructor;
+	private ActivitiesCtr actCtr;
 
 	public CustomersGUI() {
 		custCtr = new CustomersCtr();
@@ -122,6 +127,7 @@ public class CustomersGUI extends JPanel {
 
 	public void initialize() {
 		
+		actCtr = new ActivitiesCtr();
 		setPreferredSize(new Dimension(780, 535));
 		
 		customersWrapper = new JPanel();
@@ -1086,7 +1092,21 @@ public class CustomersGUI extends JPanel {
 		custBillinstHireScrollPane.setViewportView(custBillinstHireTable);
 
 		lowerBillInstructorsWrap = new JPanel();
+		lowerBillInstructorsWrap.setLayout(new BorderLayout(0,0));
 		billInstructors.add(lowerBillInstructorsWrap, BorderLayout.SOUTH);
+		
+
+		JButton payInstructor = new JButton("Mark paid");
+		payInstructor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				markPaidInstHire();
+			}
+		});
+		lowerBillInstructorsWrap.add(payInstructor, BorderLayout.EAST);
+		
+		totalInstructor = new JLabel("Total: ");
+		lowerBillInstructorsWrap.add(totalInstructor, BorderLayout.WEST);
+		
 	}
 
 	/*
@@ -1190,12 +1210,49 @@ public class CustomersGUI extends JPanel {
 	private void fillInstHireBillTable() {
 		CardLayout card = (CardLayout) (lowerBillingPanelWrapper.getLayout());
 		card.show(lowerBillingPanelWrapper, "Bill Instructors");
+		custBillinstHireTableModel = new DefaultTableModel(new Object[][] {},
+				new String[] { "Instructor Hire ID", "Customer ID",
+				"First Name", "Last Name", "Address", 
+				"Total Price", "Status" });
+		custBillinstHireTable.setModel(custBillinstHireTableModel);
+		String text = null;
+		try{
+			Customer customer = custCtr.getCustomer(Integer.parseInt(billCustIDField.getText()));
+			ActivitiesCtr actCtr = new ActivitiesCtr();
+			ArrayList<InstructorHire> hires = actCtr.getInstructorHires();
+			double totalPrice =0;
+			for (InstructorHire ih: hires){
+				if(ih.getCustomer().getPersonID()==customer.getPersonID()){
+					Object[] rowData = {ih.getId(), customer.getPersonID(), customer.getFname(), customer.getLname(), customer.getAddress(), ih.getActivityBooking().getActivity().getInstructorPrice(),ih.getStatus() };
+					custBillinstHireTableModel.addRow(rowData);
+					if(ih.getStatus().equals("unpaid"))totalPrice = totalPrice + ih.getActivityBooking().getActivity().getInstructorPrice();
+				}
+			}
+			text = "Total Price: " + totalPrice;
+			totalInstructor.setText(text);
+		}
+		catch(NumberFormatException nfe){
+			JOptionPane.showMessageDialog(null, "Enter valid number!", "Error ",
+					JOptionPane.ERROR_MESSAGE);
+		}
+		
+	
 
 	}
 			
-	@SuppressWarnings("unused")
 	private void markPaidInstHire() {
-
+		int rowCount = custBillinstHireTableModel.getRowCount();
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String dat = sdf.format(date);
+		for(int row = 0; row<rowCount; row++){
+			int ID = (int) custBillinstHireTableModel.getValueAt(row, 0);
+			InstructorHire ih = actCtr.findInstructorHire(ID);
+			if(ih.getStatus().equals("unpaid"))ih.setStatus("paid on: " + dat);
+			actCtr.updateInstructorHire(ih.getId(), ih.getCustomer(), ih.getInstructor(), ih.getActivityBooking(), ih.getActivityTime(), ih.getStatus());
+			
+		}
+		fillInstHireBillTable();
 	}
 	
 	private void findCust(int ID) {
