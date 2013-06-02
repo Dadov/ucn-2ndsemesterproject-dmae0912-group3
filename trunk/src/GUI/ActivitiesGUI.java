@@ -563,6 +563,7 @@ public class ActivitiesGUI extends JPanel {
 				ArrayList<ActivityBooking> allBookings = actCtr.getAllBookings();
 				int number =0;
 				int id = 0;
+				customer = c1;
 				ArrayList<Customer> customers = new ArrayList<Customer>();
 				String activityType = (String) createActivityCombo.getSelectedItem();
 				String date = createDateField.getText();
@@ -575,8 +576,7 @@ public class ActivitiesGUI extends JPanel {
 					currDate = sdf.parse(curDate);
 					bookDate = sdf.parse(date);
 				} catch (ParseException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(activitiesWrapper, "Unparsable date", "Warning", JOptionPane.WARNING_MESSAGE);
 				}
 				currDate.setDate(currDate.getDate()+7);
 				if(currDate.after(bookDate)||currDate.compareTo(bookDate)==0)
@@ -606,7 +606,7 @@ public class ActivitiesGUI extends JPanel {
 								+ activity.getActivityType().name(),"Message", 1);
 							}
 							else JOptionPane.showMessageDialog(activitiesWrapper,
-							"You already have booked 4 activities today.","Message", 3);
+							"You already have booked 4 activities on this date.","Message", 3);
 						}
 						catch (IndexOutOfBoundsException ae) {
 							JOptionPane.showMessageDialog(activitiesWrapper,
