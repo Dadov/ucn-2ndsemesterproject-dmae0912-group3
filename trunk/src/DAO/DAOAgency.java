@@ -1,7 +1,7 @@
 package DAO;
 
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import Models.*;
 
 public class DAOAgency implements IFDAOAgency {
@@ -22,7 +22,7 @@ public class DAOAgency implements IFDAOAgency {
 
 	// gets all agencies
 	@Override
-	public ArrayList<Agency> getAllAgencies(boolean retrieveAssociation) {
+	public LinkedList<Agency> getAllAgencies(boolean retrieveAssociation) {
 		return miscWhere("", retrieveAssociation);
 	}
 
@@ -54,7 +54,7 @@ public class DAOAgency implements IFDAOAgency {
 	}
 	
 	// inserts customers in the ProvidedCustomers table
-	public int insertCustomers(ArrayList<Customer> customers, int ID) {
+	public int insertCustomers(LinkedList<Customer> customers, int ID) {
 		int rc = -1;
 		if (ID == -1) {
 			ID = getLastInsertedID();
@@ -178,9 +178,10 @@ public class DAOAgency implements IFDAOAgency {
 	}
 
 	// used when more than one agency is to be selected
-	private ArrayList<Agency> miscWhere(String wClause, boolean retrieveAssociation) {
+	private LinkedList<Agency> miscWhere(String wClause,
+			boolean retrieveAssociation) {
 		ResultSet results;
-		ArrayList<Agency> list = new ArrayList<Agency>();
+		LinkedList<Agency> list = new LinkedList<Agency>();
 		String query = buildQuery(wClause);
 		// reads the agency from the database
 		try {
@@ -209,10 +210,11 @@ public class DAOAgency implements IFDAOAgency {
 	}
 	
 	// returns a list of the customers provided by an agency
-	private ArrayList<Customer> getProvidedCustomers (String wClause, boolean retrieveAssociation) {
+	private LinkedList<Customer> getProvidedCustomers(String wClause,
+			boolean retrieveAssociation) {
 		ResultSet results;
 		String query = buildCustomersQuery(wClause);
-		ArrayList<Customer> providedCustomers = new ArrayList<Customer>();
+		LinkedList<Customer> providedCustomers = new LinkedList<Customer>();
 		Customer customer = new Customer();
 		IFDAOCustomer daoCustomer = new DAOCustomer();
 		try {
@@ -236,7 +238,7 @@ public class DAOAgency implements IFDAOAgency {
 	// builds an Agency object
 	private Agency buildAgency(ResultSet results) {
 		Agency agency = new Agency();
-		ArrayList<Customer> customers = new ArrayList<Customer>();
+		LinkedList<Customer> customers = new LinkedList<Customer>();
 		agency.setProvidedCustomers(customers);
 		// fills the Agency object with date from the database
 		try {

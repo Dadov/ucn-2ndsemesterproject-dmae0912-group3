@@ -2,7 +2,7 @@ package Models;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -12,7 +12,7 @@ import org.junit.Test;
 
 public class AgencyTest {
 	private Agency agency;
-	private ArrayList<Customer> providedCustomers;
+	private LinkedList<Customer> providedCustomers;
 	private Customer cust01;
 	private Customer cust02;
 
@@ -29,7 +29,7 @@ public class AgencyTest {
 		agency = new Agency();
 		cust01 = new Customer();
 		cust02 = new Customer();
-		providedCustomers = new ArrayList<Customer>();
+		providedCustomers = new LinkedList<Customer>();
 		providedCustomers.add(cust01);
 		providedCustomers.add(cust02);
 	}

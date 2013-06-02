@@ -1,6 +1,6 @@
 package DAO;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 import Models.Agency;
 
@@ -8,7 +8,7 @@ public interface IFDAOAgency {
 
 	public Agency getAgency(int ID, boolean retrieveAssociation);
 
-	public ArrayList<Agency> getAllAgencies(boolean retrieveAssociation);
+	public LinkedList<Agency> getAllAgencies(boolean retrieveAssociation);
 
 	public int insert(Agency agency);
 

@@ -1,6 +1,7 @@
 package Controllers;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import DAO.DAOAgency;
 import DAO.DAOCustomer;
@@ -20,7 +21,7 @@ public class CustomersCtr {
 
 	// adds a new agency to the database
 	public void newAgency(String name, int discountLevel,
-			ArrayList<Customer> customers) {
+			LinkedList<Customer> customers) {
 		Agency agency = new Agency();
 		agency.getID();
 		agency.setName(name);
@@ -47,16 +48,16 @@ public class CustomersCtr {
 	}
 
 	// returns all agencies
-	public ArrayList<Agency> getAllAgencies() {
+	public LinkedList<Agency> getAllAgencies() {
 		IFDAOAgency daoAgency = new DAOAgency();
-		ArrayList<Agency> allAgencies = new ArrayList<Agency>();
+		LinkedList<Agency> allAgencies = new LinkedList<Agency>();
 		allAgencies = daoAgency.getAllAgencies(false);
 		return allAgencies;
 	}
 
 	// updates an agency
 	public int updateAgency(int id, String name, int discountLevel,
-			ArrayList<Customer> customers) {
+			LinkedList<Customer> customers) {
 		IFDAOAgency daoAgency = new DAOAgency();
 		Agency agency = new Agency();
 		agency.setID(id);
