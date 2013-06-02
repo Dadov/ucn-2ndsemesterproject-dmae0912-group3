@@ -41,10 +41,13 @@ public class MenuButton extends JButton {
 
 		public void actionPerformed(ActionEvent e) {
 			JButton button = (JButton) e.getSource();
-			for (Component component : button.getParent().getComponents()) {
-				if (component instanceof JButton)
-					component.setBackground(Color.decode("#F0F0F0"));
+			if (button.getParent() != null) {
+				for (Component component : button.getParent().getComponents()) {
+					if (component instanceof JButton)
+						component.setBackground(Color.decode("#F0F0F0"));
+				}
 			}
+
 			button.setBackground(Color.decode("#FFFFFF"));
 		}
 	}

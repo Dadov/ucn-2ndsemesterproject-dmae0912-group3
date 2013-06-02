@@ -105,7 +105,8 @@ public class RoomsGUI extends JPanel {
 		checkRoomAvailabilityPanel.setLayout(new BorderLayout(0, 0));
 
 		chraInputPanel = new JPanel();
-		chraInputPanel.setBorder(null);
+		chraInputPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null,
+				null));
 		checkRoomAvailabilityPanel.add(chraInputPanel, BorderLayout.NORTH);
 		GridBagLayout gbl_chraInputPanel = new GridBagLayout();
 		gbl_chraInputPanel.columnWidths = new int[] { 30, 80, 36, 140, 35, 140,
@@ -127,6 +128,7 @@ public class RoomsGUI extends JPanel {
 
 		chraStartDateLabel = new JLabel("Start Date (dd-mm-yyyy):");
 		GridBagConstraints gbc_chraStartDateLabel = new GridBagConstraints();
+		gbc_chraStartDateLabel.anchor = GridBagConstraints.WEST;
 		gbc_chraStartDateLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_chraStartDateLabel.gridx = 3;
 		gbc_chraStartDateLabel.gridy = 0;
@@ -134,6 +136,7 @@ public class RoomsGUI extends JPanel {
 
 		chraEndDateLabel = new JLabel("End Date (dd-mm-yyyy):");
 		GridBagConstraints gbc_chraEndDateLabel = new GridBagConstraints();
+		gbc_chraEndDateLabel.anchor = GridBagConstraints.WEST;
 		gbc_chraEndDateLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_chraEndDateLabel.gridx = 5;
 		gbc_chraEndDateLabel.gridy = 0;
@@ -175,6 +178,7 @@ public class RoomsGUI extends JPanel {
 			}
 		});
 		GridBagConstraints gbc_chraButton = new GridBagConstraints();
+		gbc_chraButton.anchor = GridBagConstraints.NORTH;
 		gbc_chraButton.gridx = 7;
 		gbc_chraButton.gridy = 1;
 		chraInputPanel.add(chraButton, gbc_chraButton);
@@ -205,11 +209,11 @@ public class RoomsGUI extends JPanel {
 				null));
 		roomBookingPanel.add(bookRoomPanel, BorderLayout.NORTH);
 		GridBagLayout gbl_bookRoomPanel = new GridBagLayout();
-		gbl_bookRoomPanel.columnWidths = new int[] { 30, 80, 35, 140, 35, 140,
-				35, 100, 35, 85, 0 };
+		gbl_bookRoomPanel.columnWidths = new int[] { 30, 80, 35, 140, 35, 130,
+				35, 100, 35, 85, 0, 0 };
 		gbl_bookRoomPanel.rowHeights = new int[] { 20, 30, 0 };
 		gbl_bookRoomPanel.columnWeights = new double[] { 0.0, 1.0, 0.0, 0.0,
-				0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+				0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		gbl_bookRoomPanel.rowWeights = new double[] { 0.0, 0.0,
 				Double.MIN_VALUE };
 		bookRoomPanel.setLayout(gbl_bookRoomPanel);
@@ -222,7 +226,7 @@ public class RoomsGUI extends JPanel {
 		gbc_brRoomTypeLabel.gridy = 0;
 		bookRoomPanel.add(brRoomTypeLabel, gbc_brRoomTypeLabel);
 
-		brStartDateLabel = new JLabel("Start Date (dd-mm-yyyy):");
+		brStartDateLabel = new JLabel("Start Date  (dd-mm-yyyy):");
 		GridBagConstraints gbc_brStartDateLabel = new GridBagConstraints();
 		gbc_brStartDateLabel.anchor = GridBagConstraints.WEST;
 		gbc_brStartDateLabel.insets = new Insets(0, 0, 5, 5);
@@ -248,6 +252,7 @@ public class RoomsGUI extends JPanel {
 
 		brRoomNumField = new JFormattedTextField();
 		GridBagConstraints gbc_brRoomNumField = new GridBagConstraints();
+		gbc_brRoomNumField.anchor = GridBagConstraints.NORTH;
 		gbc_brRoomNumField.insets = new Insets(0, 0, 0, 5);
 		gbc_brRoomNumField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_brRoomNumField.gridx = 1;
@@ -256,7 +261,7 @@ public class RoomsGUI extends JPanel {
 
 		brStartDateTextField = new JTextField();
 		GridBagConstraints gbc_brStartDateTextField = new GridBagConstraints();
-		gbc_brStartDateTextField.anchor = GridBagConstraints.WEST;
+		gbc_brStartDateTextField.anchor = GridBagConstraints.NORTHWEST;
 		gbc_brStartDateTextField.insets = new Insets(0, 0, 0, 5);
 		gbc_brStartDateTextField.gridx = 3;
 		gbc_brStartDateTextField.gridy = 1;
@@ -265,7 +270,7 @@ public class RoomsGUI extends JPanel {
 
 		brEndDateTextField = new JTextField();
 		GridBagConstraints gbc_brEndDateTextField = new GridBagConstraints();
-		gbc_brEndDateTextField.anchor = GridBagConstraints.WEST;
+		gbc_brEndDateTextField.anchor = GridBagConstraints.NORTHWEST;
 		gbc_brEndDateTextField.insets = new Insets(0, 0, 0, 5);
 		gbc_brEndDateTextField.gridx = 5;
 		gbc_brEndDateTextField.gridy = 1;
@@ -274,7 +279,7 @@ public class RoomsGUI extends JPanel {
 
 		brCustomerIdTextField = new JTextField();
 		GridBagConstraints gbc_brCustomerIdTextField = new GridBagConstraints();
-		gbc_brCustomerIdTextField.anchor = GridBagConstraints.WEST;
+		gbc_brCustomerIdTextField.anchor = GridBagConstraints.NORTHWEST;
 		gbc_brCustomerIdTextField.insets = new Insets(0, 0, 0, 5);
 		gbc_brCustomerIdTextField.gridx = 7;
 		gbc_brCustomerIdTextField.gridy = 1;
@@ -288,6 +293,7 @@ public class RoomsGUI extends JPanel {
 			}
 		});
 		GridBagConstraints gbc_btnBookRoom = new GridBagConstraints();
+		gbc_btnBookRoom.insets = new Insets(0, 0, 0, 5);
 		gbc_btnBookRoom.anchor = GridBagConstraints.NORTHWEST;
 		gbc_btnBookRoom.gridx = 9;
 		gbc_btnBookRoom.gridy = 1;
@@ -336,7 +342,7 @@ public class RoomsGUI extends JPanel {
 		rbTablePanel.add(rbTableScrollPane);
 
 		rbTable = new JTable();
-		rbTable.setPreferredScrollableViewportSize(new Dimension(750, 340));
+		rbTable.setPreferredScrollableViewportSize(new Dimension(750, 345));
 		rbTableModel = new DefaultTableModel(new Object[][] {}, new String[] {
 				"Booking ID", "Customer ID", "First Name", "Last Name",
 				"Rooms Booked", "Date Start", "Date End",
@@ -528,5 +534,17 @@ public class RoomsGUI extends JPanel {
 
 		// 'refreshing' the table, maybe should add some popup
 		fillRbTable();
+	}
+
+	@SuppressWarnings("unused")
+	private boolean checkDateFormat(String input) {
+		String inputFormat = input;
+		SimpleDateFormat correnctFormat = new SimpleDateFormat("dd-mm-yyyy");
+		
+		// try {
+		//
+		// }
+
+		return false;
 	}
 }

@@ -131,9 +131,10 @@ public class MainGUI {
 
 		loginGUI.loginButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				activitiesGUI = new ActivitiesGUI();
-				contentPanel.add(activitiesGUI, "ActivitiesGUI");
+				login();
 
+				activitiesGUI = new ActivitiesGUI(loginGUI.getUserID());
+				contentPanel.add(activitiesGUI, "ActivitiesGUI");
 
 				customersGUI = new CustomersGUI();
 				contentPanel.add(customersGUI, "CustomersGUI");
@@ -143,8 +144,6 @@ public class MainGUI {
 
 				staffGUI = new StaffGUI();
 				contentPanel.add(staffGUI, "StaffGUI");
-				login();
-
 			}
 		});
 
@@ -186,10 +185,6 @@ public class MainGUI {
 	}
 
 	private void login() {
-		// perform login and set 'rank' of logged in user to restrict amount of
-		// functionality available
-		activitiesGUI.setUserID(loginGUI.getUserID());
-		activitiesGUI.initialize();
 		int rank = loginGUI.login();
 
 		// int rank = 1;
