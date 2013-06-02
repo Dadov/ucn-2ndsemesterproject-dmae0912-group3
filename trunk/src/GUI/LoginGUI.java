@@ -94,7 +94,8 @@ public class LoginGUI extends JPanel {
 
 		newsBorder = new JPanel();
 		newsBorder.setBorder(new TitledBorder(UIManager
-				.getBorder("TitledBorder.border"), "News and shit",
+				.getBorder("TitledBorder.border"),
+				"Place for news and announcements",
 				TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		add(newsBorder);
 
@@ -104,7 +105,8 @@ public class LoginGUI extends JPanel {
 
 		textPane = new JTextPane();
 		textPane.setPreferredSize(new Dimension(750, 500));
-		textPane.setText("Welcome to Morocco Holiday center. \n\n\n Some news might be here. \n\n\n Login swaggot!");
+		textPane.setEditable(false);
+		textPane.setText("Welcome to Morocco Holiday center. \n\n\n Place for news. \n\n\n Enter your ID and password to login.");
 		newsPanel.add(textPane);
 	}
 

@@ -97,7 +97,9 @@ public class ActivitiesGUI extends JPanel {
 	@SuppressWarnings("unused")
 	private Staff s1;
 
-	public ActivitiesGUI() {
+	public ActivitiesGUI(int userID) {
+		setUserID(userID);
+		initialize();
 	}
 
 	public int getUserID() {
