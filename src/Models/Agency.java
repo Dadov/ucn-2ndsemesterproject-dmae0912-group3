@@ -1,20 +1,20 @@
 package Models;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Agency {
 
 	private int id;
 	private String name;
 	private int agencyDiscountLevel;
-	private ArrayList<Customer> providedCustomers;
+	private LinkedList<Customer> providedCustomers;
 
 	public Agency() {
 
 	}
 
 	public Agency(int id, String name, int agencyDiscountLevel,
-			ArrayList<Customer> providedCustomers) {
+			LinkedList<Customer> providedCustomers) {
 		this.id = id;
 		this.name = name;
 		this.agencyDiscountLevel = agencyDiscountLevel;
@@ -22,7 +22,7 @@ public class Agency {
 	}
 
 	public Agency(String name, int agencyDiscountLevel,
-			ArrayList<Customer> providedCustomers) {
+			LinkedList<Customer> providedCustomers) {
 		this.name = name;
 		this.agencyDiscountLevel = agencyDiscountLevel;
 		this.providedCustomers = providedCustomers;
@@ -52,11 +52,11 @@ public class Agency {
 		this.agencyDiscountLevel = agencyDiscountLevel;
 	}
 
-	public ArrayList<Customer> getProvidedCustomers() {
+	public LinkedList<Customer> getProvidedCustomers() {
 		return providedCustomers;
 	}
 
-	public void setProvidedCustomers(ArrayList<Customer> providedCustomers) {
+	public void setProvidedCustomers(LinkedList<Customer> providedCustomers) {
 		this.providedCustomers = providedCustomers;
 	}
 

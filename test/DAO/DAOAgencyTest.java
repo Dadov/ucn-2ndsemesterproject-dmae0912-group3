@@ -5,7 +5,7 @@ import static org.mockito.Mockito.*;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -41,7 +41,7 @@ public class DAOAgencyTest {
 		Customer customer2 = new Customer(1, "151287-0067", "Dean", "Brown", 
 				"Denmark", "9000", "Aalborg", "Hundvej 56", 
 				"dog@mail.com", "pass2", "15-05-2003", 7);
-		ArrayList<Customer> customers = new ArrayList<Customer>();
+		LinkedList<Customer> customers = new LinkedList<Customer>();
 		customers.add(customer1);
 		customers.add(customer2);
 		agency = new Agency("Swaggins Travel", 40, customers);
@@ -66,7 +66,7 @@ public class DAOAgencyTest {
 			//insert
 			daoAgency.insert(agency);
 
-			ArrayList<Agency> agencies = daoAgency.getAllAgencies(false);
+			LinkedList<Agency> agencies = daoAgency.getAllAgencies(false);
 			Agency lastAgency = agencies.get(agencies.size()-1);
 			
 			//get
