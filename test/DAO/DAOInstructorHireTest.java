@@ -58,6 +58,7 @@ public class DAOInstructorHireTest {
 	@Before
 	public void setUp() throws Exception {
 		con = DBConnection.getInstance().getDBCon();
+		con.setAutoCommit(false);
 		IFDAOStaff dbs= new DAOStaff();
 		IFDAOCustomer dbc = new DAOCustomer();
 		Instructor instructor = new Instructor(0,"987654-3210","No","One","Boulevarden 55","9000","Aalborg","noone@nomail.dk", "shitsinked", "Instructor", 100);
@@ -123,6 +124,7 @@ public class DAOInstructorHireTest {
 		assertEquals(instructorHire.getActivityTime().toString(), ih.getActivityTime().toString());
 	}
 		finally{
+			con.rollback();
 		}
 	}
 
@@ -164,6 +166,7 @@ public class DAOInstructorHireTest {
 			assertNull(daoHire.getInstructorHire(lastHire.getId(), false));
 
 		} finally {
+			con.rollback();
 		}
 	}
 	public int getLastInsertedID(int i){
