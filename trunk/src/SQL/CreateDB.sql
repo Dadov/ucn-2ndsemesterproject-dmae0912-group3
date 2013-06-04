@@ -1,4 +1,4 @@
-USE Morocco;
+USE dmae0912_3;
 
 /* setting date format for normal people, not americans */
 SET DATEFORMAT dmy;

@@ -1,4 +1,4 @@
-USE Morocco;
+USE dmae0912_3;
 
 /*
 * PopulateDB, used to populate tables with mostly fixed data:
