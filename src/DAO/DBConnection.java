@@ -8,12 +8,12 @@ public class DBConnection {
 
 	// connection data;
 	// TODO set your value
-	private static final String driver = "jdbc:sqlserver://localhost:49156";
+	private static final String driver = "jdbc:sqlserver://balder.ucn.dk";
 	// TODO manually made a database named 'Morocco'
-	private static final String databaseName = ";databaseName=Morocco";
-	private static String userName = ";user=sa";
+	private static final String databaseName = ";databaseName=dmae0912_3";
+	private static String userName = ";user=dmae0912_3";
 	// TODO set your value
-	private static String password = ";password=";
+	private static String password = ";password=IsAllowed";
 	private DatabaseMetaData dma;
 	private static Connection con;
 

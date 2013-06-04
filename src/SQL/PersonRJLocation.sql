@@ -1,4 +1,4 @@
-USE Morocco;
+USE dmae0912_3;
 
 /* These SQL scripts use RIGHT JOIN on Person and Location tables.
  * The deal is that city value for a Person must be retrieved. There
