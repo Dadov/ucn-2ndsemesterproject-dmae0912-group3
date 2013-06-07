@@ -16,6 +16,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -84,6 +85,10 @@ public class RoomsGUI extends JPanel {
 	private JPanel rbLabelPanel;
 	private JLabel rbLabel;
 	private JTabbedPane roomsTabbedPane;
+	private JButton btnPickDate;
+	private JButton btnPickDate_1;
+	private JButton btnPickDate_2;
+	private JButton btnPickDate_3;
 
 	public RoomsGUI() {
 		initialize();
@@ -109,11 +114,11 @@ public class RoomsGUI extends JPanel {
 				null));
 		checkRoomAvailabilityPanel.add(chraInputPanel, BorderLayout.NORTH);
 		GridBagLayout gbl_chraInputPanel = new GridBagLayout();
-		gbl_chraInputPanel.columnWidths = new int[] { 30, 80, 36, 140, 35, 140,
+		gbl_chraInputPanel.columnWidths = new int[] { 30, 80, 36, 85, 0, 35, 85, 0,
 				35, 0, 0 };
 		gbl_chraInputPanel.rowHeights = new int[] { 0, 20, 0 };
-		gbl_chraInputPanel.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0,
-				0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_chraInputPanel.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0,
+				0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		gbl_chraInputPanel.rowWeights = new double[] { 0.0, 0.0,
 				Double.MIN_VALUE };
 		chraInputPanel.setLayout(gbl_chraInputPanel);
@@ -126,7 +131,7 @@ public class RoomsGUI extends JPanel {
 		gbc_chraRoomTypeLabel.gridy = 0;
 		chraInputPanel.add(chraRoomTypeLabel, gbc_chraRoomTypeLabel);
 
-		chraStartDateLabel = new JLabel("Start Date (dd-mm-yyyy):");
+		chraStartDateLabel = new JLabel("Start Date:");
 		GridBagConstraints gbc_chraStartDateLabel = new GridBagConstraints();
 		gbc_chraStartDateLabel.anchor = GridBagConstraints.WEST;
 		gbc_chraStartDateLabel.insets = new Insets(0, 0, 5, 5);
@@ -134,11 +139,11 @@ public class RoomsGUI extends JPanel {
 		gbc_chraStartDateLabel.gridy = 0;
 		chraInputPanel.add(chraStartDateLabel, gbc_chraStartDateLabel);
 
-		chraEndDateLabel = new JLabel("End Date (dd-mm-yyyy):");
+		chraEndDateLabel = new JLabel("End Date:");
 		GridBagConstraints gbc_chraEndDateLabel = new GridBagConstraints();
 		gbc_chraEndDateLabel.anchor = GridBagConstraints.WEST;
 		gbc_chraEndDateLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_chraEndDateLabel.gridx = 5;
+		gbc_chraEndDateLabel.gridx = 6;
 		gbc_chraEndDateLabel.gridy = 0;
 		chraInputPanel.add(chraEndDateLabel, gbc_chraEndDateLabel);
 
@@ -156,17 +161,28 @@ public class RoomsGUI extends JPanel {
 		chraDateStartField = new JTextField();
 		GridBagConstraints gbc_chraDateStartField = new GridBagConstraints();
 		gbc_chraDateStartField.anchor = GridBagConstraints.NORTHWEST;
-		gbc_chraDateStartField.insets = new Insets(0, 0, 0, 5);
 		gbc_chraDateStartField.gridx = 3;
 		gbc_chraDateStartField.gridy = 1;
 		chraInputPanel.add(chraDateStartField, gbc_chraDateStartField);
 		chraDateStartField.setColumns(10);
+		
+		btnPickDate = new JButton("Pick Date");
+		btnPickDate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+						JFrame f = new JFrame();
+						chraDateStartField.setText(new DatePicker(f).setPickedDate());
+			}
+		});
+		GridBagConstraints gbc_btnPickDate = new GridBagConstraints();
+		gbc_btnPickDate.insets = new Insets(0, 0, 0, 5);
+		gbc_btnPickDate.gridx = 4;
+		gbc_btnPickDate.gridy = 1;
+		chraInputPanel.add(btnPickDate, gbc_btnPickDate);
 
 		chraDateEndField = new JTextField();
 		GridBagConstraints gbc_chraDateEndField = new GridBagConstraints();
-		gbc_chraDateEndField.insets = new Insets(0, 0, 0, 5);
 		gbc_chraDateEndField.anchor = GridBagConstraints.NORTHWEST;
-		gbc_chraDateEndField.gridx = 5;
+		gbc_chraDateEndField.gridx = 6;
 		gbc_chraDateEndField.gridy = 1;
 		chraInputPanel.add(chraDateEndField, gbc_chraDateEndField);
 		chraDateEndField.setColumns(10);
@@ -177,9 +193,22 @@ public class RoomsGUI extends JPanel {
 				fillChraTable();
 			}
 		});
+		
+		btnPickDate_1 = new JButton("Pick Date");
+		btnPickDate_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+						JFrame f = new JFrame();
+						chraDateEndField.setText(new DatePicker(f).setPickedDate());
+			}
+		});
+		GridBagConstraints gbc_btnPickDate_1 = new GridBagConstraints();
+		gbc_btnPickDate_1.insets = new Insets(0, 0, 0, 5);
+		gbc_btnPickDate_1.gridx = 7;
+		gbc_btnPickDate_1.gridy = 1;
+		chraInputPanel.add(btnPickDate_1, gbc_btnPickDate_1);
 		GridBagConstraints gbc_chraButton = new GridBagConstraints();
 		gbc_chraButton.anchor = GridBagConstraints.NORTH;
-		gbc_chraButton.gridx = 7;
+		gbc_chraButton.gridx = 9;
 		gbc_chraButton.gridy = 1;
 		chraInputPanel.add(chraButton, gbc_chraButton);
 
@@ -209,11 +238,11 @@ public class RoomsGUI extends JPanel {
 				null));
 		roomBookingPanel.add(bookRoomPanel, BorderLayout.NORTH);
 		GridBagLayout gbl_bookRoomPanel = new GridBagLayout();
-		gbl_bookRoomPanel.columnWidths = new int[] { 30, 80, 35, 140, 35, 130,
+		gbl_bookRoomPanel.columnWidths = new int[] { 30, 80, 35, 85, 0, 35, 85, 0,
 				35, 100, 35, 85, 0, 0 };
 		gbl_bookRoomPanel.rowHeights = new int[] { 20, 30, 0 };
-		gbl_bookRoomPanel.columnWeights = new double[] { 0.0, 1.0, 0.0, 0.0,
-				0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_bookRoomPanel.columnWeights = new double[] { 0.0, 1.0, 0.0, 0.0, 0.0,
+				0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		gbl_bookRoomPanel.rowWeights = new double[] { 0.0, 0.0,
 				Double.MIN_VALUE };
 		bookRoomPanel.setLayout(gbl_bookRoomPanel);
@@ -226,7 +255,7 @@ public class RoomsGUI extends JPanel {
 		gbc_brRoomTypeLabel.gridy = 0;
 		bookRoomPanel.add(brRoomTypeLabel, gbc_brRoomTypeLabel);
 
-		brStartDateLabel = new JLabel("Start Date  (dd-mm-yyyy):");
+		brStartDateLabel = new JLabel("Start Date:");
 		GridBagConstraints gbc_brStartDateLabel = new GridBagConstraints();
 		gbc_brStartDateLabel.anchor = GridBagConstraints.WEST;
 		gbc_brStartDateLabel.insets = new Insets(0, 0, 5, 5);
@@ -234,11 +263,11 @@ public class RoomsGUI extends JPanel {
 		gbc_brStartDateLabel.gridy = 0;
 		bookRoomPanel.add(brStartDateLabel, gbc_brStartDateLabel);
 
-		brEndDateLabel = new JLabel("End Date (dd-mm-yyyy):");
+		brEndDateLabel = new JLabel("End Date:");
 		GridBagConstraints gbc_brEndDateLabel = new GridBagConstraints();
 		gbc_brEndDateLabel.anchor = GridBagConstraints.WEST;
 		gbc_brEndDateLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_brEndDateLabel.gridx = 5;
+		gbc_brEndDateLabel.gridx = 6;
 		gbc_brEndDateLabel.gridy = 0;
 		bookRoomPanel.add(brEndDateLabel, gbc_brEndDateLabel);
 
@@ -246,13 +275,12 @@ public class RoomsGUI extends JPanel {
 		GridBagConstraints gbc_brCustomerLabel = new GridBagConstraints();
 		gbc_brCustomerLabel.anchor = GridBagConstraints.WEST;
 		gbc_brCustomerLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_brCustomerLabel.gridx = 7;
+		gbc_brCustomerLabel.gridx = 9;
 		gbc_brCustomerLabel.gridy = 0;
 		bookRoomPanel.add(brCustomerLabel, gbc_brCustomerLabel);
 
 		brRoomNumField = new JFormattedTextField();
 		GridBagConstraints gbc_brRoomNumField = new GridBagConstraints();
-		gbc_brRoomNumField.anchor = GridBagConstraints.NORTH;
 		gbc_brRoomNumField.insets = new Insets(0, 0, 0, 5);
 		gbc_brRoomNumField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_brRoomNumField.gridx = 1;
@@ -261,27 +289,53 @@ public class RoomsGUI extends JPanel {
 
 		brStartDateTextField = new JTextField();
 		GridBagConstraints gbc_brStartDateTextField = new GridBagConstraints();
-		gbc_brStartDateTextField.anchor = GridBagConstraints.NORTHWEST;
-		gbc_brStartDateTextField.insets = new Insets(0, 0, 0, 5);
+		gbc_brStartDateTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_brStartDateTextField.gridx = 3;
 		gbc_brStartDateTextField.gridy = 1;
 		bookRoomPanel.add(brStartDateTextField, gbc_brStartDateTextField);
 		brStartDateTextField.setColumns(10);
+		
+		btnPickDate_2 = new JButton("Pick Date");
+		btnPickDate_2.setSize(new Dimension(1, 1));
+		btnPickDate_2.setSize(10, 10);
+		btnPickDate_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFrame f = new JFrame();
+				brStartDateTextField.setText(new DatePicker(f).setPickedDate());
+			}
+		});
+		GridBagConstraints gbc_btnPickDate_2 = new GridBagConstraints();
+		gbc_btnPickDate_2.insets = new Insets(0, 0, 0, 5);
+		gbc_btnPickDate_2.gridx = 4;
+		gbc_btnPickDate_2.gridy = 1;
+		bookRoomPanel.add(btnPickDate_2, gbc_btnPickDate_2);
 
 		brEndDateTextField = new JTextField();
 		GridBagConstraints gbc_brEndDateTextField = new GridBagConstraints();
-		gbc_brEndDateTextField.anchor = GridBagConstraints.NORTHWEST;
-		gbc_brEndDateTextField.insets = new Insets(0, 0, 0, 5);
-		gbc_brEndDateTextField.gridx = 5;
+		gbc_brEndDateTextField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_brEndDateTextField.gridx = 6;
 		gbc_brEndDateTextField.gridy = 1;
 		bookRoomPanel.add(brEndDateTextField, gbc_brEndDateTextField);
 		brEndDateTextField.setColumns(10);
+		
+		btnPickDate_3 = new JButton("Pick Date");
+		btnPickDate_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFrame f = new JFrame();
+				brEndDateTextField.setText(new DatePicker(f).setPickedDate());
+			}
+		});
+		GridBagConstraints gbc_btnPickDate_3 = new GridBagConstraints();
+		gbc_btnPickDate_3.insets = new Insets(0, 0, 0, 5);
+		gbc_btnPickDate_3.gridx = 7;
+		gbc_btnPickDate_3.gridy = 1;
+		bookRoomPanel.add(btnPickDate_3, gbc_btnPickDate_3);
 
 		brCustomerIdTextField = new JTextField();
 		GridBagConstraints gbc_brCustomerIdTextField = new GridBagConstraints();
-		gbc_brCustomerIdTextField.anchor = GridBagConstraints.NORTHWEST;
+		gbc_brCustomerIdTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_brCustomerIdTextField.insets = new Insets(0, 0, 0, 5);
-		gbc_brCustomerIdTextField.gridx = 7;
+		gbc_brCustomerIdTextField.gridx = 9;
 		gbc_brCustomerIdTextField.gridy = 1;
 		bookRoomPanel.add(brCustomerIdTextField, gbc_brCustomerIdTextField);
 		brCustomerIdTextField.setColumns(10);
@@ -295,7 +349,7 @@ public class RoomsGUI extends JPanel {
 		GridBagConstraints gbc_btnBookRoom = new GridBagConstraints();
 		gbc_btnBookRoom.insets = new Insets(0, 0, 0, 5);
 		gbc_btnBookRoom.anchor = GridBagConstraints.NORTHWEST;
-		gbc_btnBookRoom.gridx = 9;
+		gbc_btnBookRoom.gridx = 11;
 		gbc_btnBookRoom.gridy = 1;
 		bookRoomPanel.add(btnBookRoom, gbc_btnBookRoom);
 
