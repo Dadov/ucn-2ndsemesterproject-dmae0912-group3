@@ -21,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -47,7 +48,6 @@ import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
-
 public class ActivitiesGUI extends JPanel {
 
 	/**
@@ -91,6 +91,7 @@ public class ActivitiesGUI extends JPanel {
 	private JTextField createHireBookingField;
 	private JTextField createHireDateField;
 	private JTextField createHireTimeField;
+	private JButton btnPickDate_1; 
 
 	private int userID;
 	private Manager m1;
@@ -534,6 +535,15 @@ public class ActivitiesGUI extends JPanel {
 		createDateFieldPanel.add(createDateField);
 		createDateField.setHorizontalAlignment(SwingConstants.CENTER);
 		createDateField.setColumns(20);
+		
+		JButton btnPick = new JButton("Pick Date");
+		btnPick.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFrame f = new JFrame();
+				createDateField.setText(new DatePicker(f).setPickedDate());
+			}
+		});
+		createDateFieldPanel.add(btnPick);
 
 		JPanel createTimeFieldPanel = new JPanel(
 				new FlowLayout(FlowLayout.LEFT));
@@ -843,6 +853,8 @@ public class ActivitiesGUI extends JPanel {
 		JPanel showHireActivityFieldPanel = new JPanel(new FlowLayout(
 				FlowLayout.LEFT));
 		showHireRight.add(showHireActivityFieldPanel);
+		
+		
 
 		showHireActivityField = new JTextField();
 		showHireActivityFieldPanel.add(showHireActivityField);
@@ -854,11 +866,21 @@ public class ActivitiesGUI extends JPanel {
 				FlowLayout.LEFT));
 		showHireRight.add(showHireDateFieldPanel);
 
+		
 		showHireDateField = new JTextField();
 		showHireDateFieldPanel.add(showHireDateField);
 		showHireDateField.setHorizontalAlignment(SwingConstants.CENTER);
 		showHireDateField.setEditable(false);
 		showHireDateField.setColumns(25);
+		
+		JButton btnPickDate = new JButton("Pick Date");
+		btnPickDate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JFrame f = new JFrame();
+				showHireDateField.setText(new DatePicker(f).setPickedDate());
+				}
+		});
+		showHireDateFieldPanel.add(btnPickDate);
 
 		JPanel showHireTimeFieldPanel = new JPanel(new FlowLayout(
 				FlowLayout.LEFT));
@@ -1004,6 +1026,14 @@ public class ActivitiesGUI extends JPanel {
 		createHireDateFieldPanel.add(createHireDateField);
 		createHireDateField.setHorizontalAlignment(SwingConstants.CENTER);
 		createHireDateField.setColumns(20);
+		
+		btnPickDate_1 = new JButton("Pick Date");
+		btnPickDate_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFrame f = new JFrame();
+				showHireDateField.setText(new DatePicker(f).setPickedDate());}
+		});
+		createHireDateFieldPanel.add(btnPickDate_1);
 
 		JPanel createHireTimeFieldPanel = new JPanel(new FlowLayout(
 				FlowLayout.LEFT));
@@ -1050,7 +1080,7 @@ public class ActivitiesGUI extends JPanel {
 						custID = Integer.parseInt(createHireCustomerField.getText());
 						customer = custCtr.getCustomer(custID);}
 						ActivityTime actTime = new ActivityTime(date, time);
-							if(instructor!=null){actCtr.newInstructorHire(c1, instructor, activBook, actTime);
+							if(instructor!=null){actCtr.newInstructorHire(customer, instructor, activBook, actTime);
 								JOptionPane.showMessageDialog(activitiesWrapper,"You have hired a new Instructor: "
 									+ instructor.getPersonID(),	"Message", 1);
 								if(!activBook.getActivity().getActivityType().name().equals("Golf")||!activBook.getActivity().getActivityType().name().equals("Swimming"))activBook.setInstructorHired(true);
@@ -1220,6 +1250,7 @@ public class ActivitiesGUI extends JPanel {
 			createHireDateField.setEnabled(false);
 			createHireTimeField.setEnabled(false);
 			createHireTimeField.setText(time);
+			btnPickDate_1.setVisible(false);
 			}
 
 			if (c1 == null){
