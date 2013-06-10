@@ -30,6 +30,7 @@ import javax.swing.table.DefaultTableModel;
 
 import Controllers.CustomersCtr;
 import Controllers.RoomsCtr;
+import Models.Agency;
 import Models.Customer;
 import Models.Room;
 import Models.RoomBooking;
@@ -89,6 +90,8 @@ public class RoomsGUI extends JPanel {
 	private JButton btnPickDate_1;
 	private JButton btnPickDate_2;
 	private JButton btnPickDate_3;
+	private JLabel lblAgencyId;
+	private JTextField textFieldAgencyId;
 
 	public RoomsGUI() {
 		initialize();
@@ -103,6 +106,7 @@ public class RoomsGUI extends JPanel {
 
 		roomsTabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		roomsWrapper.add(roomsTabbedPane);
+		
 
 		checkRoomAvailabilityPanel = new JPanel();
 		roomsTabbedPane.addTab("Check Room Availability", null,
@@ -238,20 +242,20 @@ public class RoomsGUI extends JPanel {
 				null));
 		roomBookingPanel.add(bookRoomPanel, BorderLayout.NORTH);
 		GridBagLayout gbl_bookRoomPanel = new GridBagLayout();
-		gbl_bookRoomPanel.columnWidths = new int[] { 30, 80, 35, 85, 0, 35, 85, 0,
-				35, 100, 35, 85, 0, 0 };
+		gbl_bookRoomPanel.columnWidths = new int[] {77, 30, 77, 30, 0, 77, 30, 0, 77, 0, 77, 30};
 		gbl_bookRoomPanel.rowHeights = new int[] { 20, 30, 0 };
-		gbl_bookRoomPanel.columnWeights = new double[] { 0.0, 1.0, 0.0, 0.0, 0.0,
-				0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_bookRoomPanel.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0,
+				0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 		gbl_bookRoomPanel.rowWeights = new double[] { 0.0, 0.0,
 				Double.MIN_VALUE };
 		bookRoomPanel.setLayout(gbl_bookRoomPanel);
 
 		brRoomTypeLabel = new JLabel("Room Numbers:");
 		GridBagConstraints gbc_brRoomTypeLabel = new GridBagConstraints();
+		gbc_brRoomTypeLabel.gridwidth = 2;
 		gbc_brRoomTypeLabel.anchor = GridBagConstraints.WEST;
 		gbc_brRoomTypeLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_brRoomTypeLabel.gridx = 1;
+		gbc_brRoomTypeLabel.gridx = 0;
 		gbc_brRoomTypeLabel.gridy = 0;
 		bookRoomPanel.add(brRoomTypeLabel, gbc_brRoomTypeLabel);
 
@@ -259,7 +263,7 @@ public class RoomsGUI extends JPanel {
 		GridBagConstraints gbc_brStartDateLabel = new GridBagConstraints();
 		gbc_brStartDateLabel.anchor = GridBagConstraints.WEST;
 		gbc_brStartDateLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_brStartDateLabel.gridx = 3;
+		gbc_brStartDateLabel.gridx = 2;
 		gbc_brStartDateLabel.gridy = 0;
 		bookRoomPanel.add(brStartDateLabel, gbc_brStartDateLabel);
 
@@ -267,7 +271,7 @@ public class RoomsGUI extends JPanel {
 		GridBagConstraints gbc_brEndDateLabel = new GridBagConstraints();
 		gbc_brEndDateLabel.anchor = GridBagConstraints.WEST;
 		gbc_brEndDateLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_brEndDateLabel.gridx = 6;
+		gbc_brEndDateLabel.gridx = 5;
 		gbc_brEndDateLabel.gridy = 0;
 		bookRoomPanel.add(brEndDateLabel, gbc_brEndDateLabel);
 
@@ -275,27 +279,36 @@ public class RoomsGUI extends JPanel {
 		GridBagConstraints gbc_brCustomerLabel = new GridBagConstraints();
 		gbc_brCustomerLabel.anchor = GridBagConstraints.WEST;
 		gbc_brCustomerLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_brCustomerLabel.gridx = 9;
+		gbc_brCustomerLabel.gridx = 8;
 		gbc_brCustomerLabel.gridy = 0;
 		bookRoomPanel.add(brCustomerLabel, gbc_brCustomerLabel);
+		
+		lblAgencyId = new JLabel("Agency ID:");
+		GridBagConstraints gbc_lblAgencyId = new GridBagConstraints();
+		gbc_lblAgencyId.anchor = GridBagConstraints.WEST;
+		gbc_lblAgencyId.insets = new Insets(0, 0, 5, 5);
+		gbc_lblAgencyId.gridx = 10;
+		gbc_lblAgencyId.gridy = 0;
+		bookRoomPanel.add(lblAgencyId, gbc_lblAgencyId);
 
 		brRoomNumField = new JFormattedTextField();
 		GridBagConstraints gbc_brRoomNumField = new GridBagConstraints();
 		gbc_brRoomNumField.insets = new Insets(0, 0, 0, 5);
 		gbc_brRoomNumField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_brRoomNumField.gridx = 1;
+		gbc_brRoomNumField.gridx = 0;
 		gbc_brRoomNumField.gridy = 1;
 		bookRoomPanel.add(brRoomNumField, gbc_brRoomNumField);
 
 		brStartDateTextField = new JTextField();
 		GridBagConstraints gbc_brStartDateTextField = new GridBagConstraints();
+		gbc_brStartDateTextField.insets = new Insets(0, 0, 0, 5);
 		gbc_brStartDateTextField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_brStartDateTextField.gridx = 3;
+		gbc_brStartDateTextField.gridx = 2;
 		gbc_brStartDateTextField.gridy = 1;
 		bookRoomPanel.add(brStartDateTextField, gbc_brStartDateTextField);
 		brStartDateTextField.setColumns(10);
 		
-		btnPickDate_2 = new JButton("Pick Date");
+		btnPickDate_2 = new JButton("Calendar");
 		btnPickDate_2.setSize(new Dimension(1, 1));
 		btnPickDate_2.setSize(10, 10);
 		btnPickDate_2.addActionListener(new ActionListener() {
@@ -306,19 +319,20 @@ public class RoomsGUI extends JPanel {
 		});
 		GridBagConstraints gbc_btnPickDate_2 = new GridBagConstraints();
 		gbc_btnPickDate_2.insets = new Insets(0, 0, 0, 5);
-		gbc_btnPickDate_2.gridx = 4;
+		gbc_btnPickDate_2.gridx = 3;
 		gbc_btnPickDate_2.gridy = 1;
 		bookRoomPanel.add(btnPickDate_2, gbc_btnPickDate_2);
 
 		brEndDateTextField = new JTextField();
 		GridBagConstraints gbc_brEndDateTextField = new GridBagConstraints();
+		gbc_brEndDateTextField.insets = new Insets(0, 0, 0, 5);
 		gbc_brEndDateTextField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_brEndDateTextField.gridx = 6;
+		gbc_brEndDateTextField.gridx = 5;
 		gbc_brEndDateTextField.gridy = 1;
 		bookRoomPanel.add(brEndDateTextField, gbc_brEndDateTextField);
 		brEndDateTextField.setColumns(10);
 		
-		btnPickDate_3 = new JButton("Pick Date");
+		btnPickDate_3 = new JButton("Calendar");
 		btnPickDate_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFrame f = new JFrame();
@@ -327,7 +341,7 @@ public class RoomsGUI extends JPanel {
 		});
 		GridBagConstraints gbc_btnPickDate_3 = new GridBagConstraints();
 		gbc_btnPickDate_3.insets = new Insets(0, 0, 0, 5);
-		gbc_btnPickDate_3.gridx = 7;
+		gbc_btnPickDate_3.gridx = 6;
 		gbc_btnPickDate_3.gridy = 1;
 		bookRoomPanel.add(btnPickDate_3, gbc_btnPickDate_3);
 
@@ -335,23 +349,31 @@ public class RoomsGUI extends JPanel {
 		GridBagConstraints gbc_brCustomerIdTextField = new GridBagConstraints();
 		gbc_brCustomerIdTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_brCustomerIdTextField.insets = new Insets(0, 0, 0, 5);
-		gbc_brCustomerIdTextField.gridx = 9;
+		gbc_brCustomerIdTextField.gridx = 8;
 		gbc_brCustomerIdTextField.gridy = 1;
 		bookRoomPanel.add(brCustomerIdTextField, gbc_brCustomerIdTextField);
 		brCustomerIdTextField.setColumns(10);
-
-		btnBookRoom = new JButton("Book Rooms");
-		btnBookRoom.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				bookRooms();
-			}
-		});
-		GridBagConstraints gbc_btnBookRoom = new GridBagConstraints();
-		gbc_btnBookRoom.insets = new Insets(0, 0, 0, 5);
-		gbc_btnBookRoom.anchor = GridBagConstraints.NORTHWEST;
-		gbc_btnBookRoom.gridx = 11;
-		gbc_btnBookRoom.gridy = 1;
-		bookRoomPanel.add(btnBookRoom, gbc_btnBookRoom);
+		
+		textFieldAgencyId = new JTextField();
+		GridBagConstraints gbc_textFieldAgencyId = new GridBagConstraints();
+		gbc_textFieldAgencyId.insets = new Insets(0, 0, 0, 5);
+		gbc_textFieldAgencyId.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textFieldAgencyId.gridx = 10;
+		gbc_textFieldAgencyId.gridy = 1;
+		bookRoomPanel.add(textFieldAgencyId, gbc_textFieldAgencyId);
+		textFieldAgencyId.setColumns(10);
+				
+						btnBookRoom = new JButton("Book Rooms");
+						btnBookRoom.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent arg0) {
+								bookRooms();
+							}
+						});
+						GridBagConstraints gbc_btnBookRoom = new GridBagConstraints();
+						gbc_btnBookRoom.anchor = GridBagConstraints.WEST;
+						gbc_btnBookRoom.gridx = 11;
+						gbc_btnBookRoom.gridy = 1;
+						bookRoomPanel.add(btnBookRoom, gbc_btnBookRoom);
 
 		roomBookingsPanel = new JPanel();
 		roomBookingsPanel.setBorder(null);
@@ -433,6 +455,11 @@ public class RoomsGUI extends JPanel {
 	 * Manually added methods:
 	 */
 
+	public void setAgencyID(Agency agency){
+		roomsTabbedPane.setSelectedIndex(1);
+		textFieldAgencyId.setText(String.valueOf(agency.getID()));
+		}
+	
 	// Fill check room availability table, triggered by using
 	// "Check Availability" button
 	private void fillChraTable() {
