@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -25,10 +26,10 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.UIManager;
-
 import Controllers.ActivitiesCtr;
 import Controllers.CustomersCtr;
 import Controllers.RoomsCtr;
+import Models.Agency;
 import Models.Customer;
 import Models.InstructorHire;
 import Models.Room;
@@ -39,6 +40,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.Component;
 
 public class CustomersGUI extends JPanel {
 
@@ -119,6 +121,18 @@ public class CustomersGUI extends JPanel {
 	private JTextField editStaysField;
 	private JLabel totalInstructor;
 	private ActivitiesCtr actCtr;
+	private JTextField textFieldSearchAgen;
+	private JTable table;
+	private JTextField textFieldAgenNameNew;
+	private JTextField textFieldAgenDiscountNew;
+	private JTextField textFieldAgenIdEdit;
+	private JTextField textFieldAgenNameEdit;
+	private JTextField textFieldAgenDiscountEdit;
+	private JTextField textFieldAgenIdShow;
+	private JTextField textFieldAgenNameShow;
+	private JTextField textFieldAgenDiscountShow;
+	private JPanel lowerAgenWrapper;
+	private DefaultTableModel dtmAgen;
 
 	public CustomersGUI() {
 		custCtr = new CustomersCtr();
@@ -759,7 +773,7 @@ public class CustomersGUI extends JPanel {
 		JPanel newCustDetails = new JPanel();
 		newCustDetails.setLayout(new BoxLayout(newCustDetails, BoxLayout.X_AXIS));
 		newCustContainer.add(newCustDetails);
-
+//TODO
 		JPanel newCustLeft = new JPanel();
 		newCustDetails.add(newCustLeft);
 		newCustLeft.setLayout(new GridLayout(0, 1, 0, 0));
@@ -1107,13 +1121,454 @@ public class CustomersGUI extends JPanel {
 		totalInstructor = new JLabel("Total: ");
 		lowerBillInstructorsWrap.add(totalInstructor, BorderLayout.WEST);
 		
+		JPanel agenPanel = new JPanel();
+		customersTabbedPane.addTab("Agencies", null, agenPanel, null);
+		agenPanel.setLayout(new BorderLayout(0, 0));
+		
+		JPanel upperAgenWrapper = new JPanel();
+		agenPanel.add(upperAgenWrapper, BorderLayout.NORTH);
+		upperAgenWrapper.setLayout(new BorderLayout(0, 0));
+		
+		JPanel upperAgenWrapLeft = new JPanel();
+		upperAgenWrapper.add(upperAgenWrapLeft, BorderLayout.WEST);
+		
+		JButton btnNewAgency = new JButton("New Agency");
+		btnNewAgency.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				CardLayout card = (CardLayout) (lowerAgenWrapper.getLayout());
+				card.show(lowerAgenWrapper, "New Agency");
+			}
+		});
+		upperAgenWrapLeft.add(btnNewAgency);
+		
+		JButton btnSelect = new JButton("Select");
+		btnSelect.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = 0;
+				Agency agency = null;
+				try{
+					row = table.getSelectedRow();
+					agency = custCtr.getAgency((int) table.getModel().getValueAt(row, 0));
+					showAgency(agency);
+				}
+				catch(ArrayIndexOutOfBoundsException ae){
+					JOptionPane.showMessageDialog(customersWrapper, "Select a row in the table!", "Request", JOptionPane.WARNING_MESSAGE);
+				}
+				
+			}
+		});
+		upperAgenWrapLeft.add(btnSelect);
+		
+		JButton btnNewBooking = new JButton("New Booking");
+		btnNewBooking.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = 0;
+				Agency agency = null;
+				try{
+					row = table.getSelectedRow();
+					agency = custCtr.getAgency((int) table.getModel().getValueAt(row, 0));
+				}
+				catch(ArrayIndexOutOfBoundsException ae){
+					JOptionPane.showMessageDialog(customersWrapper, "Select a row in the table!", "Request", JOptionPane.WARNING_MESSAGE);
+				}
+				MainGUI.getInstance().showRoomBooking(agency);
+			}
+		});
+		upperAgenWrapLeft.add(btnNewBooking);
+		
+		JPanel upperAgenWrapRight = new JPanel();
+		upperAgenWrapper.add(upperAgenWrapRight, BorderLayout.EAST);
+		
+		textFieldSearchAgen = new JTextField();
+		upperAgenWrapRight.add(textFieldSearchAgen);
+		textFieldSearchAgen.setColumns(10);
+		
+		JButton btnSearch = new JButton("Search");
+		btnSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int ID = 0;
+				try{
+					ID = Integer.parseInt(textFieldSearchAgen.getText());
+					Agency agency = custCtr.getAgency(ID);
+					agency.getID();
+					showAgency(agency);
+				}
+				catch(NumberFormatException nfe){
+					JOptionPane.showMessageDialog(customersWrapper, "Enter a valid number!", "Request", JOptionPane.WARNING_MESSAGE);
+				}
+				catch(NullPointerException npe){
+					JOptionPane.showMessageDialog(customersWrapper, "Agency with such an ID doesn't exist!", "Request", JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		});
+		upperAgenWrapRight.add(btnSearch);
+		
+		lowerAgenWrapper = new JPanel();
+		agenPanel.add(lowerAgenWrapper);
+		lowerAgenWrapper.setLayout(new CardLayout(0, 0));
+		
+		JPanel allAgen = new JPanel();
+		lowerAgenWrapper.add(allAgen, "All Agencies");
+		allAgen.setLayout(new BorderLayout(0, 0));
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		allAgen.add(scrollPane_1);
+		
+		table = new JTable();
+		scrollPane_1.setViewportView(table);
+		//TODO
+		JPanel newAgen = new JPanel();
+		lowerAgenWrapper.add(newAgen, "New Agency");
+		newAgen.setLayout(new BorderLayout());
+		
+		JPanel newAgenContainer = new JPanel();
+		newAgenContainer.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		newAgen.add(newAgenContainer, BorderLayout.NORTH);
+		newAgenContainer.setBorder(BorderFactory.createTitledBorder("New Agency"));
+		
+		JPanel newAgenDetails = new JPanel();
+		newAgenContainer.add(newAgenDetails);
+		newAgenDetails.setLayout(new BoxLayout(newAgenDetails, BoxLayout.X_AXIS));
+		
+		JPanel newAgenLeft = new JPanel();
+		newAgenDetails.add(newAgenLeft);
+		newAgenLeft.setLayout(new GridLayout(0, 1, 0, 0));
+		
+		JPanel newAgenName = new JPanel();
+		newAgenLeft.add(newAgenName);
+		newAgenName.setLayout(new BoxLayout(newAgenName, BoxLayout.X_AXIS));
+		
+		JLabel lblName = new JLabel("Name:");
+		newAgenName.add(lblName);
+		lblName.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		JPanel newAgenDiscount = new JPanel();
+		newAgenLeft.add(newAgenDiscount);
+		newAgenDiscount.setLayout(new BoxLayout(newAgenDiscount, BoxLayout.X_AXIS));
+		
+		JLabel lblDiscount = new JLabel("Discount:");
+		newAgenDiscount.add(lblDiscount);
+		lblDiscount.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		JPanel newAgenRight = new JPanel();
+		newAgenDetails.add(newAgenRight);
+		newAgenRight.setLayout(new BoxLayout(newAgenRight, BoxLayout.Y_AXIS));
+		
+		JPanel newAgenNameField = new JPanel();
+		newAgenRight.add(newAgenNameField);
+		newAgenNameField.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
+		textFieldAgenNameNew = new JTextField();
+		newAgenNameField.add(textFieldAgenNameNew);
+		textFieldAgenNameNew.setColumns(10);
+		
+		JPanel newAgenDiscountField = new JPanel();
+		newAgenRight.add(newAgenDiscountField);
+		newAgenDiscountField.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
+		textFieldAgenDiscountNew = new JTextField();
+		newAgenDiscountField.add(textFieldAgenDiscountNew);
+		textFieldAgenDiscountNew.setColumns(10);
+		
+		JPanel newAgenButtons = new JPanel();
+		newAgen.add(newAgenButtons, BorderLayout.CENTER);
+		
+		JButton btnCreate = new JButton("Create");
+		btnCreate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String name = textFieldAgenNameNew.getText();
+				int discount = 0;
+				try{
+					discount = Integer.parseInt(textFieldAgenDiscountNew.getText());
+				}
+				catch(NumberFormatException nfe){
+					JOptionPane.showMessageDialog(customersWrapper, "Discount is automatically 0.", "Message", JOptionPane.INFORMATION_MESSAGE);
+				}
+				if(discount<0||discount>100){
+					JOptionPane.showMessageDialog(customersWrapper, "Discount is automatically 0.", "Message", JOptionPane.INFORMATION_MESSAGE);
+					discount = 0;
+				}
+				custCtr.newAgency(name, discount, new LinkedList<Customer>());
+				showAllAgencies();
+			}
+		});
+		newAgenButtons.add(btnCreate);
+		
+		JButton btnCancel = new JButton("Cancel");
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showAllAgencies();
+			}
+		});
+		newAgenButtons.add(btnCancel);
+		
+		JPanel editAgen = new JPanel();
+		lowerAgenWrapper.add(editAgen, "Edit Agency");
+		editAgen.setLayout(new BorderLayout(0, 0));
+		
+		JPanel editAgenContainer = new JPanel();
+		editAgen.add(editAgenContainer, BorderLayout.NORTH);
+		
+		JPanel editAgenDetails = new JPanel();
+		editAgenContainer.add(editAgenDetails);
+		editAgenDetails.setLayout(new BoxLayout(editAgenDetails, BoxLayout.X_AXIS));
+		
+		JPanel editAgenLeft = new JPanel();
+		editAgenDetails.add(editAgenLeft);
+		editAgenLeft.setLayout(new GridLayout(0, 1, 0, 0));
+		
+		JPanel editAgenIdLabelPanel = new JPanel();
+		editAgenLeft.add(editAgenIdLabelPanel);
+		editAgenIdLabelPanel.setLayout(new BoxLayout(editAgenIdLabelPanel, BoxLayout.X_AXIS));
+		
+		JLabel lblId = new JLabel("ID:");
+		editAgenIdLabelPanel.add(lblId);
+		
+		JPanel editAgenNameLabelPanel = new JPanel();
+		editAgenLeft.add(editAgenNameLabelPanel);
+		editAgenNameLabelPanel.setLayout(new BoxLayout(editAgenNameLabelPanel, BoxLayout.X_AXIS));
+		
+		JLabel lblName_1 = new JLabel("Name:");
+		editAgenNameLabelPanel.add(lblName_1);
+		
+		JPanel editAgenDiscountLabelPanel = new JPanel();
+		editAgenLeft.add(editAgenDiscountLabelPanel);
+		editAgenDiscountLabelPanel.setLayout(new BoxLayout(editAgenDiscountLabelPanel, BoxLayout.X_AXIS));
+		
+		JLabel lblDiscount_1 = new JLabel("Discount:");
+		editAgenDiscountLabelPanel.add(lblDiscount_1);
+		
+		JPanel editAgenRight = new JPanel();
+		editAgenDetails.add(editAgenRight);
+		editAgenRight.setLayout(new BoxLayout(editAgenRight, BoxLayout.Y_AXIS));
+		
+		JPanel editAgenIdFieldPanel = new JPanel();
+		editAgenRight.add(editAgenIdFieldPanel);
+		
+		textFieldAgenIdEdit = new JTextField();
+		textFieldAgenIdEdit.setEnabled(false);
+		textFieldAgenIdEdit.setText("");
+		editAgenIdFieldPanel.add(textFieldAgenIdEdit);
+		textFieldAgenIdEdit.setColumns(10);
+		
+		JPanel editAgenNameFieldPanel = new JPanel();
+		editAgenRight.add(editAgenNameFieldPanel);
+		
+		textFieldAgenNameEdit = new JTextField();
+		textFieldAgenNameEdit.setText("");
+		editAgenNameFieldPanel.add(textFieldAgenNameEdit);
+		textFieldAgenNameEdit.setColumns(10);
+		
+		JPanel editAgenDiscountFieldPanel = new JPanel();
+		editAgenRight.add(editAgenDiscountFieldPanel);
+		
+		textFieldAgenDiscountEdit = new JTextField();
+		textFieldAgenDiscountEdit.setText("");
+		editAgenDiscountFieldPanel.add(textFieldAgenDiscountEdit);
+		textFieldAgenDiscountEdit.setColumns(10);
+		
+		JPanel editAgenButtonsPanel = new JPanel();
+		editAgen.add(editAgenButtonsPanel, BorderLayout.CENTER);
+		editAgenButtonsPanel.setLayout(new BorderLayout(0, 0));
+		
+		JPanel editAgenButtonsCenterPanel = new JPanel();
+		editAgenButtonsPanel.add(editAgenButtonsCenterPanel, BorderLayout.CENTER);
+		
+		JButton btnEdit = new JButton("Edit");
+		btnEdit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int ID = Integer.parseInt(textFieldAgenIdEdit.getText());
+				String name = textFieldAgenNameEdit.getText();
+				int discount = 0;
+				try{
+					discount = Integer.parseInt(textFieldAgenDiscountEdit.getText());
+				}
+				catch(NumberFormatException nfe){
+					JOptionPane.showMessageDialog(customersWrapper, "Discount is automatically 0.", "Message", JOptionPane.INFORMATION_MESSAGE);
+				}
+				if(discount<0||discount>100){
+					JOptionPane.showMessageDialog(customersWrapper, "Discount is automatically 0.", "Message", JOptionPane.INFORMATION_MESSAGE);
+					discount = 0;
+				}
+				Agency agency = custCtr.getAgency(ID);
+				custCtr.updateAgency(ID, name, discount, agency.getProvidedCustomers());
+				showAllAgencies();
+			}
+		});
+		editAgenButtonsCenterPanel.add(btnEdit);
+		
+		JButton btnCancel_1 = new JButton("Cancel");
+		btnCancel_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showAllAgencies();
+			}
+		});
+		editAgenButtonsCenterPanel.add(btnCancel_1);
+		
+		JPanel showAgen = new JPanel();
+		lowerAgenWrapper.add(showAgen, "Show Agency");
+		showAgen.setLayout(new BorderLayout(0, 0));
+		
+		JPanel showAgenContainer = new JPanel();
+		showAgen.add(showAgenContainer, BorderLayout.NORTH);
+		showAgenContainer.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
+		JPanel showAgenDetails = new JPanel();
+		showAgenContainer.add(showAgenDetails);
+		showAgenDetails.setLayout(new BoxLayout(showAgenDetails, BoxLayout.X_AXIS));
+		
+		JPanel showAgenLeft = new JPanel();
+		showAgenDetails.add(showAgenLeft);
+		showAgenLeft.setLayout(new GridLayout(0, 1, 0, 0));
+		
+		JPanel showAgenIdLabelPanel = new JPanel();
+		showAgenLeft.add(showAgenIdLabelPanel);
+		showAgenIdLabelPanel.setLayout(new BoxLayout(showAgenIdLabelPanel, BoxLayout.X_AXIS));
+		
+		JLabel lblId_1 = new JLabel("ID:");
+		lblId_1.setVerticalTextPosition(SwingConstants.CENTER);
+		lblId_1.setHorizontalTextPosition(SwingConstants.TRAILING);
+		lblId_1.setAlignmentY(Component.CENTER_ALIGNMENT);
+		lblId_1.setAlignmentX(Component.LEFT_ALIGNMENT);
+		lblId_1.setHorizontalAlignment(SwingConstants.LEADING);
+		lblId_1.setVerticalAlignment(SwingConstants.CENTER);
+		showAgenIdLabelPanel.add(lblId_1);
+		
+		JPanel showAgenNameLabel = new JPanel();
+		showAgenLeft.add(showAgenNameLabel);
+		showAgenNameLabel.setLayout(new BoxLayout(showAgenNameLabel, BoxLayout.X_AXIS));
+		
+		JLabel lblName_2 = new JLabel("Name:");
+		lblName_2.setHorizontalAlignment(SwingConstants.LEFT);
+		showAgenNameLabel.add(lblName_2);
+		
+		JPanel showAgenDiscountLabelPanel = new JPanel();
+		showAgenLeft.add(showAgenDiscountLabelPanel);
+		showAgenDiscountLabelPanel.setLayout(new BoxLayout(showAgenDiscountLabelPanel, BoxLayout.X_AXIS));
+		
+		JLabel lblDiscount_2 = new JLabel("Discount:");
+		showAgenDiscountLabelPanel.add(lblDiscount_2);
+		
+		JPanel showAgenRight = new JPanel();
+		showAgenDetails.add(showAgenRight);
+		showAgenRight.setLayout(new BoxLayout(showAgenRight, BoxLayout.Y_AXIS));
+		
+		JPanel showAgenIdFieldPanel = new JPanel();
+		showAgenRight.add(showAgenIdFieldPanel);
+		
+		textFieldAgenIdShow = new JTextField();
+		textFieldAgenIdShow.setEnabled(false);
+		textFieldAgenIdShow.setText("");
+		showAgenIdFieldPanel.add(textFieldAgenIdShow);
+		textFieldAgenIdShow.setColumns(10);
+		
+		JPanel showAgenNameFieldPanel = new JPanel();
+		showAgenRight.add(showAgenNameFieldPanel);
+		
+		textFieldAgenNameShow = new JTextField();
+		textFieldAgenNameShow.setEnabled(false);
+		textFieldAgenNameShow.setText("");
+		showAgenNameFieldPanel.add(textFieldAgenNameShow);
+		textFieldAgenNameShow.setColumns(10);
+		
+		JPanel showAgenDiscountFieldPanel = new JPanel();
+		showAgenRight.add(showAgenDiscountFieldPanel);
+		
+		textFieldAgenDiscountShow = new JTextField();
+		textFieldAgenDiscountShow.setEnabled(false);
+		textFieldAgenDiscountShow.setText("");
+		showAgenDiscountFieldPanel.add(textFieldAgenDiscountShow);
+		textFieldAgenDiscountShow.setColumns(10);
+		
+		JPanel showAgenButtons = new JPanel();
+		showAgen.add(showAgenButtons, BorderLayout.CENTER);
+		showAgenButtons.setLayout(new BorderLayout(0, 0));
+		
+		JPanel showAgenButtonsLeft = new JPanel();
+		showAgenButtons.add(showAgenButtonsLeft, BorderLayout.WEST);
+		
+		JButton btnBack = new JButton("Back");
+		btnBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showAllAgencies();
+			}
+		});
+		showAgenButtonsLeft.add(btnBack);
+		
+		JPanel showButtonsAgenCenter = new JPanel();
+		showAgenButtons.add(showButtonsAgenCenter, BorderLayout.CENTER);
+		
+		JButton btnEdit_1 = new JButton("Edit");
+		btnEdit_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int ID = Integer.parseInt(textFieldAgenIdShow.getText());
+				Agency agency = custCtr.getAgency(ID);
+				editAgency(agency);
+			}
+		});
+		showButtonsAgenCenter.add(btnEdit_1);
+		
+		JButton btnDelete = new JButton("Delete");
+		btnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try{
+					int ID = Integer.parseInt(textFieldAgenIdShow.getText());
+					custCtr.deleteAgency(ID);					
+				}
+				catch(NumberFormatException nfe){
+					JOptionPane.showMessageDialog(customersWrapper, "Enter valid number", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+					showAllAgencies();
+				
+			}
+		});
+		showButtonsAgenCenter.add(btnDelete);
+		
+		fillAgenTable();
+		
+
 	}
 
 	/*
 	 * Manually added methods
 	 */
+	
+	private void editAgency(Agency agency){
+		CardLayout card = (CardLayout) (lowerAgenWrapper.getLayout());
+		card.show(lowerAgenWrapper, "Edit Agency");
+		textFieldAgenIdEdit.setText(String.valueOf((agency.getID())));
+		textFieldAgenNameEdit.setText(agency.getName());
+		textFieldAgenDiscountEdit.setText(String.valueOf(agency.getAgencyDiscountLevel()));
+	}
+	
+	private void showAgency(Agency agency){
+		CardLayout card = (CardLayout) (lowerAgenWrapper.getLayout());
+		card.show(lowerAgenWrapper, "Show Agency");
+		textFieldAgenIdShow.setText(String.valueOf((agency.getID())));
+		textFieldAgenNameShow.setText(agency.getName());
+		textFieldAgenDiscountShow.setText(String.valueOf(agency.getAgencyDiscountLevel()));
+	}
 
-	@SuppressWarnings("unused")
+	private void showAllAgencies(){
+		CardLayout card = (CardLayout) (lowerAgenWrapper.getLayout());
+		card.show(lowerAgenWrapper, "All Agencies");
+		fillAgenTable();
+	}
+	private void fillAgenTable(){
+		dtmAgen = new DefaultTableModel(new Object[][] {},
+				new String[] { "ID", "Name", "Discount"});
+		table.setModel(dtmAgen);
+		LinkedList<Agency> agencies = custCtr.getAllAgencies();
+		for(Agency agency: agencies){
+			int ID = agency.getID();
+			String name = agency.getName();
+			int discount = agency.getAgencyDiscountLevel();
+			
+			Object[] rowData = { ID,name,discount};
+			dtmAgen.addRow(rowData);
+		}
+	}
+	
 	private void fillCustRoomBillTable() {
 		CardLayout card = (CardLayout) (lowerBillingPanelWrapper.getLayout());
 		card.show(lowerBillingPanelWrapper, "Bill Rooms");
@@ -1159,7 +1614,6 @@ public class CustomersGUI extends JPanel {
 			// getting total price
 			double totalPrice = 0;
 			ArrayList<Room> rooms = roombooking.getRoomsBooked();
-			String roomsBooked = "";
 			for (Room room : rooms) {
 				totalPrice = totalPrice + room.getPrice();
 			}

@@ -17,6 +17,8 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
+import Models.Agency;
+
 public class MainGUI {
 	private JFrame frame;
 	private JPanel menuWrapper;
@@ -35,6 +37,7 @@ public class MainGUI {
 	private JPanel contentPanel;
 	private JPanel optionsBorder;
 	private JPanel contentBorder;
+	private static MainGUI instance;
 
 	public MainGUI() {
 
@@ -160,7 +163,7 @@ public class MainGUI {
 				cl.show(frame.getContentPane(), "Login Wrapper");
 			}
 		});
-
+		
 	}
 
 	public static void main(String[] args) {
@@ -179,6 +182,7 @@ public class MainGUI {
 				}
 
 				MainGUI window = new MainGUI();
+				instance = window;
 				window.initialize();
 			}
 		});
@@ -229,6 +233,17 @@ public class MainGUI {
 			CardLayout cl = (CardLayout) (frame.getContentPane().getLayout());
 			cl.show(frame.getContentPane(), "Menu Wrapper");
 		}
-	}
+		
+		}
+	
+		public static MainGUI getInstance(){
+			return instance;
+		}
+		public void showRoomBooking(Agency agency){
+			CardLayout cl = (CardLayout) contentPanel.getLayout();
+			cl.show(contentPanel, "RoomsGUI");
+			
+			roomsGUI.setAgencyID(agency);
+		}
 
 }
