@@ -83,6 +83,7 @@ public class DAOAgency implements IFDAOAgency {
 	public int update(Agency agency) {
 		// row count set to -1
 		int rc = -1;
+		deleteCustomers(agency.getID());
 		// creates query
 		String query = "SET DATEFORMAT dmy;" +
 				"UPDATE Agency SET " +
@@ -101,6 +102,7 @@ public class DAOAgency implements IFDAOAgency {
 			System.out.println("Agency update failed.");
 			e.getMessage();
 		}
+		insertCustomers(agency.getProvidedCustomers(), agency.getID());
 		return rc;
 	}
 
@@ -192,6 +194,7 @@ public class DAOAgency implements IFDAOAgency {
 				Agency agency = new Agency();
 				agency = buildAgency(results);
 				//inserts provided customers into Agency object
+				wClause = "AgencyID = " + agency.getID();
 				agency.setProvidedCustomers(getProvidedCustomers(wClause,false));
 				list.add(agency);
 			}
