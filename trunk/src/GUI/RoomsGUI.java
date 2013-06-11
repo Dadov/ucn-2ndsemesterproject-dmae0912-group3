@@ -568,10 +568,17 @@ public class RoomsGUI extends JPanel {
 				.getInstance().getTime());
 		String startDate = brStartDateTextField.getText();
 		String endDate = brEndDateTextField.getText();
-
+		
 		try {
+			int agenID = Integer.parseInt(textFieldAgencyId.getText());
+			Agency agency = customersCtr.getAgency(agenID);
+			agency.getProvidedCustomers().add(customer);
 			roomsCtr.newRoomBooking(customer, rooms, bookDate, startDate,
 					endDate);
+			customersCtr.updateAgency(agenID, agency.getName(), agency.getAgencyDiscountLevel(), agency.getProvidedCustomers());
+		}
+		catch(NumberFormatException nfe){
+			JOptionPane.showMessageDialog(roomsWrapper, "Enter valid number","Error", JOptionPane.ERROR_MESSAGE);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(),
 					"Invalid dates", JOptionPane.ERROR_MESSAGE);

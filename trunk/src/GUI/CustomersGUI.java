@@ -133,6 +133,7 @@ public class CustomersGUI extends JPanel {
 	private JTextField textFieldAgenDiscountShow;
 	private JPanel lowerAgenWrapper;
 	private DefaultTableModel dtmAgen;
+	private JTable provCustTable;
 
 	public CustomersGUI() {
 		custCtr = new CustomersCtr();
@@ -1125,12 +1126,16 @@ public class CustomersGUI extends JPanel {
 		customersTabbedPane.addTab("Agencies", null, agenPanel, null);
 		agenPanel.setLayout(new BorderLayout(0, 0));
 		
-		JPanel upperAgenWrapper = new JPanel();
+		final JPanel upperAgenWrapper = new JPanel();
 		agenPanel.add(upperAgenWrapper, BorderLayout.NORTH);
-		upperAgenWrapper.setLayout(new BorderLayout(0, 0));
+		upperAgenWrapper.setLayout(new CardLayout(0, 0));
+		
+		JPanel normalMenuAgen = new JPanel();
+		upperAgenWrapper.add(normalMenuAgen, "Back Agency");
+		normalMenuAgen.setLayout(new BorderLayout(0, 0));
 		
 		JPanel upperAgenWrapLeft = new JPanel();
-		upperAgenWrapper.add(upperAgenWrapLeft, BorderLayout.WEST);
+		normalMenuAgen.add(upperAgenWrapLeft, BorderLayout.WEST);
 		
 		JButton btnNewAgency = new JButton("New Agency");
 		btnNewAgency.addActionListener(new ActionListener() {
@@ -1176,8 +1181,28 @@ public class CustomersGUI extends JPanel {
 		});
 		upperAgenWrapLeft.add(btnNewBooking);
 		
+		JButton btnSeeProvidedCustomers = new JButton("See Provided Customers");
+		btnSeeProvidedCustomers.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				CardLayout cl = (CardLayout) (upperAgenWrapper.getLayout());
+				cl.show(upperAgenWrapper, "See Customers");
+				CardLayout card = (CardLayout) (lowerAgenWrapper.getLayout());
+				card.show(lowerAgenWrapper, "Provided Customers");
+				int agenID = 0;
+				try{
+					int row = table.getSelectedRow();
+					agenID = (int) table.getModel().getValueAt(row, 0);
+					fillProvCustTable(agenID);
+				}
+				catch(ArrayIndexOutOfBoundsException ae){
+				fillProvCustTable(0);
+				}
+			}
+		});
+		upperAgenWrapLeft.add(btnSeeProvidedCustomers);
+		
 		JPanel upperAgenWrapRight = new JPanel();
-		upperAgenWrapper.add(upperAgenWrapRight, BorderLayout.EAST);
+		normalMenuAgen.add(upperAgenWrapRight, BorderLayout.EAST);
 		
 		textFieldSearchAgen = new JTextField();
 		upperAgenWrapRight.add(textFieldSearchAgen);
@@ -1202,6 +1227,23 @@ public class CustomersGUI extends JPanel {
 			}
 		});
 		upperAgenWrapRight.add(btnSearch);
+		
+		JPanel backProvCustPanel = new JPanel();
+		upperAgenWrapper.add(backProvCustPanel, "See Customers");
+		backProvCustPanel.setLayout(new BorderLayout(0, 0));
+		
+		JPanel upperBackLeft = new JPanel();
+		backProvCustPanel.add(upperBackLeft, BorderLayout.WEST);
+		
+		JButton btnBack_1 = new JButton("Back");
+		btnBack_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showAllAgencies();
+				CardLayout card = (CardLayout) (upperAgenWrapper.getLayout());
+				card.show(upperAgenWrapper, "Back Agency");
+			}
+		});
+		upperBackLeft.add(btnBack_1);
 		
 		lowerAgenWrapper = new JPanel();
 		agenPanel.add(lowerAgenWrapper);
@@ -1524,6 +1566,16 @@ public class CustomersGUI extends JPanel {
 		});
 		showButtonsAgenCenter.add(btnDelete);
 		
+		JPanel provCust = new JPanel();
+		lowerAgenWrapper.add(provCust, "Provided Customers");
+		provCust.setLayout(new BorderLayout(0, 0));
+		
+		JScrollPane scrollPane_2 = new JScrollPane();
+		provCust.add(scrollPane_2, BorderLayout.CENTER);
+		
+		provCustTable = new JTable();
+		scrollPane_2.setViewportView(provCustTable);
+		
 		fillAgenTable();
 		
 
@@ -1532,7 +1584,20 @@ public class CustomersGUI extends JPanel {
 	/*
 	 * Manually added methods
 	 */
-	
+	private void fillProvCustTable(int agenID){
+		DefaultTableModel dtmProvCust = new DefaultTableModel(new Object[][] {},
+				new String[] { "Agency ID", "Customer ID", "First Name", "Last Name", "Address"});
+		provCustTable.setModel(dtmProvCust);
+		LinkedList<Agency> agencies = new LinkedList<Agency>();
+		if(agenID==0)agencies = custCtr.getAllAgencies();
+		else agencies.add(custCtr.getAgency(agenID));
+		for(Agency agency: agencies){
+			for(Customer customer: agency.getProvidedCustomers()){
+				Object[] rowData = { agency.getID(), customer.getPersonID(),customer.getFname(), customer.getLname(),customer.getAddress()};
+				dtmProvCust.addRow(rowData);
+			}
+		}
+	}
 	private void editAgency(Agency agency){
 		CardLayout card = (CardLayout) (lowerAgenWrapper.getLayout());
 		card.show(lowerAgenWrapper, "Edit Agency");
