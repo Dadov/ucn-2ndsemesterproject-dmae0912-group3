@@ -48,6 +48,7 @@ import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+import java.awt.Insets;
 public class ActivitiesGUI extends JPanel {
 
 	/**
@@ -873,7 +874,8 @@ public class ActivitiesGUI extends JPanel {
 		showHireDateField.setEditable(false);
 		showHireDateField.setColumns(25);
 		
-		JButton btnPickDate = new JButton("Pick Date");
+		JButton btnPickDate = new JButton("Calendar");
+		btnPickDate.setMargin(new Insets(0, 0, 0, 0));
 		btnPickDate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				JFrame f = new JFrame();

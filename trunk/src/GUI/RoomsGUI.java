@@ -164,13 +164,14 @@ public class RoomsGUI extends JPanel {
 
 		chraDateStartField = new JTextField();
 		GridBagConstraints gbc_chraDateStartField = new GridBagConstraints();
-		gbc_chraDateStartField.anchor = GridBagConstraints.NORTHWEST;
+		gbc_chraDateStartField.anchor = GridBagConstraints.WEST;
 		gbc_chraDateStartField.gridx = 3;
 		gbc_chraDateStartField.gridy = 1;
 		chraInputPanel.add(chraDateStartField, gbc_chraDateStartField);
 		chraDateStartField.setColumns(10);
 		
-		btnPickDate = new JButton("Pick Date");
+		btnPickDate = new JButton("Calendar");
+		btnPickDate.setMargin(new Insets(0, 0, 0, 0));
 		btnPickDate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 						JFrame f = new JFrame();
@@ -185,7 +186,7 @@ public class RoomsGUI extends JPanel {
 
 		chraDateEndField = new JTextField();
 		GridBagConstraints gbc_chraDateEndField = new GridBagConstraints();
-		gbc_chraDateEndField.anchor = GridBagConstraints.NORTHWEST;
+		gbc_chraDateEndField.anchor = GridBagConstraints.WEST;
 		gbc_chraDateEndField.gridx = 6;
 		gbc_chraDateEndField.gridy = 1;
 		chraInputPanel.add(chraDateEndField, gbc_chraDateEndField);
@@ -198,7 +199,8 @@ public class RoomsGUI extends JPanel {
 			}
 		});
 		
-		btnPickDate_1 = new JButton("Pick Date");
+		btnPickDate_1 = new JButton("Calendar");
+		btnPickDate_1.setMargin(new Insets(0, 0, 0, 0));
 		btnPickDate_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 						JFrame f = new JFrame();
@@ -242,7 +244,7 @@ public class RoomsGUI extends JPanel {
 				null));
 		roomBookingPanel.add(bookRoomPanel, BorderLayout.NORTH);
 		GridBagLayout gbl_bookRoomPanel = new GridBagLayout();
-		gbl_bookRoomPanel.columnWidths = new int[] {77, 30, 77, 30, 0, 77, 30, 0, 77, 0, 77, 30};
+		gbl_bookRoomPanel.columnWidths = new int[] {77, 20, 77, 30, 20, 77, 30, 20, 77, 20, 77, 30};
 		gbl_bookRoomPanel.rowHeights = new int[] { 20, 30, 0 };
 		gbl_bookRoomPanel.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0,
 				0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
@@ -300,8 +302,8 @@ public class RoomsGUI extends JPanel {
 		bookRoomPanel.add(brRoomNumField, gbc_brRoomNumField);
 
 		brStartDateTextField = new JTextField();
+		brStartDateTextField.setMargin(new Insets(2, 0, 2, 0));
 		GridBagConstraints gbc_brStartDateTextField = new GridBagConstraints();
-		gbc_brStartDateTextField.insets = new Insets(0, 0, 0, 5);
 		gbc_brStartDateTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_brStartDateTextField.gridx = 2;
 		gbc_brStartDateTextField.gridy = 1;
@@ -309,6 +311,7 @@ public class RoomsGUI extends JPanel {
 		brStartDateTextField.setColumns(10);
 		
 		btnPickDate_2 = new JButton("Calendar");
+		btnPickDate_2.setMargin(new Insets(0, 0, 0, 0));
 		btnPickDate_2.setSize(new Dimension(1, 1));
 		btnPickDate_2.setSize(10, 10);
 		btnPickDate_2.addActionListener(new ActionListener() {
@@ -325,7 +328,6 @@ public class RoomsGUI extends JPanel {
 
 		brEndDateTextField = new JTextField();
 		GridBagConstraints gbc_brEndDateTextField = new GridBagConstraints();
-		gbc_brEndDateTextField.insets = new Insets(0, 0, 0, 5);
 		gbc_brEndDateTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_brEndDateTextField.gridx = 5;
 		gbc_brEndDateTextField.gridy = 1;
@@ -333,6 +335,7 @@ public class RoomsGUI extends JPanel {
 		brEndDateTextField.setColumns(10);
 		
 		btnPickDate_3 = new JButton("Calendar");
+		btnPickDate_3.setMargin(new Insets(0, 0, 0, 0));
 		btnPickDate_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFrame f = new JFrame();
@@ -570,13 +573,16 @@ public class RoomsGUI extends JPanel {
 		String endDate = brEndDateTextField.getText();
 		
 		try {
-			int agenID = Integer.parseInt(textFieldAgencyId.getText());
-			Agency agency = customersCtr.getAgency(agenID);
-			agency.getProvidedCustomers().add(customer);
 			roomsCtr.newRoomBooking(customer, rooms, bookDate, startDate,
 					endDate);
-			customersCtr.updateAgency(agenID, agency.getName(), agency.getAgencyDiscountLevel(), agency.getProvidedCustomers());
-		}
+			int agenID = 0;
+			if(!textFieldAgencyId.getText().equals(""))	agenID = Integer.parseInt(textFieldAgencyId.getText());
+			if(agenID!=0){
+				Agency agency = customersCtr.getAgency(agenID);
+				agency.getProvidedCustomers().add(customer);
+				customersCtr.updateAgency(agenID, agency.getName(), agency.getAgencyDiscountLevel(), agency.getProvidedCustomers());
+				}
+			}
 		catch(NumberFormatException nfe){
 			JOptionPane.showMessageDialog(roomsWrapper, "Enter valid number","Error", JOptionPane.ERROR_MESSAGE);
 		} catch (Exception e) {
@@ -624,15 +630,4 @@ public class RoomsGUI extends JPanel {
 		fillRbTable();
 	}
 
-	@SuppressWarnings("unused")
-	private boolean checkDateFormat(String input) {
-		String inputFormat = input;
-		SimpleDateFormat correnctFormat = new SimpleDateFormat("dd-mm-yyyy");
-		
-		// try {
-		//
-		// }
-
-		return false;
-	}
 }
