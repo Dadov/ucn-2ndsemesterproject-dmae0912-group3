@@ -48,7 +48,6 @@ import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
-import java.awt.Insets;
 public class ActivitiesGUI extends JPanel {
 
 	/**
@@ -193,6 +192,7 @@ public class ActivitiesGUI extends JPanel {
 				int number = 0;
 				ActivityBooking actBook = null;
 				try {
+					bookings = actCtr.getAllBookings();
 					actId = (int) table.getModel().getValueAt(
 							table.getSelectedRow(), 0);
 					actBook = actCtr.findBooking(actId);
@@ -221,6 +221,7 @@ public class ActivitiesGUI extends JPanel {
 										+ actBook.getActivity()
 												.getActivityType().name(),
 								"Message", 1);
+						fillInstructorTable();
 					}
 					else JOptionPane.showMessageDialog(activitiesWrapper,
 							"This activity is full!", "Message", 1);
@@ -615,6 +616,8 @@ public class ActivitiesGUI extends JPanel {
 								actCtr.newActivityBooking(customers, activity, actTime, openActivity, false);
 								JOptionPane.showMessageDialog(activitiesWrapper,"You have created new activity: "
 								+ activity.getActivityType().name(),"Message", 1);
+								fillActivityTable();
+								fillInstructorTable();
 							}
 							else JOptionPane.showMessageDialog(activitiesWrapper,
 							"You already have booked 4 activities on this date.","Message", 3);
@@ -829,7 +832,7 @@ public class ActivitiesGUI extends JPanel {
 		showHireIdFieldPanel.add(showHireIDField);
 		showHireIDField.setHorizontalAlignment(SwingConstants.CENTER);
 		showHireIDField.setEditable(false);
-		showHireIDField.setColumns(5);
+		showHireIDField.setColumns(15);
 
 		JPanel showHireCustomerFieldPanel = new JPanel(new FlowLayout(
 				FlowLayout.LEFT));
@@ -839,7 +842,7 @@ public class ActivitiesGUI extends JPanel {
 		showHireCustomerFieldPanel.add(showHireCustomerField);
 		showHireCustomerField.setHorizontalAlignment(SwingConstants.CENTER);
 		showHireCustomerField.setEditable(false);
-		showHireCustomerField.setColumns(5);
+		showHireCustomerField.setColumns(15);
 
 		JPanel showHireInstructorFieldPanel = new JPanel(new FlowLayout(
 				FlowLayout.LEFT));
@@ -849,7 +852,7 @@ public class ActivitiesGUI extends JPanel {
 		showHireInstructorFieldPanel.add(showHireInstructorField);
 		showHireInstructorField.setHorizontalAlignment(SwingConstants.CENTER);
 		showHireInstructorField.setEditable(false);
-		showHireInstructorField.setColumns(5);
+		showHireInstructorField.setColumns(15);
 
 		JPanel showHireActivityFieldPanel = new JPanel(new FlowLayout(
 				FlowLayout.LEFT));
@@ -861,7 +864,7 @@ public class ActivitiesGUI extends JPanel {
 		showHireActivityFieldPanel.add(showHireActivityField);
 		showHireActivityField.setHorizontalAlignment(SwingConstants.CENTER);
 		showHireActivityField.setEditable(false);
-		showHireActivityField.setColumns(20);
+		showHireActivityField.setColumns(15);
 
 		JPanel showHireDateFieldPanel = new JPanel(new FlowLayout(
 				FlowLayout.LEFT));
@@ -872,17 +875,7 @@ public class ActivitiesGUI extends JPanel {
 		showHireDateFieldPanel.add(showHireDateField);
 		showHireDateField.setHorizontalAlignment(SwingConstants.CENTER);
 		showHireDateField.setEditable(false);
-		showHireDateField.setColumns(25);
-		
-		JButton btnPickDate = new JButton("Calendar");
-		btnPickDate.setMargin(new Insets(0, 0, 0, 0));
-		btnPickDate.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				JFrame f = new JFrame();
-				showHireDateField.setText(new DatePicker(f).setPickedDate());
-				}
-		});
-		showHireDateFieldPanel.add(btnPickDate);
+		showHireDateField.setColumns(15);
 
 		JPanel showHireTimeFieldPanel = new JPanel(new FlowLayout(
 				FlowLayout.LEFT));
@@ -1029,7 +1022,7 @@ public class ActivitiesGUI extends JPanel {
 		createHireDateField.setHorizontalAlignment(SwingConstants.CENTER);
 		createHireDateField.setColumns(20);
 		
-		btnPickDate_1 = new JButton("Pick Date");
+		btnPickDate_1 = new JButton("Calendar");
 		btnPickDate_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFrame f = new JFrame();
