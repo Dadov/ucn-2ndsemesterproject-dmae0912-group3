@@ -71,8 +71,6 @@ public class StaffCtr {
 	public Staff getEmployee(int id) {
 		IFDAOStaff daoStaff = new DAOStaff();
 		Staff staff = daoStaff.getStaff(id, false);
-		if (staff == null) throw new IllegalArgumentException(
-				"This ID does not exist in the database.");
 		return staff;
 	}
 

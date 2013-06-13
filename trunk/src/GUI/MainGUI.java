@@ -2,6 +2,7 @@ package GUI;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -134,6 +135,7 @@ public class MainGUI {
 
 		loginGUI.loginButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+			try{
 				login();
 
 				activitiesGUI = new ActivitiesGUI(loginGUI.getUserID());
@@ -148,6 +150,10 @@ public class MainGUI {
 				staffGUI = new StaffGUI();
 				contentPanel.add(staffGUI, "StaffGUI");
 			}
+			catch(IllegalArgumentException ie){
+				
+			}
+			}
 		});
 
 		logoutButton.addActionListener(new ActionListener() {
@@ -161,6 +167,7 @@ public class MainGUI {
 				CardLayout cl = (CardLayout) (frame.getContentPane()
 						.getLayout());
 				cl.show(frame.getContentPane(), "Login Wrapper");
+				loginGUI.clearLoginFields();
 			}
 		});
 		
@@ -197,9 +204,9 @@ public class MainGUI {
 		// 0 = invalid login, avoid doing anything
 		case (0):
 			JOptionPane.showMessageDialog(null,
-					"Invlaid username and password.", "Login Failed",
+					"Invalid username and password.", "Login Failed",
 					JOptionPane.INFORMATION_MESSAGE);
-			break;
+		throw new IllegalArgumentException();
 		// manager
 		case (1):
 			System.out.println("Manager logged in, message from MainGUI");
@@ -227,7 +234,13 @@ public class MainGUI {
 			System.out.println("Customer logged in, message from MainGUI");
 			optionsPanel.add(activitvitiesButton);
 		}
+		
 		optionsPanel.add(logoutButton);
+		activitvitiesButton.setBackground(Color.decode("#FFFFFF"));
+		logoutButton.setBackground(Color.decode("#F0F0F0"));
+		staffButtom.setBackground(Color.decode("#F0F0F0"));
+		customersButton.setBackground(Color.decode("#F0F0F0"));
+		roomsButton.setBackground(Color.decode("#F0F0F0"));
 		// if rank is in range 1 - 4 show contentPane
 		if (rank > 0 && rank < 5) {
 			CardLayout cl = (CardLayout) (frame.getContentPane().getLayout());
@@ -242,6 +255,8 @@ public class MainGUI {
 		public void showRoomBooking(Agency agency){
 			CardLayout cl = (CardLayout) contentPanel.getLayout();
 			cl.show(contentPanel, "RoomsGUI");
+			roomsButton.setBackground(Color.decode("#FFFFFF"));
+			customersButton.setBackground(Color.decode("#F0F0F0"));
 			
 			roomsGUI.setAgencyID(agency);
 		}

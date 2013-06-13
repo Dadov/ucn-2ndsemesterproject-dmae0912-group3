@@ -1172,11 +1172,12 @@ public class CustomersGUI extends JPanel {
 				try{
 					row = table.getSelectedRow();
 					agency = custCtr.getAgency((int) table.getModel().getValueAt(row, 0));
+					MainGUI.getInstance().showRoomBooking(agency);
 				}
 				catch(ArrayIndexOutOfBoundsException ae){
 					JOptionPane.showMessageDialog(customersWrapper, "Select a row in the table!", "Request", JOptionPane.WARNING_MESSAGE);
 				}
-				MainGUI.getInstance().showRoomBooking(agency);
+				
 			}
 		});
 		upperAgenWrapLeft.add(btnNewBooking);
