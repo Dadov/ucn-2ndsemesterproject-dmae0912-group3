@@ -261,4 +261,9 @@ public class MainGUI {
 			roomsGUI.setAgencyID(agency);
 		}
 
+		public void fillInstructorHireTable() {
+			activitiesGUI.fillInstructorTable();
+			
+		}
+
 }
