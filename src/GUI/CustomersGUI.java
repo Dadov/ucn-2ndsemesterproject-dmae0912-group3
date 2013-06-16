@@ -1773,6 +1773,7 @@ public class CustomersGUI extends JPanel {
 			
 		}
 		fillInstHireBillTable();
+		MainGUI.getInstance().fillInstructorHireTable();
 	}
 	
 	private void findCust(int ID) {

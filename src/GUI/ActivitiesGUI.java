@@ -604,13 +604,15 @@ public class ActivitiesGUI extends JPanel {
 								activitiesWrapper, "Customer's ID", "Request",
 								1));
 								customer = custCtr.getCustomer(id);
+							}
+								
 									for(ActivityBooking ab: allBookings){
 										for(Customer c: ab.getCustomers()){
 											if(customer.getPersonID()==c.getPersonID()&&date.equals(ab.getActivityTime().getDate()))number = number +1;
 										}
 									}
 									customers.add(customer);
-							}
+							
 							if(number<4){
 								Activity activity = activities.get(0);
 								actCtr.newActivityBooking(customers, activity, actTime, openActivity, false);
@@ -1026,7 +1028,7 @@ public class ActivitiesGUI extends JPanel {
 		btnPickDate_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFrame f = new JFrame();
-				showHireDateField.setText(new DatePicker(f).setPickedDate());}
+				createHireDateField.setText(new DatePicker(f).setPickedDate());}
 		});
 		createHireDateFieldPanel.add(btnPickDate_1);
 
@@ -1053,15 +1055,33 @@ public class ActivitiesGUI extends JPanel {
 					Activity activity = activBook.getActivity();
 					String date = createHireDateField.getText();
 					String time = createHireTimeField.getText();
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 					Date currentDate = new Date();
 					String curDate = sdf.format(currentDate);
-					int year = Integer.parseInt(date.substring(0,4));
-					int cYear = Integer.parseInt(curDate.substring(0,4));
-					int month = Integer.parseInt(date.substring(5,7));
-					int cMonth = Integer.parseInt(curDate.substring(5,7));
-					int day = Integer.parseInt(date.substring(8,10));
-					int cDay = Integer.parseInt(curDate.substring(8,10));
+					int year = 0;
+					int cYear = 0;
+					int month = 0;
+					int cMonth = 0;
+					int day = 0;
+					int cDay = 0;
+					if(activity.getID()==16||activity.getID()==17){
+						year = Integer.parseInt(date.substring(6,10));
+						cYear = Integer.parseInt(curDate.substring(6,10));
+						month = Integer.parseInt(date.substring(3,5));
+						cMonth = Integer.parseInt(curDate.substring(3,5));
+						day = Integer.parseInt(date.substring(0,2));
+						cDay = Integer.parseInt(curDate.substring(0,2));
+						time = time + ":00";
+					}
+					else
+					{
+						year = Integer.parseInt(date.substring(0,4));
+						cYear = Integer.parseInt(curDate.substring(6,10));
+						month = Integer.parseInt(date.substring(5,7));
+						cMonth = Integer.parseInt(curDate.substring(3,5));
+						day = Integer.parseInt(date.substring(8,10));
+						cDay = Integer.parseInt(curDate.substring(0,2));
+					}
 					if((year>=cYear)||(year==cYear&&month>=cMonth)||(year==cYear&&month==cMonth&&day>cDay))
 					{
 					Instructor instructor = null;
@@ -1078,7 +1098,7 @@ public class ActivitiesGUI extends JPanel {
 							if(instructor!=null){actCtr.newInstructorHire(customer, instructor, activBook, actTime);
 								JOptionPane.showMessageDialog(activitiesWrapper,"You have hired a new Instructor: "
 									+ instructor.getPersonID(),	"Message", 1);
-								if(!activBook.getActivity().getActivityType().name().equals("Golf")||!activBook.getActivity().getActivityType().name().equals("Swimming"))activBook.setInstructorHired(true);
+								activBook.setInstructorHired(true);
 							}
 							else JOptionPane.showMessageDialog(activitiesWrapper,"No instructor available. ", "Message", 1);
 				}
@@ -1230,6 +1250,7 @@ public class ActivitiesGUI extends JPanel {
 		try {
 			int bookID;
 			Customer customer = c1;
+			
 			if(c1==null)bookID = Integer.parseInt(JOptionPane.showInputDialog(
 					activitiesWrapper, "Enter activity booking's ID:", "Request", 1));
 			else{int row = table_1.getSelectedRow();
@@ -1237,6 +1258,7 @@ public class ActivitiesGUI extends JPanel {
 			createHireBookingField.setText(String.valueOf(bookID));
 			int id = 0;
 			ActivityBooking actBook = actCtr.findBooking(bookID);
+			if(actBook.getActivity().getActivityType().name().equals("Golf")||actBook.getActivity().getActivityType().name().equals("Swimming"))actBook.setInstructorHired(false);
 			String date = actBook.getActivityTime().getDate();
 			String time = actBook.getActivityTime().getTime();
 			if(actBook.getActivity().getActivityType().name().equals("Golf")||actBook.getActivity().getActivityType().name().equals("Swimming")){}
@@ -1364,7 +1386,7 @@ public class ActivitiesGUI extends JPanel {
 		}
 	}
 
-	private void fillInstructorTable() {
+	protected void fillInstructorTable() {
 		clearTable(table_1);
 		dtmInstructorHire = new DefaultTableModel(new Object[][] {},
 				new String[] { "ID", "Activity", "Time", "Date", "Status" });
@@ -1376,16 +1398,17 @@ public class ActivitiesGUI extends JPanel {
 			dtmInstructorHire = new DefaultTableModel(new Object[][] {},
 					new String[] { "Booking ID", "Instructor Hire ID",
 							"Activity", "Time", "Date", "Instructor", "Status" });
-			for (ActivityBooking insHire : bookings) {
+			bookings = actCtr.getAllBookings();
+			for (ActivityBooking actBook : bookings) {
 				// Initialise variables for filling table
-				for (Customer c : insHire.getCustomers()) {
+				for (Customer c : actBook.getCustomers()) {
 					if (c.getPersonID()==c1.getPersonID()) {
-						int ID = insHire.getID();
-						String actType = insHire.getActivity()
+						int ID = actBook.getID();
+						String actType = actBook.getActivity()
 								.getActivityType().name();
-						String date = insHire.getActivityTime().getDate();
-						String time = insHire.getActivityTime().getTime();
-						boolean hired = insHire.isInstructorHired();
+						String date = actBook.getActivityTime().getDate();
+						String time = actBook.getActivityTime().getTime();
+						boolean hired = actBook.isInstructorHired();
 						int IHID = 0;
 						String status = "no instructor hired";
 						if (hired){
@@ -1393,13 +1416,20 @@ public class ActivitiesGUI extends JPanel {
 								if (ih.getActivityBooking().getID() == ID){
 									IHID = ih.getId();
 									status = ih.getStatus();
+									// add the values to the table
+									Object[] rowData = { ID, IHID, actType, date, time,
+											hired, status };
+									dtmInstructorHire.addRow(rowData);
 								}
 							}
 						}
-						// add the values to the table
-						Object[] rowData = { ID, IHID, actType, date, time,
-								hired, status };
-						dtmInstructorHire.addRow(rowData);
+						else{
+							// add the values to the table
+							Object[] rowData = { ID, IHID, actType, date, time,
+									hired, status };
+							dtmInstructorHire.addRow(rowData);
+						}
+						
 						
 					}
 					table_1.setModel(dtmInstructorHire);
@@ -1409,7 +1439,7 @@ public class ActivitiesGUI extends JPanel {
 			for (InstructorHire insHire : hires) {
 				// Initialise variables for filling table
 
-				if (i1.equals(insHire.getInstructor())) {
+				if (i1.getPersonID()==insHire.getInstructor().getPersonID()) {
 					int ID = insHire.getId();
 					String actType = insHire.getActivityBooking().getActivity()
 							.getActivityType().name();
