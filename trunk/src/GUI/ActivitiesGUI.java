@@ -532,8 +532,7 @@ public class ActivitiesGUI extends JPanel {
 				new FlowLayout(FlowLayout.LEFT));
 		createBookingRight.add(createDateFieldPanel);
 
-		final JFormattedTextField createDateField = new JFormattedTextField(
-				"yyyy-mm-dd");
+		final JFormattedTextField createDateField = new JFormattedTextField("dd-MM-yyyy");
 		createDateFieldPanel.add(createDateField);
 		createDateField.setHorizontalAlignment(SwingConstants.CENTER);
 		createDateField.setColumns(20);
@@ -620,6 +619,7 @@ public class ActivitiesGUI extends JPanel {
 								+ activity.getActivityType().name(),"Message", 1);
 								fillActivityTable();
 								fillInstructorTable();
+								showAllBookings();
 							}
 							else JOptionPane.showMessageDialog(activitiesWrapper,
 							"You already have booked 4 activities on this date.","Message", 3);
@@ -1099,6 +1099,8 @@ public class ActivitiesGUI extends JPanel {
 								JOptionPane.showMessageDialog(activitiesWrapper,"You have hired a new Instructor: "
 									+ instructor.getPersonID(),	"Message", 1);
 								activBook.setInstructorHired(true);
+								actCtr.updateBooking(activBook.getID(), activBook.getCustomers(), activBook.getActivity(), activBook.getActivityTime(), activBook.isOpenActivity(), activBook.isInstructorHired());
+								showAllHires();
 							}
 							else JOptionPane.showMessageDialog(activitiesWrapper,"No instructor available. ", "Message", 1);
 				}
@@ -1308,10 +1310,9 @@ public class ActivitiesGUI extends JPanel {
 	}
 
 	protected void showAllHires() {
+		fillInstructorTable();
 		CardLayout c1 = (CardLayout) hireTablePanel.getLayout();
 		c1.show(hireTablePanel, "showhires");
-		fillInstructorTable();
-
 	}
 
 	protected void showInstructorHire(int id) {
@@ -1335,11 +1336,10 @@ public class ActivitiesGUI extends JPanel {
 	}
 
 	protected void showAllBookings() {
+		fillActivityTable();
 		CardLayout c1 = (CardLayout) BookingTable.getLayout();
 		c1.show(BookingTable, "showAllBookings");
-		fillActivityTable();
-
-	}
+		}
 
 	protected void createBooking() {
 		CardLayout c1 = (CardLayout) (BookingTable.getLayout());
@@ -1413,7 +1413,7 @@ public class ActivitiesGUI extends JPanel {
 						String status = "no instructor hired";
 						if (hired){
 							for (InstructorHire ih : hires){
-								if (ih.getActivityBooking().getID() == ID){
+								if (ih.getActivityBooking().getID() == ID&&ih.getCustomer().getPersonID()==c1.getPersonID()){
 									IHID = ih.getId();
 									status = ih.getStatus();
 									// add the values to the table

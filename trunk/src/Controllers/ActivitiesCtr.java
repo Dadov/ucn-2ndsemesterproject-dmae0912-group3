@@ -137,6 +137,7 @@ public class ActivitiesCtr {
 			booking.setActivity(activity);
 			booking.setActivityTime(activityTime);
 			booking.setOpenActivity(openActivity);
+			booking.setInstructorHired(instructorHired);
 			return daoBooking.update(booking);
 		}
 
