@@ -55,7 +55,7 @@ public class RoomsCtr {
 	// finds a booking by id
 	public RoomBooking findBooking(int id) {
 		daoRoomBooking = new DAORoomBooking();
-		return daoRoomBooking.getRoomBooking(id, false);
+		return daoRoomBooking.getRoomBooking(id, true);
 	}
 
 	// retrieves all bookings

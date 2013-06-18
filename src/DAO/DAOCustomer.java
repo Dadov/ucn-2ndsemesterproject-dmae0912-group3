@@ -182,7 +182,7 @@ public class DAOCustomer implements IFDAOCustomer {
 		int rc = -1; // row count;
 
 		// building DELETE query;
-		String query = "DELETE FROM Customer WHERE customerID = " + customerID
+		String query = "DELETE FROM ActivityCustomers WHERE customerID = "+ customerID + "; DELETE FROM Customer WHERE customerID = " + customerID
 				+ ";";
 
 		try { // executing the query and deleting Customer data;

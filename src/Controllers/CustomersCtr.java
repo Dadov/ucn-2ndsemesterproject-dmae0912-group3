@@ -1,6 +1,8 @@
 package Controllers;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 
 import DAO.DAOAgency;
@@ -76,7 +78,7 @@ public class CustomersCtr {
 	// adds a new customer to the database
 	public void newCustomer(String CPR, String fname, String lname,
 			String country, String ZIP, String address, String email,
-			String password, String registrationDate, int noOfStays) {
+			String password) {
 		Customer customer = new Customer();
 		customer.getPersonID();
 		customer.setCPR(CPR);
@@ -87,8 +89,11 @@ public class CustomersCtr {
 		customer.setAddress(address);
 		customer.setEmail(email);
 		customer.setPassword(password);
-		customer.setRegistrationDate(registrationDate);
-		customer.setNoOfStays(noOfStays);
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		Date date = new Date();
+		String dat = sdf.format(date);
+		customer.setRegistrationDate(dat);
+		customer.setNoOfStays(0);
 		ActivitiesCtr actCtr = new ActivitiesCtr();
 		try {
 			DBConnection.startTransaction();
@@ -136,6 +141,7 @@ public class CustomersCtr {
 		IFDAOCustomer daoCustomer = new DAOCustomer();
 		Customer customer = new Customer();
 		customer.setPersonID(id);
+		customer.setCPR(CPR);
 		customer.setFname(fname);
 		customer.setLname(lname);
 		customer.setCountry(country);
