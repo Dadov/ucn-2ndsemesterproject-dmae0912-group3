@@ -79,6 +79,7 @@ public class CustomersCtr {
 			String password, String registrationDate, int noOfStays) {
 		Customer customer = new Customer();
 		customer.getPersonID();
+		customer.setCPR(CPR);
 		customer.setFname(fname);
 		customer.setLname(lname);
 		customer.setCountry(country);
@@ -93,13 +94,16 @@ public class CustomersCtr {
 			DBConnection.startTransaction();
 			IFDAOCustomer daoCustomer = new DAOCustomer();
 			daoCustomer.insert(customer);
+			ArrayList<Customer> customeris = daoCustomer.getAllCustomers(true);
+			customer = customeris.get(customeris.size()-1);			
 			DBConnection.commitTransaction();
 			ArrayList<ActivityBooking> bookings = actCtr.getAllBookings();
 			for(ActivityBooking booking: bookings){
-				if(booking.getActivity().getActivityType().equals("Golf")||booking.getActivity().getActivityType().equals("Swimming")){
+				if(booking.getActivity().getActivityType().name().equals("Golf")||booking.getActivity().getActivityType().name().equals("Swimming")){
 					ArrayList<Customer> customers = booking.getCustomers();
 							customers.add(customer);
 							booking.setCustomers(customers);
+							actCtr.updateBooking(booking.getID(), booking.getCustomers(), booking.getActivity(), booking.getActivityTime(), booking.isOpenActivity(), booking.isInstructorHired());
 				}
 					
 			}
