@@ -194,7 +194,7 @@ public class DAORoomBooking implements IFDAORoomBooking {
                 if(retrieveAssociation) {//retrieves the customer object
                 	IFDAOCustomer dbCust = new DAOCustomer();
                 	int custID = roomBooking.getCustomer().getPersonID();
-                	Customer cust = dbCust.getCustomer(custID, false);
+                	Customer cust = dbCust.getCustomer(custID, true);
                 	roomBooking.setCustomer(cust);
                 }
 			} else { //nothing was found

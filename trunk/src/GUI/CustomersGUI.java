@@ -116,8 +116,6 @@ public class CustomersGUI extends JPanel {
 	private JTextField createCountryField;
 	private JTextField createEmailField;
 	private JTextField createPassField;
-	private JTextField createRegDateField;
-	private JTextField createStaysField;
 	private JTextField editStaysField;
 	private JLabel totalInstructor;
 	private ActivitiesCtr actCtr;
@@ -842,22 +840,6 @@ public class CustomersGUI extends JPanel {
 		JLabel createPassLabel = new JLabel("Password");
 		createPassLabelPanel.add(createPassLabel);
 		createPassLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		
-		JPanel createRegDateLabelPanel = new JPanel();
-		newCustLeft.add(createRegDateLabelPanel);
-		createRegDateLabelPanel.setLayout(new BoxLayout(createRegDateLabelPanel, BoxLayout.X_AXIS));
-		
-		JLabel createRegDateLabel = new JLabel("Registration date");
-		createRegDateLabelPanel.add(createRegDateLabel);
-		createRegDateLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		
-		JPanel createStaysLabelPanel = new JPanel();
-		newCustLeft.add(createStaysLabelPanel);
-		createStaysLabelPanel.setLayout(new BoxLayout(createStaysLabelPanel, BoxLayout.X_AXIS));
-		
-		JLabel createStaysLabel = new JLabel("No. of stays");
-		createStaysLabelPanel.add(createStaysLabel);
-		createStaysLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
 		JPanel newStaffRight = new JPanel();
 		newStaffRight.setLayout(new BoxLayout(newStaffRight, BoxLayout.Y_AXIS));
@@ -926,22 +908,6 @@ public class CustomersGUI extends JPanel {
 		createPassFieldPanel.add(createPassField);
 		createPassField.setHorizontalAlignment(SwingConstants.CENTER);
 		createPassField.setColumns(20);
-		
-		JPanel createRegDateFieldPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		newStaffRight.add(createRegDateFieldPanel);
-
-		createRegDateField = new JTextField();
-		createRegDateFieldPanel.add(createRegDateField);
-		createRegDateField.setHorizontalAlignment(SwingConstants.CENTER);
-		createRegDateField.setColumns(20);
-		
-		JPanel createStaysFieldPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		newStaffRight.add(createStaysFieldPanel);
-
-		createStaysField = new JTextField();
-		createStaysFieldPanel.add(createStaysField);
-		createStaysField.setHorizontalAlignment(SwingConstants.CENTER);
-		createStaysField.setColumns(20);
 
 		JPanel createBottomMenu = new JPanel();
 		newCust.add(createBottomMenu, BorderLayout.CENTER);
@@ -964,8 +930,7 @@ public class CustomersGUI extends JPanel {
 					custCtr.newCustomer(createCPRField.getText(), createFNameField.getText(), 
 							createLNameField.getText(), createCountryField.getText(), 
 							createZIPField.getText(), createAddressField.getText(), 
-							createEmailField.getText(), createPassField.getText(), 
-							createRegDateField.getText(), Integer.parseInt(createStaysField.getText()));
+							createEmailField.getText(), createPassField.getText());
 				} 
 				catch (NumberFormatException e1) {
 					toCreate = false;
@@ -1716,6 +1681,11 @@ public class CustomersGUI extends JPanel {
 			JOptionPane.showMessageDialog(null, "Booking number " + id
 					+ " was paid", "Booking payment",
 					JOptionPane.INFORMATION_MESSAGE);
+			Customer customer = roomBooking.getCustomer();
+			customer.setNoOfStays(customer.getNoOfStays()+1);
+			custCtr.updateCustomer(customer.getPersonID(), customer.getCPR(), customer.getFname(), customer.getLname(), 
+					customer.getCountry(), customer.getZIP(), customer.getAddress(), customer.getEmail(), customer.getPassword(),
+					customer.getRegistrationDate(), customer.getNoOfStays());
 		} else {
 			JOptionPane.showMessageDialog(null, "Booking number " + id
 					+ " did not exist", "Booking payment",
