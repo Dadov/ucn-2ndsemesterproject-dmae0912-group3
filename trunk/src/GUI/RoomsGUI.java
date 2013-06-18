@@ -35,6 +35,7 @@ import Models.Customer;
 import Models.Room;
 import Models.RoomBooking;
 import Models.RoomType;
+import javax.swing.ImageIcon;
 
 public class RoomsGUI extends JPanel {
 
@@ -170,7 +171,8 @@ public class RoomsGUI extends JPanel {
 		chraInputPanel.add(chraDateStartField, gbc_chraDateStartField);
 		chraDateStartField.setColumns(10);
 		
-		btnPickDate = new JButton("Calendar");
+		btnPickDate = new JButton("");
+		btnPickDate.setIcon(new ImageIcon(RoomsGUI.class.getResource("/resources/calendar_ico.png")));
 		btnPickDate.setMargin(new Insets(0, 0, 0, 0));
 		btnPickDate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -199,7 +201,8 @@ public class RoomsGUI extends JPanel {
 			}
 		});
 		
-		btnPickDate_1 = new JButton("Calendar");
+		btnPickDate_1 = new JButton("");
+		btnPickDate_1.setIcon(new ImageIcon(RoomsGUI.class.getResource("/resources/calendar_ico.png")));
 		btnPickDate_1.setMargin(new Insets(0, 0, 0, 0));
 		btnPickDate_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -310,7 +313,8 @@ public class RoomsGUI extends JPanel {
 		bookRoomPanel.add(brStartDateTextField, gbc_brStartDateTextField);
 		brStartDateTextField.setColumns(10);
 		
-		btnPickDate_2 = new JButton("Calendar");
+		btnPickDate_2 = new JButton("");
+		btnPickDate_2.setIcon(new ImageIcon(RoomsGUI.class.getResource("/resources/calendar_ico.png")));
 		btnPickDate_2.setMargin(new Insets(0, 0, 0, 0));
 		btnPickDate_2.setSize(new Dimension(1, 1));
 		btnPickDate_2.setSize(10, 10);
@@ -334,7 +338,8 @@ public class RoomsGUI extends JPanel {
 		bookRoomPanel.add(brEndDateTextField, gbc_brEndDateTextField);
 		brEndDateTextField.setColumns(10);
 		
-		btnPickDate_3 = new JButton("Calendar");
+		btnPickDate_3 = new JButton("");
+		btnPickDate_3.setIcon(new ImageIcon(RoomsGUI.class.getResource("/resources/calendar_ico.png")));
 		btnPickDate_3.setMargin(new Insets(0, 0, 0, 0));
 		btnPickDate_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

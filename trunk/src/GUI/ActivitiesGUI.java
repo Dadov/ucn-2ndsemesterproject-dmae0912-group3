@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.HeadlessException;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
@@ -17,6 +18,7 @@ import java.util.Iterator;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -537,7 +539,11 @@ public class ActivitiesGUI extends JPanel {
 		createDateField.setHorizontalAlignment(SwingConstants.CENTER);
 		createDateField.setColumns(20);
 		
-		JButton btnPick = new JButton("Pick Date");
+		JButton btnPick = new JButton("");
+		btnPick.setIcon(new ImageIcon(RoomsGUI.class.getResource("/resources/calendar_ico.png")));
+		btnPick.setMargin(new Insets(0, 0, 0, 0));
+		btnPick.setSize(new Dimension(1, 1));
+		btnPick.setSize(10, 10);
 		btnPick.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFrame f = new JFrame();
@@ -1024,7 +1030,11 @@ public class ActivitiesGUI extends JPanel {
 		createHireDateField.setHorizontalAlignment(SwingConstants.CENTER);
 		createHireDateField.setColumns(20);
 		
-		btnPickDate_1 = new JButton("Calendar");
+		btnPickDate_1 = new JButton("");
+		btnPickDate_1.setIcon(new ImageIcon(RoomsGUI.class.getResource("/resources/calendar_ico.png")));
+		btnPickDate_1.setMargin(new Insets(0, 0, 0, 0));
+		btnPickDate_1.setSize(new Dimension(1, 1));
+		btnPickDate_1.setSize(10, 10);
 		btnPickDate_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFrame f = new JFrame();
@@ -1389,7 +1399,7 @@ public class ActivitiesGUI extends JPanel {
 	protected void fillInstructorTable() {
 		clearTable(table_1);
 		dtmInstructorHire = new DefaultTableModel(new Object[][] {},
-				new String[] { "ID", "Activity", "Time", "Date", "Status" });
+				new String[] { "ID", "Activity", "Date", "Time", "Status" });
 		table_1.setModel(dtmInstructorHire);
 		hires = actCtr.getInstructorHires();
 		bookings = actCtr.getAllBookings();
@@ -1397,7 +1407,7 @@ public class ActivitiesGUI extends JPanel {
 		if (c1 != null) {
 			dtmInstructorHire = new DefaultTableModel(new Object[][] {},
 					new String[] { "Booking ID", "Instructor Hire ID",
-							"Activity", "Time", "Date", "Instructor", "Status" });
+							"Activity", "Date", "Time", "Instructor", "Status" });
 			bookings = actCtr.getAllBookings();
 			for (ActivityBooking actBook : bookings) {
 				// Initialise variables for filling table
@@ -1412,6 +1422,11 @@ public class ActivitiesGUI extends JPanel {
 						int IHID = 0;
 						String status = "no instructor hired";
 						if (hired){
+							if(actBook.getActivity().getActivityType().name().equals("Golf")||actBook.getActivity().getActivityType().name().equals("Swimming")){
+								Object[] rowData = { ID, IHID, actType, date, time,
+										hired, status };
+								dtmInstructorHire.addRow(rowData);
+							}
 							for (InstructorHire ih : hires){
 								if (ih.getActivityBooking().getID() == ID&&ih.getCustomer().getPersonID()==c1.getPersonID()){
 									IHID = ih.getId();
@@ -1432,8 +1447,9 @@ public class ActivitiesGUI extends JPanel {
 						
 						
 					}
-					table_1.setModel(dtmInstructorHire);
+					
 				}
+				table_1.setModel(dtmInstructorHire);
 			}
 		} else if (i1 != null) {
 			for (InstructorHire insHire : hires) {
